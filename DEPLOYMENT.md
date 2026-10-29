@@ -20,8 +20,8 @@
 | Custom origin    | `https://admin.meal.royalexander.online` — pending DNS    |
 | Активный release | source `5f944b2`; container image ID `43e8bd3b0551`       |
 | Live-версия      | `0.0.125`                                                 |
-| Репозиторий      | `0.0.126` (documentation/readiness sync)                  |
-| Contract/schema  | OpenAPI `0.0.61`, backend `0.0.149`, schema `v30`         |
+| Репозиторий      | `0.0.127` (schema v31 contract sync)                      |
+| Contract/schema  | OpenAPI `0.0.61`, backend `0.0.151`, schema `v31`         |
 | Точка выдачи     | container `8080` → host loopback `127.0.0.1:3002`         |
 | API              | same-origin `/api`, proxy на `http://127.0.0.1:3001`      |
 | Liveness         | `https://abstract-usable-gazebo.ruweb.place/health/live`  |
@@ -49,7 +49,7 @@ Server helper обязан под lock проверить allowlist component/im
 - `/srv/meal/deployment/verify.sh --component admin` завершился успешно; контейнер image ID `43e8bd3b0551` находился в состоянии `healthy`.
 - Публичные `/`, `/auth` и `/admin/testing` возвращают SPA document; неавторизованный `/api/v1/admin/acceptance-tests` возвращает контролируемый JSON `401`.
 - В новой вкладке password/session flow корректно потребовал обязательный TOTP для доступа к `/admin/testing`; TOTP не обходился и не сохранялся в evidence. Browser console на auth boundary не содержал ошибок или предупреждений.
-- Backend `0.0.149`, OpenAPI `0.0.61` и migration/schema `v30` развёрнуты до admin smoke; admin rollout миграции не запускает.
+- Целевой backend `0.0.151`, OpenAPI `0.0.61` и additive migration/schema `v31`; admin rollout миграции не запускает.
 
 ### Историческое подтверждение rollout 28 октября 2026
 

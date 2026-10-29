@@ -1,6 +1,6 @@
 # Meal Admin
 
-Самостоятельная административная React/Vite SPA Meal Planner. Версия: 0.0.126. Исходники и зависимости полностью находятся в этом репозитории; `design-system` — локальная копия npm workspace (0.0.10), без ссылок на соседние проекты. Архитектурные границы и поэтапная миграция описаны в `ARCHITECTURE.md`.
+Самостоятельная административная React/Vite SPA Meal Planner. Версия: 0.0.127. Исходники и зависимости полностью находятся в этом репозитории; `design-system` — локальная копия npm workspace (0.0.10), без ссылок на соседние проекты. Архитектурные границы и поэтапная миграция описаны в `ARCHITECTURE.md`.
 
 ## Установка и запуск
 
@@ -37,7 +37,7 @@ Production image собирается через `Dockerfile`: multi-stage build
 
 Backend владеет roles/grants, staff auth/MFA и критичными операциями. Скрытая кнопка не заменяет серверную проверку. Снимки OpenAPI/HTTP cases в `contracts` переносимы; `node scripts/check-backend-contract.mjs <backend-openapi-path>` проверяет согласованность без импорта backend-кода. Изменения API требуют отдельного согласования.
 
-Текущий контракт синхронизирован с backend `0.0.149`: OpenAPI `0.0.61`, database schema `v30`. В recipe moderation обязательные серверные оси `review` и `publication` разделяют проверяемую редакцию и активную публикацию; полностью legacy-ответ без обеих осей всё ещё нормализуется, а частичный schema drift отклоняется generated-схемой. Развёрнутая admin `0.0.125` дополнительно предоставляет `/admin/testing` с server-side каталогом из 83 приёмочных кейсов. Release `5f944b2` прошёл `Admin checks`, immutable image build/deploy и server verify; контейнер image ID `43e8bd3b0551` был подтверждён healthy после rollout. Полный registry digest хранится в защищённом server inventory и намеренно не дублируется сокращённым или вымышленным значением в README.
+Текущий контракт синхронизирован с backend `0.0.151`: OpenAPI `0.0.61`, database schema `v31`. Wire paths и payload не менялись; additive schema добавляет только внутреннюю транзакционную account-mail очередь. В recipe moderation обязательные серверные оси `review` и `publication` разделяют проверяемую редакцию и активную публикацию; полностью legacy-ответ без обеих осей всё ещё нормализуется, а частичный schema drift отклоняется generated-схемой. Развёрнутая admin дополнительно предоставляет `/admin/testing` с server-side каталогом из 83 приёмочных кейсов. Полный registry digest хранится в защищённом server inventory и намеренно не дублируется сокращённым или вымышленным значением в README.
 
 Критичные действия сохраняют permission → re-auth/MFA → preview → confirm → execute → audit/readback. Внешние провайдеры работают fail-closed. Полезные сценарии и результаты переноса записаны в `TESTs.md`.
 
