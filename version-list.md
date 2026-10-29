@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.120 - 29.10.2026 | 10:03 - GitHub Actions check переносит `QA_OUTPUT_DIR` с job-level на step-level `env`, где `runner.temp` доступен; устранён fail до создания job без изменения admin runtime, wire-контрактов и design-system.
+
 0.0.119 - 28.10.2026 | 17:50 - Добавлен container delivery path административной SPA: real-only multi-stage image на digest-pinned Node/Nginx, unprivileged Nginx на 8080 с `/healthz`, SPA/cache/security boundary и fail-closed `/api`; production artifact gate исключает mock worker, source maps и env-файлы. GitHub workflow после успешного main-check дважды блокирует stale SHA, использует commit tag и immutable GHCR digest с provenance/SBOM, а все Actions закреплены по commit SHA; rollout передаётся защищённому allowlisted server helper. Live deployment не выполнялся, wire-контракты и design-system не менялись.
 
 0.0.118 - 28.10.2026 | 13:24 - Актуализирован тестовый checkpoint: full mock Playwright E2E прошёл `134/134` за `10.7m` в system Edge, desktop/mobile `67/67`, один worker и без retry. Зафиксированы также unit `117/117`, contracts `102`, build `282` modules и production smoke live SPA `0.0.117`. Runtime-код и развёрнутый artifact не менялись.
