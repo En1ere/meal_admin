@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.128 - 29.10.2026 | 18:22 - Release metadata синхронизирована с backend runtime 0.0.152 после устранения APP_VERSION drift; OpenAPI 0.0.61, schema v31 и wire-контракты не менялись.
+
 0.0.127 - 29.10.2026 | 18:05 - OpenAPI metadata синхронизирована с backend 0.0.151 / additive schema v31 для транзакционной account-mail очереди; wire paths и payload не менялись. Generated contracts, package/lock и deployment target обновлены.
 
 0.0.126 - 29.10.2026 | 16:53 - Синхронизированы полный OpenAPI snapshot 0.0.61, generated metadata и production-документация с фактическим Docker release admin 0.0.125: backend 0.0.149 / schema v30, healthy container image ID и CI/deploy evidence, текущий technical origin и pending-DNS custom origin. Legacy symlink-процедура заменена актуальным immutable digest/helper rollout, verify и rollback runbook; wire paths и payload не менялись.
