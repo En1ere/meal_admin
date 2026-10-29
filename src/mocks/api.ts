@@ -24,6 +24,7 @@ import { releaseWorkspaceCommand, ReleaseMockError } from './release-workspace.j
 import { releaseApi } from './release-api.js';
 import { accountDeletionReviewHandle } from './account-deletion-review.js';
 import { createObservabilityFixture } from './observability.js';
+import { acceptanceTestingHandle } from './acceptance-testing.js';
 import {
     fixturePassword,
     fixtureUserIds,
@@ -609,6 +610,17 @@ export class MockApi {
                         fail,
                     });
                     if (freeAiResult) return freeAiResult;
+                    const acceptanceResult = acceptanceTestingHandle({
+                        state,
+                        path: wirePath,
+                        method: request.method,
+                        input: parsed?.success ? parsed.data : body,
+                        actor: session.principal,
+                        now,
+                        success,
+                        fail,
+                    });
+                    if (acceptanceResult) return acceptanceResult;
                     const supportResult = supportHandle({
                         state,
                         path: wirePath,

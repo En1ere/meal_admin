@@ -1,4 +1,4 @@
-// Generated from contracts/openapi.json. Do not edit. SHA256: 7d012b76992a5c7ea07d6e5a0e6ff2d65a4b9b2eb5c3fc6de95abc3455dcff74
+// Generated from contracts/openapi.json. Do not edit. SHA256: 308270f58215e20a98c525779ac163232a8985f8e86465c93b475657f9c3bf5d
 import { z } from 'zod';
 export const contractVersion = '0.0.60';
 export const contracts = {
@@ -12167,6 +12167,346 @@ export const contracts = {
                         )
                         .min(8)
                         .max(8),
+                }),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/acceptance-tests': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                schemaVersion: z.literal(1),
+                catalog: z.strictObject({
+                    version: z.string().min(1).max(80),
+                    publishedOn: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.date()),
+                }),
+                run: z
+                    .strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        createdAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime()),
+                    })
+                    .nullable(),
+                summary: z.strictObject({
+                    total: z.number().int().min(0).max(9007199254740991),
+                    notTested: z.number().int().min(0).max(9007199254740991),
+                    passed: z.number().int().min(0).max(9007199254740991),
+                    partial: z.number().int().min(0).max(9007199254740991),
+                    failed: z.number().int().min(0).max(9007199254740991),
+                    completed: z.number().int().min(0).max(9007199254740991),
+                }),
+                groups: z
+                    .array(
+                        z.strictObject({
+                            id: z.union([
+                                z.literal('database'),
+                                z.literal('backend'),
+                                z.literal('admin'),
+                                z.literal('frontend'),
+                            ]),
+                            title: z.string().min(1).max(80),
+                            order: z.number().int().gt(0).max(9007199254740991),
+                            cases: z
+                                .array(
+                                    z.strictObject({
+                                        id: z
+                                            .string()
+                                            .min(3)
+                                            .max(80)
+                                            .regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
+                                        displayCode: z
+                                            .string()
+                                            .regex(new RegExp('^(?:DB|API|ADMIN|FRONTEND)-\\d{2}$', 'u')),
+                                        order: z.number().int().gt(0).max(9007199254740991),
+                                        title: z.string().min(1).max(240),
+                                        steps: z.array(z.string().min(1).max(2000)).min(1).max(100),
+                                        expectedResult: z.string().min(1).max(2000),
+                                        source: z.strictObject({
+                                            file: z.string().min(1).max(240),
+                                            anchor: z.string().min(1).max(240),
+                                            checksum: z.string().regex(new RegExp('^[0-9a-f]{64}$', 'u')),
+                                        }),
+                                        result: z.strictObject({
+                                            status: z.union([
+                                                z.literal('not_tested'),
+                                                z.literal('passed'),
+                                                z.literal('partial'),
+                                                z.literal('failed'),
+                                            ]),
+                                            comment: z.string().max(1000),
+                                            version: z.number().int().min(0).max(9007199254740991),
+                                            checkedBy: z
+                                                .strictObject({
+                                                    id: z
+                                                        .string()
+                                                        .regex(
+                                                            new RegExp(
+                                                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                                                'u',
+                                                            ),
+                                                        )
+                                                        .pipe(z.uuid()),
+                                                    login: z.string().min(1).max(100),
+                                                    displayName: z.string().min(1).max(200).nullable(),
+                                                })
+                                                .nullable(),
+                                            checkedAt: z
+                                                .string()
+                                                .regex(
+                                                    new RegExp(
+                                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                        'u',
+                                                    ),
+                                                )
+                                                .pipe(z.iso.datetime())
+                                                .nullable(),
+                                            updatedAt: z
+                                                .string()
+                                                .regex(
+                                                    new RegExp(
+                                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                        'u',
+                                                    ),
+                                                )
+                                                .pipe(z.iso.datetime())
+                                                .nullable(),
+                                        }),
+                                    }),
+                                )
+                                .min(1)
+                                .max(50),
+                        }),
+                    )
+                    .min(4)
+                    .max(4),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'PUT /api/v1/admin/acceptance-tests/{caseId}': {
+        params: z.strictObject({ caseId: z.string().min(3).max(80) }),
+        request: z.strictObject({
+            status: z.union([z.literal('passed'), z.literal('partial'), z.literal('failed')]),
+            comment: z.string().max(1000),
+            expectedVersion: z.number().int().min(0).max(9007199254740991),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                caseId: z.string().min(3).max(80).regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
+                run: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    createdAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                }),
+                result: z.strictObject({
+                    status: z.union([
+                        z.literal('not_tested'),
+                        z.literal('passed'),
+                        z.literal('partial'),
+                        z.literal('failed'),
+                    ]),
+                    comment: z.string().max(1000),
+                    version: z.number().int().min(0).max(9007199254740991),
+                    checkedBy: z
+                        .strictObject({
+                            id: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.uuid()),
+                            login: z.string().min(1).max(100),
+                            displayName: z.string().min(1).max(200).nullable(),
+                        })
+                        .nullable(),
+                    checkedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    updatedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                }),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/acceptance-tests/{caseId}/reset': {
+        params: z.strictObject({ caseId: z.string().min(3).max(80) }),
+        request: z.strictObject({
+            expectedVersion: z.number().int().min(0).max(9007199254740991),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                caseId: z.string().min(3).max(80).regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
+                run: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    createdAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                }),
+                result: z.strictObject({
+                    status: z.union([
+                        z.literal('not_tested'),
+                        z.literal('passed'),
+                        z.literal('partial'),
+                        z.literal('failed'),
+                    ]),
+                    comment: z.string().max(1000),
+                    version: z.number().int().min(0).max(9007199254740991),
+                    checkedBy: z
+                        .strictObject({
+                            id: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.uuid()),
+                            login: z.string().min(1).max(100),
+                            displayName: z.string().min(1).max(200).nullable(),
+                        })
+                        .nullable(),
+                    checkedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    updatedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
                 }),
             }),
             meta: z.strictObject({

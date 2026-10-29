@@ -7,7 +7,7 @@ Meal Admin развивается как FSD-подобное приложени
 - `app` — router, route metadata, lazy chunks и композиция providers.
 - `widgets` — admin shell, session guard и междоменная композиция экранов.
 - `features` — законченные действия сотрудника: вход/MFA, moderation decision, support reply, grant/revoke, publish/rollback.
-- `entities` — staff session, admin record, support ticket, access, billing, content workflow, catalog, content release, news, admin notification и operation models/query keys.
+- `entities` — staff session, admin record, support ticket, access, billing, content workflow, acceptance test, catalog, content release, news, admin notification и operation models/query keys.
 - `shared` — API transport, runtime, request cancellation, design-system adapters, theme и технические utilities.
 
 Зависимости направлены только вниз. `app` и соседние домены должны использовать явные `client.ts` public APIs. CSS Module принадлежит своему домену. Глобальный CSS содержит только reset, typography и общие accessibility/layout primitives.
@@ -26,6 +26,7 @@ Meal Admin развивается как FSD-подобное приложени
 10. `compliance`: audit, rollback и legal/account-deletion requests.
 11. `operations`: jobs, errors и metrics.
 12. `notifications`, `recipe-governance` и mock-only `dev-scenarios`.
+13. `acceptance-testing`: `/admin/testing`, versioned server catalog, session-scoped read model и CAS/idempotent result commands. Экран не расширяет generic admin sections и не хранит подтверждения в browser storage.
 
 ## Неподвижные контракты
 

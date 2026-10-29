@@ -1,35 +1,64 @@
-# Design QA — observability option 1
+# Design QA — acceptance testing option 2
 
 final result: passed
 
 ## Evidence
 
-- Source: `D:\Agents\EP Frontend projects\projects\tempFiles\meal-admin-observability-design\selected-observability-option-1.png`
-- Source pixels: `1487×1058`, density `96×96 dpi`.
-- Implementation: `http://127.0.0.1:5198/admin/observability`, in-app browser capture from 29.10.2026.
-- Implementation capture: full-view in-app browser evidence, `1269×2619` pixels at device density `1`; focused viewport evidence, `1269×714` pixels.
-- Requested desktop viewport: `1440×1024`; the in-app browser exposed a fixed `1280×720` viewport, so responsive fidelity was additionally covered by CSS breakpoint review and the repository mobile E2E case at `390×844`.
-- State: authenticated mock administrator, `nature-dark`, complete and healthy snapshot, 5 containers, 10 workers, 8 providers.
+- Source visual truth: `D:\Agents\EP Frontend projects\projects\tempFiles\meal-admin-test-checklist-design\selected-option-2.png`.
+- Source pixels: `1487×1058`, `96×96 dpi`.
+- Implementation: `http://127.0.0.1:5199/admin/testing`, authenticated mock administrator, `nature-dark`.
+- Implementation screenshot evidence: Codex in-app browser tab 17, inline capture from 29.10.2026; the IAB provider does not expose a stable filesystem path.
+- Desktop CSS viewport: `1440×1024`, device density `1`; captured content pixels: `1430×1017`.
+- Mobile CSS viewport: `390×844`, device density `1`; captured content pixels: `380×822`.
+- State: four catalog groups, one selected case, reset result with preserved comment/history metadata, desktop footer fixed inside the case workspace.
 
-## Fidelity surfaces
+## Full-view comparison evidence
 
-- Composition: persistent service navigation, page title and update action, system summary, one bounded grouped surface.
-- Information architecture: separate Host, Services, Database, Queue, Workers and Providers rows.
-- Visual system: only shared design-system tokens; selected nature-dark palette; semantic success/warning/muted states include text and are not color-only.
-- Data fidelity: UI renders the generated strict backend contract and does not invent resource thresholds, operational actions or missing values.
-- Interaction fidelity: all four themes, manual refresh and authenticated route were exercised; the page has no destructive controls or automatic polling.
-- Responsive fidelity: the feature CSS collapses rows and cards at `52rem` and `30rem`; the dedicated browser test asserts no horizontal overflow at `390×844`.
+The selected source and the final IAB desktop capture were reviewed together at the same desktop state and normalized to their content frames. The implementation preserves the source hierarchy: page heading and progress, two-column catalog/detail workspace, search and status filter, grouped cases, source/steps/expected result, four result choices, comment, audit metadata and bottom actions.
 
-## Review history
+The real `ServiceShell` remains intentionally different from the generated mock shell: it keeps the product's existing text navigation and theme control in the sidebar. Replacing the shared shell only for this page would create an inconsistent application-wide navigation model. This is an accepted product constraint, not unresolved design drift.
 
-1. Initial implementation review found the Queue and Workers content combined and the title inconsistent with the selected option.
-2. Queue and Workers were split, the title/navigation were aligned to “Наблюдаемость”, and stale/unavailable database, queue and provider data were added to the global attention summary.
-3. A clean reload confirmed the stable final screen. Transient hot-module-reload errors observed while code and cached data were on different revisions did not reproduce after reload.
+Focused regions reviewed:
 
-## Runtime checks
+- catalog toolbar, group headers, selected row and semantic status labels;
+- case title, source, numbered steps and expected-result hierarchy;
+- four status cards, comment counter and reset audit wording;
+- sticky desktop footer with previous/save/save-and-next actions;
+- mobile header, search/filter stack and case-list overflow at `390×844`.
 
-- Theme values confirmed: `coffee-light`, `coffee-dark`, `nature-light`, `nature-dark`.
-- Manual update confirmed as a read-only `GET` flow.
-- Fresh final render: no clipping or overlap in the focused desktop capture.
-- Unit/contract suite: `120/120` passed after the final semantic changes.
-- Playwright implementation exists for desktop themes, refresh, read-only controls and mobile overflow. Local execution is environment-blocked by the missing Playwright Chromium executable and is not reported as passed.
+## Required fidelity surfaces
+
+- Fonts and typography: existing design-system serif display headings and sans UI copy match the chosen visual hierarchy; weights, wrapping and truncation remain readable at desktop and mobile sizes.
+- Spacing and layout rhythm: the desktop proportions match the two-pane source; bounded catalog/detail scrolling prevents long cases from hiding persistent actions. Mobile collapses to one column without horizontal overflow.
+- Colors and tokens: all four themes use shared semantic tokens. Verified body colors were distinct for `coffee-light`, `coffee-dark`, `nature-light` and `nature-dark`; no feature-local color literals were added.
+- Image and icon fidelity: the screen contains no custom raster illustration. Existing Meal Planner branding and design-system `AppIcon` assets are used; there are no placeholder images, handcrafted SVGs, CSS drawings or emoji substitutes.
+- Copy and content: labels and actions match the selected Russian mock. Actual case titles and counts come from the authoritative 83-case backend catalog rather than the four demo rows shown in the visual concept.
+
+## Interaction and runtime checks
+
+- Password + TOTP mock login and new-tab unlock.
+- Search automatically presents the first visible matching case.
+- Status selection, bounded comment, save-and-next, confirmed progress update, reload persistence and reset.
+- Reset keeps the comment/history and changes the audit label to `Вернул на проверку`.
+- All four themes applied; `coffee-light` persisted across reload.
+- Group disclosure, status filter controls and keyboard-native radios/buttons were present in the accessibility tree.
+- Mobile `390×844`: `documentWidth=380`, `bodyWidth=380`, `innerWidth=390`; no horizontal overflow.
+- Fresh final IAB tab console: no warnings or errors.
+- `npm run check`: design system `5/5`, application `123/123`, contracts, architecture, TypeScript, ESLint, Prettier and Stylelint passed.
+- Production build: 309 modules; production artifact gate passed.
+
+## Comparison history
+
+1. Initial desktop capture showed the detail actions below the visible viewport for longer content. The detail workspace received bounded internal scrolling and a sticky footer; the revised `1440×1024` capture keeps all primary actions visible.
+2. Search initially narrowed the catalog while leaving a previously selected hidden case in the detail pane. Selection is now derived from the visible result set without an effect-driven render loop; searching for `MFA` immediately presents the Backend/API case.
+3. Reset initially retained the generic `Проверил` audit label. The final UI uses `Вернул на проверку` for a reset result while preserving the actor, timestamp and comment history.
+4. A clean new IAB tab was unlocked and reloaded after the fixes. The final console was empty and the screen rendered without clipping, overlap or runtime errors.
+
+## Residual P3 notes
+
+- Very long real cases require scrolling inside the detail card by design; the sticky action footer remains available.
+- The selected mock shows decorative sidebar icons for every navigation item, while the existing production shell deliberately uses text navigation. No page-local shell fork was introduced.
+
+## Previous passed review
+
+The observability option 1 review was completed earlier with `final result: passed`. Its runtime coverage remains documented in `ADMIN_TESTING.md` and `TESTs.md`; this file now records the latest Product Design handoff.

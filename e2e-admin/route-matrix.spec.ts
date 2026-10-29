@@ -25,6 +25,7 @@ const routes = [
     '/',
     '/admin',
     '/admin/observability',
+    '/admin/testing',
     ...sections.map((section) => `/admin/${section}`),
     '/admin/queues/recipes',
     '/admin/catalog/allergens',

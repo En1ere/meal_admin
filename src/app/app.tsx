@@ -41,6 +41,9 @@ const ReputationPage = lazy(async () => ({
 const ObservabilityPage = lazy(async () => ({
     default: (await import('../features/observability/client.js')).ObservabilityPage,
 }));
+const AcceptanceTestingPage = lazy(async () => ({
+    default: (await import('../features/acceptance-testing/client.js')).AcceptanceTestingPage,
+}));
 const ScenarioConsole =
     import.meta.env.DEV && import.meta.env.VITE_API_MODE === 'mock'
         ? lazy(async () => ({ default: (await import('../mocks/scenario-console.js')).ScenarioConsole }))
@@ -58,6 +61,7 @@ function RouteMetadata() {
             '/admin/catalog/achievements': 'Достижения',
             '/admin/catalog/reputation': 'Репутация',
             '/admin/observability': 'Наблюдаемость',
+            '/admin/testing': 'Приёмочное тестирование',
             '/settings/notifications': 'Настройки уведомлений',
             '/settings/recipes': 'Рецепты и антиспам',
             '/notifications': 'Центр уведомлений',
@@ -109,6 +113,7 @@ export function App() {
                                         <Route path="/admin/releases" element={<ReleasesPage />} />
                                         <Route path="/admin/releases/:id" element={<ReleaseDetailPage />} />
                                         <Route path="/admin/observability" element={<ObservabilityPage />} />
+                                        <Route path="/admin/testing" element={<AcceptanceTestingPage />} />
                                         <Route
                                             path="/admin/queues"
                                             element={<Navigate replace to="/admin/queues/recipes" />}
