@@ -10,7 +10,7 @@ import {
     type ReleaseChange,
     type ReleaseCommand,
     type ReleaseWorkspace,
-} from '../features/releases/contracts.js';
+} from '../entities/content-release/index.js';
 
 const id = (prefix: number, value: number) =>
     `${String(prefix).padStart(8, '0')}-0000-4000-8000-${String(value).padStart(12, '0')}`;

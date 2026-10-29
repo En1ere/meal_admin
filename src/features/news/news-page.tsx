@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
-import { useRuntime } from '../../app/providers.js';
-import { Guard } from '../auth/session.js';
-import { AdminShell } from '../admin/admin-shell.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { NewsWorkspace, type NewsApi } from './news-workspace.js';
 
 export function NewsPage() {
@@ -17,11 +15,9 @@ export function NewsPage() {
         [api],
     );
     return (
-        <Guard context="admin">
-            <AdminShell active="news">
-                <h1>Новости</h1>
-                <NewsWorkspace api={request} />
-            </AdminShell>
-        </Guard>
+        <>
+            <h1>Новости</h1>
+            <NewsWorkspace api={request} />
+        </>
     );
 }

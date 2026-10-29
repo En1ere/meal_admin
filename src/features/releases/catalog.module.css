@@ -231,7 +231,7 @@
 }
 
 .condition-blocker {
-    border-color: #9a5b55;
+    border-color: var(--danger);
 }
 
 .condition-blocker pre {
@@ -291,7 +291,7 @@
     gap: 0.8rem;
     align-items: end;
     padding-bottom: 0.7rem;
-    border-bottom: 1px solid #34564c;
+    border-bottom: 1px solid var(--line);
 }
 
 .rank-row > b {

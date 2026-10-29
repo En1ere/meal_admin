@@ -3,7 +3,7 @@ import type { BrowserContext, Page } from '@playwright/test';
 type FetchFault = {
     path: string;
     method: string;
-    status: 409 | 412 | 503;
+    status: 403 | 409 | 412 | 503;
     remaining: number;
     commitBeforeFailure?: boolean;
 };
@@ -29,6 +29,7 @@ export async function installFetchFaultHarness(context: BrowserContext) {
                 else sessionStorage.removeItem(key);
                 if (fault.commitBeforeFailure) await nativeFetch(input, init);
                 const messages = {
+                    403: ['FORBIDDEN', 'Недостаточно разрешений для операции.'],
                     409: ['CONFLICT', 'Данные изменились. Перечитайте актуальную версию.'],
                     412: ['PRECONDITION_FAILED', 'Версия устарела. Перечитайте актуальные данные.'],
                     503: ['UNAVAILABLE', 'Сервис временно недоступен.'],

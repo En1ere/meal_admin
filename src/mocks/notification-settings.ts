@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { Principal } from '../shared/api/contracts.generated.js';
 import type { Repository } from './model.js';
-import { defaultNotificationPreferences, type NotificationSettings } from '../features/notifications/preferences.js';
+import { defaultNotificationPreferences, type NotificationSettings } from '../entities/admin-notification/index.js';
 
 const changeSchema = z.strictObject({
     channel: z.enum(['browser', 'mobilePush', 'email']),

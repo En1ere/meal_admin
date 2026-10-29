@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useRuntime } from '../../app/providers.js';
-import { useSession } from '../auth/session.js';
-import { useRequestSignal } from '../auth/use-request-signal.js';
-import { CriticalConfirmation } from '../auth/critical-confirmation.js';
+import { useRuntime } from '../../shared/runtime/index.js';
+import { adminRecordKeys } from '../../entities/admin-record/index.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
+import { CriticalConfirmation } from '../auth/access-client.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { operationsResultSchema, type Operation, type OperationsResult } from './contracts.js';
@@ -26,7 +27,7 @@ export function OperationsWorkspace({
     itemVersion: string;
 }) {
     const { api, queryClient } = useRuntime();
-    const session = useSession('admin');
+    const session = useStaffSession('admin');
     const beginRequest = useRequestSignal();
     const [operation, setOperation] = useState<Operation>(section === 'errors' ? 'in_progress' : 'retry');
     const [reason, setReason] = useState('');
@@ -102,8 +103,7 @@ export function OperationsWorkspace({
                 attempt.current = null;
                 setMessage(result.message);
                 await queryClient.invalidateQueries({ queryKey: ['operations-workspace'] });
-                await queryClient.invalidateQueries({ queryKey: ['admin'] });
-                await queryClient.invalidateQueries({ queryKey: ['admin-detail'] });
+                await queryClient.invalidateQueries({ queryKey: adminRecordKeys.root });
             }
         } catch (error) {
             if (!signal.aborted) setMessage(error instanceof Error ? error.message : 'Не удалось выполнить команду.');

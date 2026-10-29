@@ -2,7 +2,7 @@ import fixture from '../../contracts/dev-users.json' with { type: 'json' };
 import { z } from 'zod';
 import { contracts, type Principal } from '../shared/api/contracts.generated.js';
 import { accountStateSchema, createAccountState, type AccountState } from './account-model.js';
-import { notificationPreferencesSchema, type NotificationPreferences } from '../features/notifications/preferences.js';
+import { notificationPreferencesSchema, type NotificationPreferences } from '../entities/admin-notification/index.js';
 import { adminStateSchema, createAdminState, type AdminState } from './admin-model.js';
 import { notificationCenterStateSchema, type NotificationCenterState } from './notification-center.js';
 import { allergensStateSchema, createAllergensState, type AllergensState } from './allergens.js';

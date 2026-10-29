@@ -30,6 +30,14 @@ for (const decision of ['approve', 'reject'] as const) {
         const decisionMessage =
             decision === 'approve' ? 'Финализация по-прежнему зависит' : 'Решение сохранено в истории';
         await expect(review.getByRole('status').filter({ hasText: decisionMessage })).toContainText(decisionMessage);
+        if (decision === 'reject') {
+            await expect(review.getByRole('status').filter({ hasText: 'Решение недоступно' })).toContainText(
+                'текущее состояние — «отклонено»',
+            );
+            await expect(review.getByRole('button', { name: 'Отклонить', exact: true })).toHaveCount(0);
+        } else {
+            await expect(review.getByRole('button', { name: 'Подтвердить проверку', exact: true })).toBeVisible();
+        }
         await expect(page.getByRole('button', { name: /Окончательное удаление/u })).toHaveCount(0);
     });
 }
@@ -97,7 +105,9 @@ test('rejects a stale legal decision with 412 after another tab commits first', 
     await staleReview.getByRole('checkbox', { name: 'Подтверждаю решение и его основание' }).check();
     await staleReview.getByRole('button', { name: 'Отклонить', exact: true }).click();
     await expect(staleReview.getByRole('alert')).toBeVisible();
-    await expect(staleReview.getByRole('status')).toHaveCount(0);
+    await expect(
+        staleReview.getByRole('status').filter({ hasText: /Решение сохранено|Проверка подтверждена/u }),
+    ).toHaveCount(0);
 });
 
 test('covers generic empty, 503 and conflict states through the supported scenario console', async ({ page }) => {

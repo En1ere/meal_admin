@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useRuntime } from '../../app/providers.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import { authRoutes, safeReturnTo, type AuthContext } from '../../shared/auth/routes.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
 import { AuthShell } from './auth-shell.js';
-import { useSession } from './session.js';
-import { useRequestSignal } from './use-request-signal.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { useAdminStatus } from './unlock-screen.js';
 import { UnlockScreen } from './unlock-screen.js';
@@ -20,7 +20,7 @@ export function SignIn({ context = 'admin' }: { context?: AuthContext }) {
     const runtime = useRuntime();
     const navigate = useNavigate();
     const [params] = useSearchParams();
-    const session = useSession(context);
+    const session = useStaffSession(context);
     const status = useAdminStatus();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');

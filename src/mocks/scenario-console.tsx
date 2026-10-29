@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Guard } from '../features/auth/session.js';
-import { useRuntime } from '../app/providers.js';
+import { useRuntime } from '../shared/runtime/index.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { IndexedDbRepository } from './repository.js';
@@ -39,11 +38,7 @@ export function ScenarioConsole() {
                 <p>Панель предназначена только для локальных моков.</p>
             </main>
         );
-    return (
-        <Guard context="admin">
-            <ConsoleContent />
-        </Guard>
-    );
+    return <ConsoleContent />;
 }
 function ConsoleContent() {
     const { queryClient } = useRuntime();

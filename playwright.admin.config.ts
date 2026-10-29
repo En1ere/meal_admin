@@ -5,6 +5,7 @@ const output = process.env.QA_OUTPUT_DIR;
 if (!output) throw new Error('Set QA_OUTPUT_DIR to a dedicated temporary directory');
 const npm = process.env.npm_execpath;
 if (!npm) throw new Error('Run E2E through npm run test:e2e:admin');
+const executablePath = process.env.PLAYWRIGHT_EXECUTABLE_PATH || undefined;
 export default defineConfig({
     fullyParallel: false,
     workers: 1,
@@ -17,7 +18,12 @@ export default defineConfig({
         { name: 'admin-desktop', use: { ...devices['Desktop Chrome'] } },
         { name: 'admin-mobile', use: { ...devices['Pixel 7'] } },
     ],
-    use: { baseURL: 'http://localhost:3002', screenshot: 'only-on-failure', trace: 'retain-on-failure' },
+    use: {
+        baseURL: 'http://localhost:3002',
+        screenshot: 'only-on-failure',
+        trace: 'retain-on-failure',
+        launchOptions: executablePath ? { executablePath } : undefined,
+    },
     webServer: {
         command: `"${process.execPath}" "${npm}" run dev`,
         env: { VITE_API_MODE: 'mock' },

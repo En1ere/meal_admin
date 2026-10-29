@@ -1,5 +1,5 @@
 import type { AdminState } from './admin-model.js';
-import type { NewsContent, NewsItem } from '../features/news/contracts.js';
+import type { NewsContent, NewsItem } from '../entities/news/index.js';
 export function ensureNewsFixtures(state: AdminState) {
     if (state.tables.news_workspace !== undefined) return;
     const content: NewsContent = {

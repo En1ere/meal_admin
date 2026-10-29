@@ -1,9 +1,9 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { useRuntime } from '../../app/providers.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { useAdminStatus } from './unlock-screen.js';
-import { useRequestSignal } from './use-request-signal.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import styles from './security.module.css';
 
 export function CriticalConfirmation() {
@@ -56,10 +56,7 @@ export function CriticalConfirmation() {
     return (
         <section className="sessions-panel">
             <h2>Подтверждение критичных действий</h2>
-            <p>
-                Подписки, блокировки и другие критичные команды требуют подтверждения. Обычная валидация и модерация —
-                без него.
-            </p>
+            <p>Публикация, модерация, блокировки и другие критичные команды требуют свежего подтверждения.</p>
             {status.isPending ? (
                 <p role="status">Проверяем подтверждение…</p>
             ) : status.isError ? (

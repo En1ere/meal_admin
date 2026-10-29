@@ -7,7 +7,7 @@ import {
     type ContentCard,
     type ContentCommand,
     type ContentResult,
-} from '../features/content/contracts.js';
+} from '../entities/content-workflow/index.js';
 import type { AdminState } from './admin-model.js';
 
 export class ContentMockError extends Error {
@@ -17,6 +17,21 @@ export class ContentMockError extends Error {
     ) {
         super(message);
     }
+}
+function sanitizePublicReason(
+    value: string | null | undefined,
+    status: 'pending' | 'rejected' | 'hidden' | 'unpublished',
+) {
+    const normalized = value
+        ?.replace(/[\u0000-\u001f\u007f]+/gu, ' ')
+        .replace(/\s+/gu, ' ')
+        .trim()
+        .slice(0, 500);
+    if (normalized) return normalized;
+    if (status === 'rejected') return 'Рецепт требует исправлений перед повторной отправкой.';
+    if (status === 'hidden') return 'Рецепт скрыт из публичного доступа после проверки.';
+    if (status === 'unpublished') return 'Публикация рецепта снята после проверки.';
+    return null;
 }
 function cards(state: AdminState): ContentCard[] {
     return (state.tables.brand_products ?? []).map((row) => {
@@ -79,6 +94,8 @@ function load(state: AdminState, section: 'queues' | 'catalog', id: string): Con
             version: card.version,
             current: null,
             pending: null,
+            review: null,
+            publication: null,
             status: card.aliasOf ? 'merged' : 'active',
             history: [],
             cards: catalog,
@@ -90,26 +107,49 @@ function load(state: AdminState, section: 'queues' | 'catalog', id: string): Con
     if (!queue) throw new ContentMockError(404, 'Материал не найден.');
     const revision = state.tables.recipe_revisions?.find((row) => row.id === queue.recipe_revision_id);
     const recipe = state.tables.recipes?.find((row) => row.id === revision?.recipe_id);
+    const publication = state.tables.recipe_publications?.find(
+        (row) => row.recipe_id === recipe?.id && row.unpublished_at === null,
+    );
+    const publishedRevision = state.tables.recipe_revisions?.find((row) => row.id === publication?.revision_id);
+    const projection = (row: typeof revision | undefined) =>
+        row
+            ? {
+                  id: String(row.id),
+                  version: Number(row.revision ?? 1),
+                  fields: {
+                      title: String(row.title),
+                      portions: String(row.portions),
+                      method: String(row.method),
+                      steps: (state.tables.recipe_steps ?? [])
+                          .filter((step) => step.revision_id === row.id)
+                          .map((step) => String(step.text))
+                          .join('\n'),
+                      author: recipe?.author_id ? String(recipe.author_id) : null,
+                  },
+              }
+            : null;
+    const reviewRevision = projection(revision);
+    const publicationRevision = projection(publishedRevision);
     return {
         section,
         id,
         version: Number(queue.version ?? 1),
         status: String(queue.status),
-        current: null,
-        pending: revision
+        current: publicationRevision,
+        pending: ['queued', 'pending', 'in_review', 'approved'].includes(String(queue.status)) ? reviewRevision : null,
+        review: reviewRevision
             ? {
-                  id: String(revision.id),
-                  version: Number(revision.revision ?? 1),
-                  fields: {
-                      title: String(revision.title),
-                      portions: String(revision.portions),
-                      method: String(revision.method),
-                      steps: (state.tables.recipe_steps ?? [])
-                          .filter((row) => row.revision_id === revision.id)
-                          .map((row) => String(row.text))
-                          .join('\n'),
-                      author: recipe?.author_id ? String(recipe.author_id) : null,
-                  },
+                  revisionId: reviewRevision.id,
+                  status: String(queue.status),
+                  publicReason: queue.public_reason ? String(queue.public_reason) : null,
+                  revision: reviewRevision,
+              }
+            : null,
+        publication: publicationRevision
+            ? {
+                  revisionId: publicationRevision.id,
+                  publishedAt: String(publication?.published_at),
+                  revision: publicationRevision,
               }
             : null,
         history: [],
@@ -136,11 +176,23 @@ export function contentWorkspaceCommand(
                 ? contentMergeSchema.safeParse(command.data)
                 : contentNotDuplicateSchema.safeParse(command.data);
     if (!parsed.success) throw new ContentMockError(400, 'Проверьте поля команды.');
+    if (
+        section === 'catalog' &&
+        command.action !== 'moderate' &&
+        ![command.data.leftId, command.data.rightId].includes(id)
+    )
+        throw new ContentMockError(409, 'Маршрут должен принадлежать выбранной паре.');
+    if (command.action === 'merge' && !context.critical)
+        throw new ContentMockError(403, 'Требуется критичное подтверждение.');
+    if (command.action === 'moderate' && !context.critical)
+        throw new ContentMockError(403, 'Требуется критичное подтверждение.');
     const journal = (state.tables.content_commands ??= []);
     const digest = JSON.stringify({ section, id, command });
-    if ('idempotencyKey' in command.data) {
-        const idempotencyKey = command.data.idempotencyKey;
-        const previous = journal.find((row) => row.id === idempotencyKey && row.actor_id === context.actorId);
+    const operation =
+        command.action === 'moderate' ? `admin.content.${command.data.action}` : `admin.content.${command.action}`;
+    const journalId = 'idempotencyKey' in command.data ? `${operation}:${id}:${command.data.idempotencyKey}` : null;
+    if (journalId) {
+        const previous = journal.find((row) => row.id === journalId && row.actor_id === context.actorId);
         if (previous) {
             if (previous.digest !== digest) throw new ContentMockError(409, 'Ключ команды уже использован.');
             return contentResultSchema.parse(JSON.parse(String(previous.result)));
@@ -148,25 +200,78 @@ export function contentWorkspaceCommand(
     }
     if (command.action === 'moderate') {
         if (section !== 'queues') throw new ContentMockError(400, 'Неверный раздел.');
-        const c = command.data;
+        const c = contentModerateSchema.parse(command.data);
+        const reviewRevision = view.review?.revision ?? view.pending;
+        const publicationRevision = view.publication?.revision ?? view.current;
         if (c.version !== view.version) throw new ContentMockError(409, 'Материал изменился. Обновите версию.');
-        if ((c.action === 'approve' || c.action === 'reject') && !view.pending)
+        const reviewAction = c.action === 'approve' || c.action === 'reject';
+        if (
+            reviewAction &&
+            (!reviewRevision ||
+                !['queued', 'pending', 'in_review', 'approved'].includes(view.review?.status ?? view.status))
+        )
             throw new ContentMockError(409, 'Нет версии, ожидающей проверки.');
-        const revisionSnapshot = JSON.stringify({ current: view.current, pending: view.pending });
+        if ((c.action === 'hide' || c.action === 'unpublish') && (!publicationRevision || view.status !== 'published'))
+            throw new ContentMockError(409, 'Нет активной публикации этой редакции.');
+        if (
+            (c.action === 'hide' || c.action === 'unpublish') &&
+            view.review &&
+            view.publication &&
+            view.review.revisionId !== view.publication.revisionId
+        )
+            throw new ContentMockError(409, 'Активная публикация относится к другой редакции.');
+        const reviewRow = state.tables.recipe_revisions?.find((row) => row.id === reviewRevision?.id);
+        const publicationRow = state.tables.recipe_revisions?.find((row) => row.id === publicationRevision?.id);
+        const recipeId = reviewRow?.recipe_id ?? publicationRow?.recipe_id;
+        const revisionSnapshot = JSON.stringify({ review: view.review, publication: view.publication });
+        const nextPublicReason = sanitizePublicReason(
+            c.publicReason,
+            c.action === 'reject'
+                ? 'rejected'
+                : c.action === 'hide'
+                  ? 'hidden'
+                  : c.action === 'unpublish'
+                    ? 'unpublished'
+                    : 'pending',
+        );
         if (c.action === 'approve') {
+            for (const publication of state.tables.recipe_publications ?? [])
+                if (publication.recipe_id === recipeId && publication.unpublished_at === null)
+                    publication.unpublished_at = new Date(context.now).toISOString();
+            (state.tables.recipe_publications ??= []).push({
+                id: crypto.randomUUID(),
+                recipe_id: String(recipeId),
+                revision_id: String(reviewRow?.id),
+                published_at: new Date(context.now).toISOString(),
+                unpublished_at: null,
+                decision_id: crypto.randomUUID(),
+            });
             view.current = view.pending;
             view.pending = null;
-            view.status = 'approved';
+            view.status = 'published';
+            if (view.review) view.review = { ...view.review, status: 'published', publicReason: null };
+            view.publication = view.review
+                ? {
+                      revisionId: view.review.revisionId,
+                      publishedAt: new Date(context.now).toISOString(),
+                      revision: view.review.revision,
+                  }
+                : null;
         }
         if (c.action === 'reject') {
             view.pending = null;
             view.status = 'rejected';
+            if (view.review) view.review = { ...view.review, status: 'rejected', publicReason: nextPublicReason };
         }
         if (c.action === 'hide' || c.action === 'unpublish') {
-            if (!view.current) throw new ContentMockError(409, 'Нет опубликованной версии.');
-            view.pending = view.current;
+            for (const publication of state.tables.recipe_publications ?? [])
+                if (publication.recipe_id === recipeId && publication.unpublished_at === null)
+                    publication.unpublished_at = new Date(context.now).toISOString();
+            view.pending = null;
             view.current = null;
+            view.publication = null;
             view.status = c.action === 'hide' ? 'hidden' : 'unpublished';
+            if (view.review) view.review = { ...view.review, status: view.status, publicReason: nextPublicReason };
         }
         view.version++;
         (state.tables.content_revision_history ??= []).push({
@@ -181,6 +286,7 @@ export function contentWorkspaceCommand(
         if (queue) {
             queue.status = view.status;
             queue.version = String(view.version);
+            queue.public_reason = nextPublicReason;
         }
     } else {
         if (section !== 'catalog') throw new ContentMockError(400, 'Неверный раздел.');
@@ -197,7 +303,9 @@ export function contentWorkspaceCommand(
             .join('|');
         if (command.action === 'not-duplicate') {
             const ignored = (state.tables.content_not_duplicates ??= []);
-            if (!ignored.some((row) => row.id === pairKey)) ignored.push({ id: pairKey, reason: command.data.reason });
+            if (ignored.some((row) => row.id === pairKey))
+                throw new ContentMockError(409, 'Эта пара уже закрыта как не дубли для текущих версий.');
+            ignored.push({ id: pairKey, reason: command.data.reason });
             view.message = 'Пара закрыта до изменения данных сравнения.';
         } else {
             const c = command.data;
@@ -229,7 +337,6 @@ export function contentWorkspaceCommand(
                 blockedReason,
             };
             if (command.action === 'compare') return view;
-            if (!context.critical) throw new ContentMockError(403, 'Требуется критичное подтверждение.');
             if (blockedReason || conflicts.some((field) => !c.choices[field]) || command.data.previewKey !== previewKey)
                 throw new ContentMockError(409, 'Разрешите все конфликты и обновите предпросмотр.');
             const canonical = c.canonicalId === left.id ? left : right;
@@ -270,9 +377,9 @@ export function contentWorkspaceCommand(
     const stored = storage.find((row) => row.id === id && row.section === section);
     if (stored) stored.payload = JSON.stringify(view);
     else storage.push({ id, section, payload: JSON.stringify(view) });
-    if ('idempotencyKey' in command.data)
+    if (journalId)
         journal.push({
-            id: command.data.idempotencyKey,
+            id: journalId,
             actor_id: context.actorId,
             digest,
             result: JSON.stringify(view),
@@ -280,7 +387,7 @@ export function contentWorkspaceCommand(
     (state.tables.audit_events ??= []).push({
         id: crypto.randomUUID(),
         actor_id: context.actorId,
-        action: `admin.content.${command.action}`,
+        action: operation,
         target_id: id,
         created_at: new Date(context.now).toISOString(),
     });

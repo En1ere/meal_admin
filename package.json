@@ -1,6 +1,6 @@
 {
     "name": "meal-planner-frontend-admin",
-    "version": "0.0.96",
+    "version": "0.0.119",
     "private": true,
     "type": "module",
     "engines": {
@@ -10,7 +10,7 @@
     "packageManager": "npm@11.12.1",
     "scripts": {
         "dev": "vite",
-        "build": "tsc -p tsconfig.json --noEmit --incremental false && vite build",
+        "build": "tsc -p tsconfig.json --noEmit --incremental false && vite build && node scripts/check-production-artifact.mjs",
         "start": "vite preview",
         "build:mocks": "node scripts/build-tests.mjs",
         "typecheck": "tsc -p tsconfig.json --noEmit --incremental false",
@@ -20,11 +20,13 @@
         "format": "prettier --write .",
         "contracts:generate": "node scripts/generate-contracts.mjs",
         "contracts:check": "node scripts/generate-contracts.mjs --check",
+        "architecture:check": "node scripts/check-architecture.mjs",
         "check": "npm --workspace design-system run check && npm run check:app",
         "preview": "vite preview",
-        "check:app": "npm run contracts:check && npm run typecheck && npm run lint && npm test",
+        "check:app": "npm run contracts:check && npm run architecture:check && npm run typecheck && npm run lint && npm test",
         "test:e2e:admin": "playwright test --config playwright.admin.config.ts",
-        "test:browser": "node scripts/admin-browser-smoke.mjs"
+        "test:browser": "node scripts/admin-browser-smoke.mjs",
+        "test:performance:budget": "npm run build && node scripts/check-browser-budget.mjs"
     },
     "dependencies": {
         "@meal-planner/design-system": "file:./design-system",

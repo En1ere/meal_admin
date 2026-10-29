@@ -18,6 +18,7 @@ export class ApiClient {
     private controller = new AbortController();
     private authenticated = false;
     private rejectionReported = false;
+    private adminContentRevisionAxes: boolean | undefined;
     constructor(
         private readonly origin: string,
         private readonly transport: typeof fetch = fetch,
@@ -31,6 +32,43 @@ export class ApiClient {
         this.csrf = undefined;
         this.csrfRequest = undefined;
         this.authenticated = false;
+        this.adminContentRevisionAxes = undefined;
+    }
+    private prepareRequestBody(route: Route, body: unknown): unknown {
+        if (
+            route !== 'POST /api/v1/admin/content-workspace/{section}/{id}/moderate' ||
+            this.adminContentRevisionAxes === true ||
+            !body ||
+            typeof body !== 'object' ||
+            Array.isArray(body)
+        )
+            return body;
+        const legacyBody = { ...(body as Record<string, unknown>) };
+        delete legacyBody.publicReason;
+        return legacyBody;
+    }
+    private normalizeAdminContentSuccess(
+        route: Route,
+        value: unknown,
+    ): { value: unknown; adminContentRevisionAxes?: boolean } {
+        if (
+            !route.startsWith('GET /api/v1/admin/content-workspace/') &&
+            !route.startsWith('POST /api/v1/admin/content-workspace/')
+        )
+            return { value };
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return { value };
+        const envelope = value as Record<string, unknown>;
+        const data = envelope.data;
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return { value };
+        const result = data as Record<string, unknown>;
+        const hasReview = Object.hasOwn(result, 'review');
+        const hasPublication = Object.hasOwn(result, 'publication');
+        if (hasReview && hasPublication) return { value, adminContentRevisionAxes: true };
+        if (hasReview || hasPublication) return { value };
+        return {
+            value: { ...envelope, data: { ...result, review: null, publication: null } },
+            adminContentRevisionAxes: false,
+        };
     }
     private async csrfToken(): Promise<string> {
         if (this.csrf) return this.csrf;
@@ -68,12 +106,13 @@ export class ApiClient {
                 return encodeURIComponent(value);
             });
         }
-        if (schema.request) schema.request.parse(body);
+        const requestBody = this.prepareRequestBody(route, body);
+        if (schema.request) schema.request.parse(requestBody);
         const headers: Record<string, string> = {};
         const unlock = getAdminUnlock();
         if (unlock && path.startsWith('/api/v1/admin/')) headers['x-admin-unlock'] = unlock;
         if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) headers['x-csrf-token'] = await this.csrfToken();
-        if (body !== undefined) headers['content-type'] = 'application/json';
+        if (requestBody !== undefined) headers['content-type'] = 'application/json';
         contextSignal.throwIfAborted();
         // Native browser fetch must not receive ApiClient as its receiver.
         const transport = this.transport;
@@ -85,7 +124,7 @@ export class ApiClient {
             credentials: 'include',
             cache: 'no-store',
             signal: signal ? AbortSignal.any([signal, contextSignal]) : contextSignal,
-            ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+            ...(requestBody !== undefined ? { body: JSON.stringify(requestBody) } : {}),
         });
         const value: unknown = await response.json();
         if (epoch !== this.epoch || contextSignal.aborted || signal?.aborted)
@@ -118,7 +157,10 @@ export class ApiClient {
             throw error;
         }
         // Runtime schema is selected by the same route key as the generic response type.
-        const result = schema.success.parse(value) as Success<R>;
+        const normalized = this.normalizeAdminContentSuccess(route, value);
+        const result = schema.success.parse(normalized.value) as Success<R>;
+        if (normalized.adminContentRevisionAxes !== undefined)
+            this.adminContentRevisionAxes = normalized.adminContentRevisionAxes;
         if (path === '/api/v1/admin/auth/me') {
             this.authenticated = true;
             this.rejectionReported = false;

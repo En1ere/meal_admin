@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
-import { useRuntime } from '../../app/providers.js';
+import type { ContentCommand, ContentResult, ContentSection } from '../../entities/content-workflow/index.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { ContentWorkspace } from './content-workspace.js';
-import type { ContentCommand, ContentResult } from './contracts.js';
-export function ContentPanel({ section, id }: { section: 'queues' | 'catalog'; id: string }) {
+
+export function ContentPanel({ section, id }: { section: ContentSection; id: string }) {
     const { api } = useRuntime();
     const request = useCallback(
         async (command: ContentCommand, signal?: AbortSignal): Promise<ContentResult> => {
@@ -25,5 +26,5 @@ export function ContentPanel({ section, id }: { section: 'queues' | 'catalog'; i
         },
         [api, section, id],
     );
-    return <ContentWorkspace section={section} id={id} api={request} />;
+    return <ContentWorkspace section={section} id={id} api={api ? request : null} />;
 }

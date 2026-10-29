@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useRuntime } from '../../app/providers.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { loadReleaseWorkspace } from './api.js';
 
 export const releaseWorkspaceKey = ['admin', 'content-releases'] as const;

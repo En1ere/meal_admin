@@ -1,5 +1,11 @@
-import { conditionModel, conditionPayload, serializeChanges, stableUuid } from '../features/releases/api.js';
-import type { CanonicalPatch, ReleaseChange } from '../features/releases/contracts.js';
+import {
+    conditionModel,
+    conditionPayload,
+    serializeChanges,
+    stableUuid,
+    type CanonicalPatch,
+    type ReleaseChange,
+} from '../entities/content-release/index.js';
 import { releaseWorkspaceCommand, ReleaseMockError, type ReleaseWorkspaceState } from './release-workspace.js';
 
 const groupCategory = {

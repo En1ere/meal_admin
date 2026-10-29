@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import { rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const headers = {
@@ -34,9 +35,19 @@ export default defineConfig(({ command, mode, isPreview }) => {
             'BACKEND_ORIGIN must be an HTTP(S) loopback origin without credentials, path, query or fragment',
         );
     }
+    const buildOutput = process.env.QA_OUTPUT_DIR ? resolve(process.env.QA_OUTPUT_DIR, 'build') : 'build';
 
     return {
-        plugins: [react()],
+        plugins: [
+            react(),
+            {
+                name: 'exclude-production-mock-worker',
+                apply: 'build',
+                async closeBundle() {
+                    await rm(resolve(buildOutput, 'mockServiceWorker.js'), { force: true });
+                },
+            },
+        ],
         ...(process.env.QA_OUTPUT_DIR ? { cacheDir: resolve(process.env.QA_OUTPUT_DIR, 'vite-cache') } : {}),
         define: { 'import.meta.env.VITE_API_MODE': JSON.stringify(apiMode) },
         server: {
@@ -55,6 +66,16 @@ export default defineConfig(({ command, mode, isPreview }) => {
             headers,
             ...(apiMode === 'real' ? { proxy: { '/api': { target: backendUrl.origin, changeOrigin: false } } } : {}),
         },
-        build: { outDir: process.env.QA_OUTPUT_DIR ? resolve(process.env.QA_OUTPUT_DIR, 'build') : 'build' },
+        build: {
+            outDir: buildOutput,
+            rollupOptions: {
+                output: {
+                    manualChunks(id) {
+                        if (id.includes('/node_modules/react-router/')) return 'vendor-router';
+                        return undefined;
+                    },
+                },
+            },
+        },
     };
 });

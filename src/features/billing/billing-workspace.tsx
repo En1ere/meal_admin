@@ -1,16 +1,22 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useRuntime } from '../../app/providers.js';
+import { useRuntime } from '../../shared/runtime/index.js';
+import { adminRecordKeys } from '../../entities/admin-record/index.js';
+import {
+    availableRefundMinor,
+    billingAccountKeys,
+    deriveBillingCapabilities,
+    formatRublesFromMinor,
+} from '../../entities/billing-account/index.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
 import { ApiError } from '../../shared/api/client.js';
-import { CriticalConfirmation } from '../auth/critical-confirmation.js';
-import { useRequestSignal } from '../auth/use-request-signal.js';
+import { CriticalConfirmation } from '../auth/access-client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
-function rubles(value: string) {
-    const amount = BigInt(value);
-    return `${amount / 100n},${String(amount % 100n).padStart(2, '0')} ₽`;
-}
 export function BillingWorkspace({ section, id }: { section: 'users' | 'subscriptions' | 'payments'; id: string }) {
     const { api, queryClient } = useRuntime();
+    const session = useStaffSession('admin');
+    const sessionId = session.data?.sessionId;
     const begin = useRequestSignal();
     const [action, setAction] = useState(section === 'payments' ? 'refund' : section === 'users' ? 'grant' : 'extend');
     const [plan, setPlan] = useState('plus');
@@ -27,8 +33,8 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
     const lock = useRef(false);
     const attempt = useRef<{ key: string; fingerprint: string; version: string } | null>(null);
     const query = useQuery({
-        queryKey: ['admin-billing', section, id],
-        enabled: !!api,
+        queryKey: billingAccountKeys.workspace(sessionId, section, id),
+        enabled: !!api && !!sessionId,
         queryFn: async ({ signal }) => {
             if (!api) throw new Error('Подключение не готово');
             return (await api.request('GET /api/v1/admin/billing/{section}/{id}', undefined, signal, { section, id }))
@@ -88,18 +94,32 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
                     : 'Тестовая операция сохранена. Реальные деньги не перемещались.',
             );
             await Promise.all([
-                queryClient.invalidateQueries({ queryKey: ['admin-billing'] }),
-                queryClient.invalidateQueries({ queryKey: ['admin'] }),
-                queryClient.invalidateQueries({ queryKey: ['admin-detail'] }),
-                queryClient.invalidateQueries({ queryKey: ['admin-related'] }),
+                queryClient.invalidateQueries({ queryKey: billingAccountKeys.workspace(sessionId, section, id) }),
+                queryClient.invalidateQueries({ queryKey: adminRecordKeys.root }),
             ]);
         } catch (error) {
             if (signal.aborted) return;
             if (error instanceof ApiError && error.status < 500) {
                 attempt.current = null;
-                if (error.status === 409) void query.refetch();
+                if (error.status === 409) {
+                    setPreview('');
+                    setConfirmed(false);
+                    setAccessConfirmed(false);
+                    await Promise.all([
+                        queryClient.invalidateQueries({
+                            queryKey: billingAccountKeys.workspace(sessionId, section, id),
+                        }),
+                        queryClient.invalidateQueries({ queryKey: adminRecordKeys.root }),
+                    ]);
+                    setFeedback('Финансовые данные изменились и обновлены. Проверьте последствия заново.');
+                    return;
+                }
             }
-            setFeedback(error instanceof Error ? error.message : 'Неизвестный результат. Повторите прежнюю операцию.');
+            setFeedback(
+                error instanceof ApiError && error.status < 500
+                    ? error.message
+                    : 'Исход финансовой операции неизвестен. Повторите прежнюю операцию без изменений: будет использован тот же ключ операции.',
+            );
         } finally {
             lock.current = false;
             setBusy(false);
@@ -117,10 +137,14 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
         );
     const data = query.data;
     const payment = data.payment;
-    const grantBlocked = section === 'users' && data.status !== 'inactive';
-    const available = payment
-        ? BigInt(payment.paidMinor) - BigInt(payment.returnedMinor) - BigInt(payment.reservedMinor)
-        : 0n;
+    const capabilities = deriveBillingCapabilities(data);
+    const refund = payment ? availableRefundMinor(payment) : null;
+    const actionUnavailable =
+        (action === 'grant' && !capabilities.canGrant) ||
+        (action === 'extend' && !capabilities.canExtend) ||
+        (action === 'freeze' && !capabilities.canFreeze) ||
+        (action === 'unfreeze' && !capabilities.canUnfreeze) ||
+        (action === 'revokeGift' && !capabilities.canRevokeGift);
     return (
         <section className="sessions-panel">
             <h2>Подписки и возвраты</h2>
@@ -149,11 +173,20 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
             )}
             {payment && (
                 <p>
-                    Платёж: {payment.status}. Оплачено {rubles(payment.paidMinor)}, возвращено{' '}
-                    {rubles(payment.returnedMinor)}, зарезервировано {rubles(payment.reservedMinor)}. Доступно к
-                    возврату {rubles(String(available))}. Исходный плательщик: {data.payerId}. Объект:{' '}
-                    {payment.targetId}
+                    Платёж: {payment.status}. Оплачено {formatRublesFromMinor(payment.paidMinor)}, возвращено{' '}
+                    {formatRublesFromMinor(payment.returnedMinor)}, зарезервировано{' '}
+                    {formatRublesFromMinor(payment.reservedMinor)}. Доступно к возврату{' '}
+                    {refund?.availableMinor === null || refund?.availableMinor === undefined
+                        ? 'не определено'
+                        : formatRublesFromMinor(refund.availableMinor)}
+                    . Исходный плательщик: {data.payerId ?? 'не указан'}. Объект: {payment.targetId}
                     {payment.targetKind === 'package' ? `, остаток пакета: ${payment.packageRemaining}` : ''}.
+                </p>
+            )}
+            {payment && !refund?.isConsistent && (
+                <p role="alert">
+                    Ledger платежа неконсистентен. Возврат заблокирован до сверки оплаченной, возвращённой и
+                    зарезервированной сумм.
                 </p>
             )}
             {section === 'payments' && (
@@ -172,14 +205,22 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
                         ) : (
                             <>
                                 {section === 'users' && (
-                                    <option value="grant" disabled={grantBlocked}>
+                                    <option value="grant" disabled={!capabilities.canGrant}>
                                         Бесплатно выдать
                                     </option>
                                 )}
-                                <option value="extend">Добавить бесплатный период</option>
-                                <option value="revokeGift">Отозвать только подарок</option>
-                                <option value="freeze">Заморозить</option>
-                                <option value="unfreeze">Разморозить</option>
+                                <option value="extend" disabled={!capabilities.canExtend}>
+                                    Добавить бесплатный период
+                                </option>
+                                <option value="revokeGift" disabled={!capabilities.canRevokeGift}>
+                                    Отозвать только подарок
+                                </option>
+                                <option value="freeze" disabled={!capabilities.canFreeze}>
+                                    Заморозить
+                                </option>
+                                <option value="unfreeze" disabled={!capabilities.canUnfreeze}>
+                                    Разморозить
+                                </option>
                             </>
                         )}
                     </select>
@@ -193,11 +234,14 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
                         </select>
                     </label>
                 )}
-                {action === 'grant' && grantBlocked && (
+                {action === 'grant' && !capabilities.canGrant && (
                     <p role="note">
                         У пользователя уже есть активный или замороженный период. Используйте продление либо управление
                         существующей подпиской.
                     </p>
+                )}
+                {action !== 'grant' && actionUnavailable && section !== 'payments' && (
+                    <p role="note">Это действие недоступно для текущего состояния подписки.</p>
                 )}
                 {(action === 'grant' || action === 'extend') && (
                     <label>
@@ -233,6 +277,7 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
                             <input
                                 inputMode="numeric"
                                 pattern="[1-9][0-9]*"
+                                maxLength={16}
                                 required
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
@@ -265,8 +310,9 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
                         {action === 'refund' ? (
                             <>
                                 <p>
-                                    Возврат {/^\d+$/.test(amount) ? rubles(amount) : '—'} исходному плательщику{' '}
-                                    {data.payerId}. Текущий владелец: {data.ownerId}. Объект: {payment?.targetId}.
+                                    Возврат {/^\d+$/.test(amount) ? formatRublesFromMinor(amount) : '—'} исходному
+                                    плательщику {data.payerId ?? 'не указан'}. Текущий владелец: {data.ownerId}. Объект:{' '}
+                                    {payment?.targetId}.
                                 </p>
                                 {effect === 'terminate' ? (
                                     <>
@@ -315,8 +361,9 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
                     className="button primary"
                     disabled={
                         busy ||
-                        (action === 'grant' && grantBlocked) ||
+                        actionUnavailable ||
                         (payment?.status !== 'paid' && section === 'payments') ||
+                        (section === 'payments' && !refund?.isConsistent) ||
                         (action === 'refund' && preview === previewFingerprint) ||
                         (preview === previewFingerprint &&
                             (!confirmed || (action === 'refund' && effect === 'terminate' && !accessConfirmed)))
@@ -327,11 +374,15 @@ export function BillingWorkspace({ section, id }: { section: 'users' | 'subscrip
             </form>
             {feedback && <p role="status">{feedback}</p>}
             <h3>История</h3>
-            {data.history.map((h, i) => (
-                <p key={i}>
-                    {new Date(h.at).toLocaleString()} · {h.action}: {h.reason}
-                </p>
-            ))}
+            {data.history.length ? (
+                data.history.map((h, i) => (
+                    <p key={i}>
+                        {new Date(h.at).toLocaleString()} · {h.action}: {h.reason}
+                    </p>
+                ))
+            ) : (
+                <p>Операций пока нет.</p>
+            )}
         </section>
     );
 }

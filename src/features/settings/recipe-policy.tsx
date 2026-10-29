@@ -1,24 +1,20 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useRuntime } from '../../app/providers.js';
-import { Guard, useSession } from '../auth/session.js';
-import { useRequestSignal } from '../auth/use-request-signal.js';
-import { CriticalConfirmation } from '../auth/critical-confirmation.js';
+import { useRuntime } from '../../shared/runtime/index.js';
+import { CriticalConfirmation } from '../auth/access-client.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import type { Success } from '../../shared/api/contracts.generated.js';
 type Policy = Success<'GET /api/v1/admin/settings/recipe-policy'>['data'];
 export function RecipePolicyPage() {
-    return (
-        <Guard context="admin">
-            <RecipePolicyContent />
-        </Guard>
-    );
+    return <RecipePolicyContent />;
 }
 function RecipePolicyContent() {
     const { api } = useRuntime();
-    const session = useSession('admin');
+    const session = useStaffSession('admin');
     const query = useQuery({
         queryKey: ['recipe-policy', session.data?.id],
         enabled: !!api && !!session.data,

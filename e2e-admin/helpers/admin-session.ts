@@ -56,11 +56,11 @@ export async function confirmCritical(page: Page, recoveryCode: string, scope?: 
     const toggle = root.getByRole('button', { name: 'Подтвердить резервным кодом', exact: true }).first();
     if (!(await confirmed.isVisible())) {
         await expect(toggle).toBeVisible();
-        await toggle.click();
+        await activate(toggle);
         const input = root.getByLabel('Резервный код подтверждения', { exact: true }).first();
         await expect(input).toBeVisible();
         await input.fill(recoveryCode);
-        await root.getByRole('button', { name: 'Подтвердить критичные действия', exact: true }).first().click();
+        await activate(root.getByRole('button', { name: 'Подтвердить критичные действия', exact: true }).first());
     }
     await expect(confirmed).toBeVisible();
 }

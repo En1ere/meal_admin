@@ -1,14 +1,17 @@
 import { lazy, Suspense, useEffect, useRef } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { SignIn, MfaScreen } from '../features/auth/auth-screen.js';
-import { StaffHome } from '../features/auth/sessions-panel.js';
+import { SignIn, MfaScreen, StaffHome } from '../features/auth/client.js';
 import { Providers } from './providers.js';
 import { AppErrorBoundary } from './error.js';
 import NotFound from './not-found.js';
-import { findSection } from '../features/admin/navigation.js';
+import { findSection } from '../entities/admin-section/model.js';
+import { AdminWorkspaceShell } from '../widgets/admin-shell/AdminWorkspaceShell.js';
+import { SessionGuard } from '../widgets/session-guard/SessionGuard.js';
 import { PageLoader as ArcPageLoader } from '@meal-planner/design-system';
 
-const AdminPage = lazy(async () => ({ default: (await import('../features/admin/admin-page.js')).AdminPage }));
+const AdminRecordPage = lazy(async () => ({
+    default: (await import('../widgets/admin-record-page/client.js')).AdminRecordPage,
+}));
 const NewsPage = lazy(async () => ({ default: (await import('../features/news/news-page.js')).NewsPage }));
 const NotificationSettingsPage = lazy(async () => ({
     default: (await import('../features/notifications/notification-settings.js')).NotificationSettingsPage,
@@ -88,31 +91,44 @@ export function App() {
                     <Providers>
                         <Suspense fallback={<ArcPageLoader />}>
                             <Routes>
-                                <Route path="/" element={<StaffHome context="admin" />} />
-                                <Route path="/admin" element={<AdminPage />} />
-                                <Route path="/admin/news" element={<NewsPage />} />
-                                <Route path="/admin/catalog/allergens" element={<AllergensPage />} />
-                                <Route path="/admin/catalog/allergens/:code" element={<AllergensPage />} />
-                                <Route path="/admin/catalog/achievements" element={<AchievementsPage />} />
-                                <Route path="/admin/catalog/achievements/:id" element={<AchievementsPage />} />
-                                <Route path="/admin/catalog/reputation" element={<ReputationPage />} />
-                                <Route path="/admin/releases" element={<ReleasesPage />} />
-                                <Route path="/admin/releases/:id" element={<ReleaseDetailPage />} />
-                                <Route path="/admin/queues" element={<Navigate replace to="/admin/queues/recipes" />} />
-                                <Route path="/admin/queues/recipes" element={<AdminPage fixedSection="queues" />} />
-                                <Route path="/admin/moderation/:id" element={<AdminPage fixedSection="queues" />} />
-                                <Route
-                                    path="/admin/operations/jobs/:id"
-                                    element={<AdminPage fixedSection="operations" />}
-                                />
-                                <Route path="/admin/:section" element={<AdminPage />} />
-                                <Route path="/admin/:section/:id" element={<AdminPage />} />
+                                <Route element={<SessionGuard context="admin" />}>
+                                    <Route path="/" element={<StaffHome context="admin" />} />
+                                    <Route element={<AdminWorkspaceShell />}>
+                                        <Route path="/admin" element={<AdminRecordPage />} />
+                                        <Route path="/admin/news" element={<NewsPage />} />
+                                        <Route path="/admin/catalog/allergens" element={<AllergensPage />} />
+                                        <Route path="/admin/catalog/allergens/:code" element={<AllergensPage />} />
+                                        <Route path="/admin/catalog/achievements" element={<AchievementsPage />} />
+                                        <Route path="/admin/catalog/achievements/:id" element={<AchievementsPage />} />
+                                        <Route path="/admin/catalog/reputation" element={<ReputationPage />} />
+                                        <Route path="/admin/releases" element={<ReleasesPage />} />
+                                        <Route path="/admin/releases/:id" element={<ReleaseDetailPage />} />
+                                        <Route
+                                            path="/admin/queues"
+                                            element={<Navigate replace to="/admin/queues/recipes" />}
+                                        />
+                                        <Route
+                                            path="/admin/queues/recipes"
+                                            element={<AdminRecordPage fixedSection="queues" />}
+                                        />
+                                        <Route
+                                            path="/admin/moderation/:id"
+                                            element={<AdminRecordPage fixedSection="queues" />}
+                                        />
+                                        <Route
+                                            path="/admin/operations/jobs/:id"
+                                            element={<AdminRecordPage fixedSection="operations" />}
+                                        />
+                                        <Route path="/admin/:section" element={<AdminRecordPage />} />
+                                        <Route path="/admin/:section/:id" element={<AdminRecordPage />} />
+                                    </Route>
+                                    <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
+                                    <Route path="/settings/recipes" element={<RecipePolicyPage />} />
+                                    <Route path="/notifications" element={<NotificationCenterPage />} />
+                                    {ScenarioConsole && <Route path="/dev/scenarios" element={<ScenarioConsole />} />}
+                                </Route>
                                 <Route path="/auth" element={<SignIn />} />
                                 <Route path="/auth/mfa" element={<MfaScreen context="admin" />} />
-                                <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
-                                <Route path="/settings/recipes" element={<RecipePolicyPage />} />
-                                <Route path="/notifications" element={<NotificationCenterPage />} />
-                                {ScenarioConsole && <Route path="/dev/scenarios" element={<ScenarioConsole />} />}
                                 <Route path="*" element={<NotFound />} />
                             </Routes>
                         </Suspense>

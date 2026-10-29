@@ -33,7 +33,9 @@ await test('related quota joins and recipe revisions follow actual foreign keys'
         item = String(state.admin.tables.moderation_cases![0]!.id);
     assert.equal(relatedRows(state, 'subscriptions', subscription, 'ai-buckets').length, 1);
     assert.equal(relatedRows(state, 'subscriptions', subscription, 'ai-ledger').length, 1);
-    assert.equal(relatedRows(state, 'queues', item, 'recipe-revisions').length, 1);
+    const revisions = relatedRows(state, 'queues', item, 'recipe-revisions');
+    assert.equal(revisions.length, 2);
+    assert.deepEqual(revisions.map((revision) => revision.revision).sort(), [1, 2]);
     state.admin.tables.moderation_cases![0]!.recipe_revision_id = null;
     assert.equal(relatedRows(state, 'queues', item, 'recipe-revisions').length, 0);
     assert.equal(state.admin.tables.sanctions![0]!.user_id, state.users.find((user) => user.login === 'user1')!.id);

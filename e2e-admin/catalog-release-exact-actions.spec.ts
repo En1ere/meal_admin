@@ -55,7 +55,17 @@ test('stages achievement and reputation changes into the same release', async ({
         .getByRole('combobox', { name: 'Добавить в релиз', exact: true })
         .selectOption({ label: 'E2E каталог и репутация' });
     const createInRelease = page.getByRole('button', { name: 'Создать в релизе', exact: true });
-    await createInRelease.click();
+    if (test.info().project.name === 'admin-mobile') {
+        await createInRelease.scrollIntoViewIfNeeded();
+        const target = await createInRelease.evaluate((element) => {
+            const rect = element.getBoundingClientRect();
+            const x = rect.x + rect.width / 2;
+            const y = rect.y + rect.height / 2;
+            return { x, y, hit: document.elementFromPoint(x, y) === element };
+        });
+        expect(target.hit).toBe(true);
+        await createInRelease.tap({ force: true });
+    } else await createInRelease.click();
     await expect(page.getByRole('status')).toContainText('Изменение добавлено');
 
     await spaNavigate(page, '/admin/catalog/reputation');

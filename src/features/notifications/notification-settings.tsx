@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useRuntime } from '../../app/providers.js';
-import { Guard, useSession } from '../auth/session.js';
-import { useRequestSignal } from '../auth/use-request-signal.js';
+import { useRuntime } from '../../shared/runtime/index.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import type { NotificationChannel } from './preferences.js';
@@ -20,15 +20,11 @@ const channels = [
 ] as const;
 
 export function NotificationSettingsPage() {
-    return (
-        <Guard context="admin">
-            <NotificationSettingsContent />
-        </Guard>
-    );
+    return <NotificationSettingsContent />;
 }
 function NotificationSettingsContent() {
     const { api, queryClient } = useRuntime();
-    const session = useSession('admin');
+    const session = useStaffSession('admin');
     const beginRequest = useRequestSignal();
     const locked = useRef(false);
     const [busy, setBusy] = useState(false);

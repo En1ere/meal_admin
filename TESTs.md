@@ -1,6 +1,29 @@
 # Проверка Meal Admin
 
-## Перенос 24.10.2026
+## Container delivery 0.0.119 — 28.10.2026
+
+- `npm run check`: PASS; design-system `5/5`, application unit `117/117`, contracts `102`, architecture/type/ESLint/Prettier/Stylelint PASS.
+- `VITE_API_MODE=real VITE_APP_VERSION=0.0.119 npm run build`: PASS; Vite `8.2.4`, `282` modules, production artifact gate PASS. В artifact отсутствуют `mockServiceWorker.js`, source maps и env-файлы.
+- `npm run test:performance:budget`: PASS; `15` chunks, max raw `375988`, max gzip `86725`, total raw `925309`, total gzip `202691` bytes.
+- Playwright discovery: PASS, `134` теста в `17` файлах, desktop/mobile. Полный browser E2E повторно не запускался, поскольку runtime и тестовые сценарии не менялись.
+- `.github/workflows/deploy.yml` разобран YAML parser; jobs quality-gate/image/deploy присутствуют. Реальный GitHub run, GHCR push, server helper и deploy не выполнялись.
+- Docker image и Nginx runtime локально не собирались: Docker CLI/daemon в рабочей среде отсутствует. До merge требуется CI image build; до rollout — container `/healthz`, hard-fail `/api`, read-only filesystem и host gateway smoke.
+- Base images зафиксированы проверенными registry references `node:24.22.1-alpine@sha256:06d7…18b53` и `nginxinc/nginx-unprivileged:1.28.0-alpine@sha256:c97f…657a0`; оба digest фактически получены из registry на Docker Engine 29.9.2 тестового VPS 28.10.2026. Workflow запрашивает BuildKit provenance и SBOM, но их публикация подтверждается только реальным GitHub run.
+- Deploy workflow дважды сверяет проверенный source SHA с актуальным tip `main` и fail-closed отклоняет stale run; GHCR получает только уникальный commit tag, а rollout использует registry digest.
+
+## Актуальный checkpoint 28.10.2026
+
+Репозиторная версия `0.0.118`; развёрнутая SPA — `0.0.117`, design-system — `0.0.10`. Production admin работает с backend `0.0.128`, OpenAPI `0.0.60` и schema `v29`.
+
+- `npm run check`: PASS; design-system `5/5`, application unit `117/117`, contracts `102` operations, architecture/type/ESLint/Prettier/Stylelint PASS.
+- `npm run build`: PASS; Vite `8.2.4`, `282` modules.
+- Playwright discovery: `134` теста в `17` файлах.
+- Полный mock E2E в system Edge: PASS `134/134` за `10.7m`, desktop `67/67`, mobile `67/67`, `workers=1`, `retries=0`.
+- Production smoke admin `0.0.117`: root и `/admin/queues/recipes` — `200`; парольный вход доходит до обязательной MFA-границы; `coffee-light` и `nature-dark` переключаются без runtime errors; liveness/readiness — `200`.
+
+Этот E2E-прогон использует development mocks и не заменяет полную live-приёмку мутаций. Для сквозной модерации нужен действующий второй фактор тестового администра. Внешние payment/email/push/AI/storage/scanner providers остаются fail-closed.
+
+## Исторический перенос 24.10.2026
 
 Админка выделена из meal_frontend/frontend_admin в самостоятельный meal_admin. Версии: app 0.0.96, design-system 0.0.10. Сценарии и API сохранены; копия дизайн-системы живёт здесь, установка не требует соседних репозиториев.
 

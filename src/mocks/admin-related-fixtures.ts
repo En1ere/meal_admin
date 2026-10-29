@@ -139,8 +139,17 @@ export function relatedFixtures(): Record<string, AdminRow[]> {
             }),
         ],
         recipe_revisions: [
-            row(45, {
+            row(145, {
                 revision: 1,
+                title: 'Ранее опубликованная молочная каша',
+                portions: 2,
+                method: 'boil',
+                change_kind: 'created',
+                recipe_id: id(46),
+                created_by: user,
+            }),
+            row(45, {
+                revision: 2,
                 title: 'Тестовая молочная каша',
                 portions: 2,
                 method: 'boil',
@@ -157,6 +166,15 @@ export function relatedFixtures(): Record<string, AdminRow[]> {
                 author_id: user,
                 scope_id: id(47),
                 base_recipe_id: null,
+            }),
+        ],
+        recipe_publications: [
+            row(146, {
+                recipe_id: id(46),
+                revision_id: id(145),
+                published_at: date,
+                unpublished_at: null,
+                decision_id: id(147),
             }),
         ],
         recipe_steps: [

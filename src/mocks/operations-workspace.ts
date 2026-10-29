@@ -3,7 +3,7 @@ import {
     operationsResultSchema,
     type OperationsResult,
     type Operation,
-} from '../features/operations/contracts.js';
+} from '../entities/operation/index.js';
 import type { AdminState, AdminRow } from './admin-model.js';
 export class OperationsMockError extends Error {
     constructor(

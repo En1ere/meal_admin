@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRuntime } from '../../app/providers.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import { authRoutes, type AuthContext } from '../../shared/auth/routes.js';
 import { Brand } from '../../shared/ui/brand.js';
-import { ThemeControl } from '../../ui/ThemeControl/ThemeControl.js';
-import { Guard, useSession } from './session.js';
-import { useRequestSignal } from './use-request-signal.js';
+import { ThemeControl } from '../../shared/ui/theme-control.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { CriticalConfirmation } from './critical-confirmation.js';
@@ -100,24 +100,22 @@ export function SessionsPanel({ context }: { context: AuthContext }) {
     );
 }
 export function StaffHome({ context }: { context: 'admin' }) {
-    const session = useSession(context);
+    const session = useStaffSession(context);
     return (
-        <Guard context={context}>
-            <main id="main" className="staff-home">
-                <Brand />
-                <ThemeControl />
-                <p className="eyebrow">Администрирование</p>
-                <h1>Служебный вход подтверждён</h1>
-                <p>{session.data?.displayName}. Двухфакторная проверка пройдена.</p>
-                <p>
-                    <Link className="button primary" to="/admin">
-                        Открыть админку
-                    </Link>
-                </p>
-                <SessionsPanel context={context} />
-                <CriticalConfirmation />
-                <Link to="/settings/notifications">Настройки уведомлений</Link>
-            </main>
-        </Guard>
+        <main id="main" className="staff-home">
+            <Brand />
+            <ThemeControl />
+            <p className="eyebrow">Администрирование</p>
+            <h1>Служебный вход подтверждён</h1>
+            <p>{session.data?.displayName}. Двухфакторная проверка пройдена.</p>
+            <p>
+                <Link className="button primary" to="/admin">
+                    Открыть админку
+                </Link>
+            </p>
+            <SessionsPanel context={context} />
+            <CriticalConfirmation />
+            <Link to="/settings/notifications">Настройки уведомлений</Link>
+        </main>
     );
 }

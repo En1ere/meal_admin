@@ -1,11 +1,15 @@
 import { useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { CriticalConfirmation } from '../auth/critical-confirmation.js';
-import { useRequestSignal } from '../auth/use-request-signal.js';
-import type { ReviewCommand, ReviewResult } from './contracts.js';
+import { adminRecordKeys } from '../../entities/admin-record/index.js';
+import { complianceReviewKeys, type ReviewCommand, type ReviewResult } from '../../entities/compliance-review/index.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
+import { ApiError } from '../../shared/api/client.js';
+import { CriticalConfirmation } from '../auth/access-client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import styles from './review-workspace.module.css';
 export type ReviewApi = (command: ReviewCommand, signal?: AbortSignal) => Promise<ReviewResult>;
+type ReviewExecuteCommand = Extract<ReviewCommand, { action: 'prepare-export' | 'apply-rollback' }>;
 export function ReviewWorkspace({
     section,
     id,
@@ -16,11 +20,16 @@ export function ReviewWorkspace({
     api: ReviewApi;
 }) {
     const cache = useQueryClient();
-    const key = ['admin-review', section, id];
+    const session = useStaffSession('admin');
+    const sessionId = session.data?.sessionId;
+    const key = complianceReviewKeys.workspace(sessionId, section, id);
+    const retry = useRef<{ intent: string; command: ReviewExecuteCommand } | null>(null);
+    const [hasFrozenAttempt, setHasFrozenAttempt] = useState(false);
     const query = useQuery({
         queryKey: key,
+        enabled: !!sessionId,
         queryFn: ({ signal }) => api({ action: 'load' }, signal),
-        refetchInterval: 60000,
+        refetchInterval: hasFrozenAttempt ? false : 60000,
     });
     const [reason, setReason] = useState('');
     const [preview, setPreview] = useState<string | null>(null);
@@ -29,18 +38,29 @@ export function ReviewWorkspace({
     const [message, setMessage] = useState('');
     const busy = useRef(false);
     const beginRequest = useRequestSignal();
-    const retry = useRef<{ digest: string; key: string } | null>(null);
     async function run(command: ReviewCommand) {
         if (busy.current) return;
+        const exactCommand = command.action === 'prepare-export' || command.action === 'apply-rollback';
+        if (!exactCommand && retry.current) {
+            setError('Исход предыдущей команды неизвестен. Сначала повторите её без изменений.');
+            return;
+        }
+        if (command.action === 'prepare-export' || command.action === 'apply-rollback') {
+            const intent = JSON.stringify([command.action, command.data.reason]);
+            if (retry.current && retry.current.intent !== intent) {
+                setError('Исход предыдущей команды неизвестен. Сначала повторите её без изменений.');
+                return;
+            }
+            if (!retry.current) {
+                retry.current = { intent, command };
+                setHasFrozenAttempt(true);
+            }
+            command = retry.current.command;
+        }
         busy.current = true;
         setPending(true);
         setError('');
         setMessage('');
-        if (command.action === 'prepare-export' || command.action === 'apply-rollback') {
-            const digest = JSON.stringify({ ...command, data: { ...command.data, idempotencyKey: '' } });
-            if (retry.current?.digest !== digest) retry.current = { digest, key: command.data.idempotencyKey };
-            command = { ...command, data: { ...command.data, idempotencyKey: retry.current.key } };
-        }
         const signal = beginRequest();
         try {
             const result = await api(command, signal);
@@ -49,8 +69,34 @@ export function ReviewWorkspace({
             setPreview(result.previewKey);
             setMessage(result.message);
             retry.current = null;
+            setHasFrozenAttempt(false);
+            if (exactCommand) await cache.invalidateQueries({ queryKey: adminRecordKeys.root });
         } catch (failure) {
-            if (!signal.aborted) setError(failure instanceof Error ? failure.message : 'Не удалось выполнить команду.');
+            if (signal.aborted) return;
+            if (failure instanceof ApiError && (failure.status === 409 || failure.status === 412)) {
+                retry.current = null;
+                setHasFrozenAttempt(false);
+                setPreview(null);
+                await Promise.all([
+                    cache.invalidateQueries({ queryKey: complianceReviewKeys.workspace(sessionId, section, id) }),
+                    cache.invalidateQueries({ queryKey: adminRecordKeys.root }),
+                ]);
+                setError('Данные и последствия изменились и обновлены. Подготовьте новый предпросмотр.');
+                return;
+            }
+            if (failure instanceof ApiError && failure.status < 500) {
+                retry.current = null;
+                setHasFrozenAttempt(false);
+                setError(failure.message);
+                return;
+            }
+            setError(
+                exactCommand
+                    ? 'Исход команды неизвестен. Повторите её без изменений: будет использован тот же ключ операции.'
+                    : failure instanceof Error
+                      ? failure.message
+                      : 'Не удалось выполнить команду.',
+            );
         } finally {
             busy.current = false;
             setPending(false);
@@ -171,7 +217,7 @@ export function ReviewWorkspace({
             )}
             <button
                 className="button outline"
-                disabled={pending}
+                disabled={pending || hasFrozenAttempt}
                 onClick={() => void run({ action: 'preview', data: { version: data.version } })}
             >
                 Обновить предпросмотр последствий
@@ -197,7 +243,9 @@ export function ReviewWorkspace({
                     pending ||
                     !preview ||
                     !reason.trim() ||
-                    (section === 'legal-requests' ? true : !data.items.some((item) => item.state === 'ready'))
+                    (section === 'legal-requests'
+                        ? true
+                        : !hasFrozenAttempt && !data.items.some((item) => item.state === 'ready'))
                 }
                 onClick={() =>
                     preview &&

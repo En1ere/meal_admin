@@ -5,7 +5,7 @@ import {
     notificationReadSchema,
     validNotificationTimeZone,
     type NotificationCenter,
-} from '../features/notifications/center-contracts.js';
+} from '../entities/admin-notification/index.js';
 
 export const notificationCenterStateSchema = z.record(z.string(), notificationCenterSchema);
 export type NotificationCenterState = z.infer<typeof notificationCenterStateSchema>;

@@ -1,4 +1,4 @@
-import { newsCommandSchema, newsItemSchema, type NewsContent, type NewsResult } from '../features/news/contracts.js';
+import { newsCommandSchema, newsItemSchema, type NewsContent, type NewsResult } from '../entities/news/index.js';
 import type { AdminState } from './admin-model.js';
 
 export interface NewsRecipient {

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { AuthShell as DesignSystemAuthShell } from '@meal-planner/design-system';
 import { Brand } from '../../shared/ui/brand.js';
-import { ThemeControl } from '../../ui/ThemeControl/ThemeControl.js';
+import { ThemeControl } from '../../shared/ui/theme-control.js';
 export function AuthShell({ children, staff = false }: { children: ReactNode; staff?: boolean }) {
     return (
         <DesignSystemAuthShell

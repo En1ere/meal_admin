@@ -99,10 +99,10 @@
     display: inline-flex;
     width: max-content;
     padding: 0.25rem 0.65rem;
-    border: 1px solid #8f7e3c;
+    border: 1px solid var(--warning);
     border-radius: 999px;
-    color: #f1db83;
-    background: #5c4e1f66;
+    color: var(--warning);
+    background: var(--mp-color-warning-surface);
     font-size: 0.85rem;
 }
 
@@ -116,7 +116,7 @@
 .summary-item {
     padding: 0.7rem;
     border-radius: 0.6rem;
-    background: #061a15;
+    background: var(--background);
 }
 
 .summary dt {
@@ -197,8 +197,8 @@
 }
 
 .steps .current b {
-    border-color: #18e8da;
-    box-shadow: 0 0 0 2px #18e8da33;
+    border-color: var(--mp-color-focus);
+    box-shadow: 0 0 0 2px var(--soft);
 }
 
 .composition {
@@ -302,7 +302,7 @@
 
 .change-row {
     padding: 0.8rem;
-    border-bottom: 1px solid #34564c;
+    border-bottom: 1px solid var(--line);
 }
 
 .change-copy {
@@ -353,13 +353,13 @@
 }
 
 .warning {
-    color: #f1cf62;
-    background: #4b421c;
+    color: var(--warning);
+    background: var(--mp-color-warning-surface);
 }
 
 .conflict {
     border-style: solid;
-    border-color: #f1cf62;
+    border-color: var(--warning);
     margin-bottom: 1rem;
 }
 

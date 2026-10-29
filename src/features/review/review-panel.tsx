@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { useRuntime } from '../../app/providers.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { ReviewWorkspace } from './review-workspace.js';
-import type { ReviewCommand, ReviewResult } from './contracts.js';
+import type { ReviewCommand, ReviewResult } from '../../entities/compliance-review/index.js';
 export function ReviewPanel({ section, id }: { section: 'legal-requests' | 'rollback'; id: string }) {
     const { api } = useRuntime();
     const request = useCallback(

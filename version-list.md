@@ -1,5 +1,51 @@
 # Версии meal_admin
 
+0.0.119 - 28.10.2026 | 17:50 - Добавлен container delivery path административной SPA: real-only multi-stage image на digest-pinned Node/Nginx, unprivileged Nginx на 8080 с `/healthz`, SPA/cache/security boundary и fail-closed `/api`; production artifact gate исключает mock worker, source maps и env-файлы. GitHub workflow после успешного main-check дважды блокирует stale SHA, использует commit tag и immutable GHCR digest с provenance/SBOM, а все Actions закреплены по commit SHA; rollout передаётся защищённому allowlisted server helper. Live deployment не выполнялся, wire-контракты и design-system не менялись.
+
+0.0.118 - 28.10.2026 | 13:24 - Актуализирован тестовый checkpoint: full mock Playwright E2E прошёл `134/134` за `10.7m` в system Edge, desktop/mobile `67/67`, один worker и без retry. Зафиксированы также unit `117/117`, contracts `102`, build `282` modules и production smoke live SPA `0.0.117`. Runtime-код и развёрнутый artifact не менялись.
+
+0.0.117 - 28.10.2026 | 13:05 - Удалены все 10 legacy-зависимостей mock adapters от feature UI: общие контракты и модели content release, news, admin notifications и operations перенесены в entity-слой с совместимыми feature re-export; architecture gate теперь запрещает любые mocks-to-features imports без allowlist. Runtime, маршруты, wire-контракты и семантика fixtures не менялись. Production build развёрнут в immutable release `20261028-0757`; root/deep-link, password → MFA и `coffee-light` / `nature-dark` smoke прошли без runtime-ошибок.
+
+0.0.116 - 28.10.2026 | 12:38 - Deployment inventory синхронизирован с live frontend root/app `0.0.28` / `0.0.137` и immutable release `20261028-0735`; зафиксирован read-only desktop/mobile acceptance 24/24 без mutation requests и runtime errors. Live admin остаётся `0.0.114`; runtime-код и публичные контракты не менялись.
+
+0.0.115 - 28.10.2026 | 12:16 - Документационная ревизия фиксирует завершённый admin-first rollout: live SPA 0.0.114 в immutable release 20261028-0705, backend 0.0.128/schema v29, HTTPS root/deep-link 200, обязательную MFA-границу, четыре темы и сохранение зелёной тёмной темы без console errors. Секреты и test credentials в Git не добавлялись; runtime-код и публичные контракты не менялись.
+
+0.0.114 - 28.10.2026 | 11:13 - Добавлен безопасный admin-first rollout revision-aware контракта: ApiClient до generated parse принимает только полностью legacy content response без обеих осей, не маскирует partial schema drift, не отправляет `publicReason` старому strict backend и сбрасывает capability вместе с auth context. Новый backend сохраняет строгие review/publication DTO; critical gate также блокирует точный replay и catalog merge после истечения подтверждения. Runbook фиксирует порядок deploy admin→backend/schema и rollback backend→admin.
+
+0.0.113 - 28.10.2026 | 11:04 - Admin recipe moderation синхронизирована с backend 0.0.128 / OpenAPI 0.0.60 / schema v29: независимые review/publication оси сохраняют отклонённую r2 рядом с опубликованной r1, publicReason отделён и санитизирован от внутренних заметок, full admin approve сразу заменяет публикацию, hide/unpublish защищены revision/CAS и свежим critical confirmation. Обновлены development-моки, unit/desktop/mobile E2E и production runbooks; live 0.0.110 не менялся.
+
+0.0.112 - 27.10.2026 | 18:57 - React Router вынесен из входного production chunk в отдельный cacheable vendor chunk: максимальный gzip снижен с 102 545 до 86 750 байт без ослабления browser budget, изменения маршрутов, UI или публичных контрактов.
+
+0.0.111 - 27.10.2026 | 18:47 - Добавлен самостоятельный production deployment/rollback runbook для статической admin SPA: immutable release и checksum, атомарный `current`, Nginx SPA/API boundary, readiness, password→обязательный MFA, deep-link/theme/session smoke, очистка и известные gates; в ручной приёмке исправлены канонические health URL.
+
+0.0.110 - 27.10.2026 | 17:10 - Content exact retry после `403` ожидает актуальный auth status: истёкшее critical confirmation предлагает повторную MFA, а при активном confirmation показывает запрет роли/разрешения без бесполезного TOTP; frozen command/key остаются доступны для точного повтора после восстановления роли, тогда как protected `401` документирован как auth recovery + обязательный readback без обещания пережить remount.
+
+0.0.109 - 27.10.2026 | 16:56 - Exact replay content merge сохраняет полный frozen command после истёкшего critical confirmation: `403` предлагает повторно пройти TOTP/recovery и затем отправить прежний idempotency key; mock 0.0.119 проверяет critical до journal replay, а unit и Edge desktop/mobile подтверждают один merge/history/audit после commit-before-failure и повторного подтверждения.
+
+0.0.108 - 27.10.2026 | 16:43 - Moderation и catalog merge выделены в `content-workflow` bounded context с entity-owned contracts/session-scoped cache и public client API; unknown outcome замораживает полный command и допускает только dedicated exact retry, conflict ожидает workspace/admin-record readback, а mock journal повторяет backend identity actor + operation + target + key и запрещает повторное закрытие exact not-duplicate pair новым ключом.
+
+0.0.107 - 27.10.2026 | 15:39 - Legal review и rollback оформлены как compliance bounded context с public client API, entity-owned contracts и session-scoped cache; rollback и account-deletion замораживают полный command для exact retry, ожидают readback после конфликта и не дублируют effect/audit при потерянном ответе; новая осознанная проверка retention state использует новый idempotency key, а terminal/unknown lifecycle отображается только для чтения.
+
+0.0.106 - 27.10.2026 | 15:21 - Billing выделен в bounded context с public client API и session-scoped cache; финансовые 409 ожидают readback и сбрасывают preview, unknown outcome допускает только exact retry, неконсистентный ledger и невозможные переходы блокируются, refund остаётся fail-closed до подключения провайдера.
+
+0.0.105 - 27.10.2026 | 15:06 - Governance и Free AI объединены в bounded context `user-governance` с public client API и session-scoped `user-access` cache; 409 ожидает readback и сбрасывает critical preview, unknown outcome разрешает только exact retry, исправлены тексты семейного Plus и фактических уведомлений.
+
+0.0.104 - 27.10.2026 | 14:55 - Support выделен в самостоятельный домен с public client API, приватным CSS и session-scoped `support-ticket` cache; success/409 атомарно обновляют ticket aggregate, unknown outcome сохраняет точный payload/idempotency key и объясняет безопасный повтор, добавлен browser regression exact retry.
+
+0.0.103 - 27.10.2026 | 14:42 - Generic admin-record UI выделен в самостоятельный content-only feature со slot-контрактом; междоменная композиция support, governance, billing, moderation, compliance и operations перенесена в widget, app больше не импортирует god-feature, а architecture gate запрещает возврат sibling feature dependencies.
+
+0.0.102 - 27.10.2026 | 14:32 - Generic admin record получил entity public API, pure presentation и единый session-scoped namespace `admin-record`; list/detail/filter/related caches больше не смешивают accountId и sessionId, удалён невозможный undefined-invalidation, доменные readback invalidations используют canonical root.
+
+0.0.101 - 27.10.2026 | 14:26 - Fail-closed session guard перенесён на router level, поэтому private routes не монтируют запросы до проверки staff session; AdminShell стал widget, section/navigation model — entity, локальные Guard/Shell wrappers удалены, а mock→auth debt сокращён до 14 edges.
+
+0.0.100 - 27.10.2026 | 14:17 - Staff session оформлена как entity с каноническим cache key, transport cancellation вынесен в shared/api, а auth открыл единый client API; app, домены и mock console больше не импортируют auth internals, возврат deep imports блокируется architecture gate.
+
+0.0.99 - 27.10.2026 | 14:12 - Зафиксирована доменная FSD-подобная архитектура админки; runtime и ThemeControl вынесены из app/legacy ui в shared public APIs, устранены feature→app зависимости и добавлен architecture gate с учётом 15 явно отслеживаемых mock-contract debt edges.
+
+0.0.98 - 27.10.2026 | 11:05 - Production build развёрнут на `https://admin.abstract-usable-gazebo.ruweb.place` как статическое SPA за Nginx/TLS с same-origin `/api`. Деплой-smoke подтвердил парольный этап, обязательный TOTP, admin session/unlock, загрузку dashboard и переключение четырёх тем без ошибок консоли.
+
+0.0.97 - 10.26.2026 | 14:45 - Production-приёмка: 104 desktop/mobile e2e, надёжный touch-сценарий релиза, внешний Chromium для Playwright, четыре сохраняемые темы без стартовой вспышки, прикладные цвета сведены к токенам, добавлены browser bundle budgets и подробное руководство ручного тестирования, включая рендеринг и утечки.
+
 0.0.96 - 10.24.2026 | 20:00 - Самостоятельный репозиторий админки, независимые зависимости и проверки; очистка истёкшего tab proof до подтверждения auth/me; Vite 8.2.4 закрывает dev security advisories; локальный preview проксирует /api к loopback backend.
 
 0.0.95 - 10.24.2026 | 18:34 - Перенос в самостоятельный meal_frontend; переносимые проверки и отсутствие зависимости от исходников backend.

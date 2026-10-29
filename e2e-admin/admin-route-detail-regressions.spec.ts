@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { enrollAdmin, spaNavigate } from './helpers/admin-session.js';
+import { confirmCritical, enrollAdmin, spaNavigate } from './helpers/admin-session.js';
 import { stableUuid } from '../src/features/releases/api.js';
 
 const firstAchievementId = stableUuid('achievement-first-dish');
@@ -35,21 +35,23 @@ test('uses canonical metadata for dedicated catalog routes', async ({ page }) =>
 
 test('rejects and reads back a pending revision through the canonical moderation route', async ({ page }) => {
     test.setTimeout(90_000);
-    await enrollAdmin(page);
+    const recoveryCodes = await enrollAdmin(page);
     await spaNavigate(page, `/admin/moderation/${moderationId}`);
 
     const workspace = page
         .getByRole('heading', { name: 'Проверка версии материала', exact: true })
         .locator('xpath=ancestor::section[1]');
-    await expect(workspace.getByRole('heading', { name: 'Версия на проверке', exact: true })).toBeVisible();
-    await workspace.getByLabel('Причина, видимая автору').fill('E2E: версия не соответствует правилам публикации');
+    await expect(workspace.getByRole('heading', { name: 'Редакция текущей проверки', exact: true })).toBeVisible();
+    await confirmCritical(page, recoveryCodes[0]!, workspace);
+    await workspace.getByLabel('Внутренний комментарий').fill('E2E: служебная проверка состава');
+    await workspace.getByLabel('Причина для автора').fill('E2E: версия не соответствует правилам публикации');
     await workspace.getByRole('button', { name: 'Отклонить с причиной', exact: true }).click();
-    await expect(workspace.getByRole('status')).toHaveText('Решение сохранено.');
-    await expect(workspace.getByText('Ожидающей версии нет.', { exact: true })).toBeVisible();
-    await expect(workspace.getByText('История решений (1)', { exact: true })).toBeVisible();
+    await expect(workspace.getByRole('status').filter({ hasText: 'Решение сохранено.' })).toBeVisible();
+    await expect(workspace.getByText('Причина для автора: E2E: версия не соответствует правилам публикации', { exact: true })).toBeVisible();
+    await expect(workspace.getByText('Внутренняя история решений (1)', { exact: true })).toBeVisible();
 
     await page.reload();
     await expect(page).toHaveURL(new RegExp(`/admin/moderation/${moderationId}$`, 'u'));
-    await expect(page.getByText('Ожидающей версии нет.', { exact: true })).toBeVisible();
-    await expect(page.getByText('История решений (1)', { exact: true })).toBeVisible();
+    await expect(page.getByText('Причина для автора: E2E: версия не соответствует правилам публикации', { exact: true })).toBeVisible();
+    await expect(page.getByText('Внутренняя история решений (1)', { exact: true })).toBeVisible();
 });

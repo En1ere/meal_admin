@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { armFetchFault, installFetchFaultHarness } from './helpers/fetch-fault.js';
-import { enrollAdmin, setScenario, spaNavigate } from './helpers/admin-session.js';
+import { confirmCritical, enrollAdmin, setScenario, spaNavigate } from './helpers/admin-session.js';
 
 const moderationId = '10000000-0000-4000-8000-000000000001';
 const missingId = 'ffffffff-ffff-4fff-8fff-ffffffffffff';
@@ -10,33 +10,36 @@ test.beforeEach(async ({ context }) => installFetchFaultHarness(context));
 for (const terminalAction of ['hide', 'unpublish'] as const) {
     const actionLabel = terminalAction === 'hide' ? 'hides' : 'unpublishes';
     test(`approves and then ${actionLabel} through the canonical moderation route with readback`, async ({ page }) => {
-        await enrollAdmin(page);
+        const recoveryCodes = await enrollAdmin(page);
         const workspace = await openModeration(page);
-        await workspace.getByRole('button', { name: 'Одобрить эту версию', exact: true }).click();
-        await expect(workspace.getByText('Публичная версия', { exact: true })).toBeVisible();
-        await expect(workspace.getByText('Ожидающей версии нет.', { exact: true })).toBeVisible();
+        await confirmCritical(page, recoveryCodes[0]!, workspace);
+        await workspace.getByRole('button', { name: 'Одобрить и опубликовать', exact: true }).click();
+        await expect(workspace.getByRole('heading', { name: 'Активная публичная редакция', exact: true })).toBeVisible();
 
-        await workspace.getByLabel('Причина, видимая автору').fill(`E2E ${terminalAction}: подтверждённая причина`);
+        await workspace.getByLabel('Внутренний комментарий').fill(`E2E internal ${terminalAction}`);
+        await workspace.getByLabel('Причина для автора').fill(`E2E ${terminalAction}: подтверждённая причина`);
         await workspace
             .getByRole('button', {
                 name: terminalAction === 'hide' ? 'Скрыть публично' : 'Снять с публикации',
                 exact: true,
             })
             .click();
-        await expect(workspace.getByText('Публичной версии нет.', { exact: true })).toBeVisible();
-        await expect(workspace.getByText('История решений (2)', { exact: true })).toBeVisible();
+        await expect(workspace.getByText('Активной публичной редакции нет.', { exact: true })).toBeVisible();
+        await expect(workspace.getByText('Внутренняя история решений (2)', { exact: true })).toBeVisible();
 
         await page.reload();
         await expect(page).toHaveURL(new RegExp(`/admin/moderation/${moderationId}$`, 'u'));
-        await expect(page.getByText('Публичной версии нет.', { exact: true })).toBeVisible();
-        await expect(page.getByText('История решений (2)', { exact: true })).toBeVisible();
+        await expect(page.getByText('Активной публичной редакции нет.', { exact: true })).toBeVisible();
+        await expect(page.getByText('Внутренняя история решений (2)', { exact: true })).toBeVisible();
     });
 }
 
 test('moderation 409 preserves the reason and succeeds on an explicit retry', async ({ page }) => {
-    await enrollAdmin(page);
+    const recoveryCodes = await enrollAdmin(page);
     const workspace = await openModeration(page);
-    const reason = workspace.getByLabel('Причина, видимая автору');
+    await confirmCritical(page, recoveryCodes[0]!, workspace);
+    await workspace.getByLabel('Внутренний комментарий').fill('E2E internal conflict');
+    const reason = workspace.getByLabel('Причина для автора');
     await reason.fill('E2E retry after conflict');
     await armFetchFault(page, {
         path: `/api/v1/admin/content-workspace/queues/${moderationId}/moderate`,
@@ -47,13 +50,15 @@ test('moderation 409 preserves the reason and succeeds on an explicit retry', as
     await expect(workspace.getByRole('alert')).toContainText('Данные изменились');
     await expect(reason).toHaveValue('E2E retry after conflict');
     await workspace.getByRole('button', { name: 'Отклонить с причиной', exact: true }).click();
-    await expect(workspace.getByText('Ожидающей версии нет.', { exact: true })).toBeVisible();
+    await expect(workspace.getByText('Причина для автора: E2E retry after conflict', { exact: true })).toBeVisible();
 });
 
 test('moderation unknown outcome reuses the command and reads back one effect', async ({ page }) => {
-    await enrollAdmin(page);
+    const recoveryCodes = await enrollAdmin(page);
     const workspace = await openModeration(page);
-    await workspace.getByLabel('Причина, видимая автору').fill('E2E retry after unknown outcome');
+    await confirmCritical(page, recoveryCodes[0]!, workspace);
+    await workspace.getByLabel('Внутренний комментарий').fill('E2E internal unknown outcome');
+    await workspace.getByLabel('Причина для автора').fill('E2E retry after unknown outcome');
     await armFetchFault(page, {
         path: `/api/v1/admin/content-workspace/queues/${moderationId}/moderate`,
         method: 'POST',
@@ -61,11 +66,16 @@ test('moderation unknown outcome reuses the command and reads back one effect', 
         commitBeforeFailure: true,
     });
     await workspace.getByRole('button', { name: 'Отклонить с причиной', exact: true }).click();
-    await expect(workspace.getByRole('alert')).toContainText('Сервис временно недоступен');
+    await expect(workspace.getByRole('alert')).toContainText('Исход команды неизвестен');
+    await workspace.getByLabel('Причина для автора').fill('E2E changed intent must be blocked');
     await workspace.getByRole('button', { name: 'Отклонить с причиной', exact: true }).click();
-    await expect(workspace.getByText('История решений (1)', { exact: true })).toBeVisible();
+    await expect(workspace.getByRole('alert')).toContainText('Сначала повторите её без изменений');
+    await workspace.getByRole('button', { name: 'Повторить прежнюю команду', exact: true }).click();
+    await expect(workspace.getByText('Внутренняя история решений (1)', { exact: true })).toBeVisible();
     await page.reload();
-    await expect(page.getByText('История решений (1)', { exact: true })).toBeVisible();
+    await expect(page.getByText('Внутренняя история решений (1)', { exact: true })).toBeVisible();
+    await spaNavigate(page, '/admin/audit');
+    await expect(page.getByRole('heading', { name: 'admin.content.reject', exact: true })).toHaveCount(1);
 });
 
 test('moderation distinguishes missing detail from transient 503 and recovers', async ({ page }) => {

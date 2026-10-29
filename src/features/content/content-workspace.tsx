@@ -1,16 +1,64 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { CriticalConfirmation } from '../auth/critical-confirmation.js';
-import { useRequestSignal } from '../auth/use-request-signal.js';
-import type { ContentCommand, ContentCompare, ContentResult } from './contracts.js';
+import { adminRecordKeys } from '../../entities/admin-record/index.js';
+import {
+    contentActionAvailable,
+    contentCommandIntent,
+    contentForbiddenRecovery,
+    contentReviewStatusLabel,
+    contentWorkflowKeys,
+    isContentMutatingCommand,
+    type ContentCommand,
+    type ContentCompare,
+    type ContentMutatingCommand,
+    type ContentResult,
+    type ContentSection,
+} from '../../entities/content-workflow/index.js';
+import { useStaffSession } from '../../entities/staff-session/client.js';
+import { ApiError } from '../../shared/api/client.js';
+import { adminAuthStatusKey, CriticalConfirmation, useAdminStatus } from '../auth/access-client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import styles from './content-workspace.module.css';
 
 export type ContentApi = (command: ContentCommand, signal?: AbortSignal) => Promise<ContentResult>;
-export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'catalog'; id: string; api: ContentApi }) {
+export function ContentWorkspace({
+    section,
+    id,
+    api,
+}: {
+    section: ContentSection;
+    id: string;
+    api: ContentApi | null;
+}) {
     const cache = useQueryClient();
-    const key = ['admin-content', section, id];
-    const query = useQuery({ queryKey: key, queryFn: ({ signal }) => api({ action: 'load' }, signal) });
-    const [reason, setReason] = useState('');
+    const session = useStaffSession('admin');
+    const adminStatus = useAdminStatus();
+    const [now, setNow] = useState(Date.now);
+    const criticalConfirmed = !!adminStatus.data?.criticalUntil && Date.parse(adminStatus.data.criticalUntil) > now;
+    useEffect(() => {
+        const until = adminStatus.data?.criticalUntil;
+        if (!until) return;
+        const expiresAt = Date.parse(until);
+        const delay = Math.max(0, Math.min(expiresAt - Date.now() + 25, 2_147_483_647));
+        const timer = setTimeout(() => setNow(expiresAt + 1), delay);
+        return () => clearTimeout(timer);
+    }, [adminStatus.data?.criticalUntil]);
+    const sessionId = session.data?.sessionId;
+    const key = contentWorkflowKeys.workspace(sessionId, section, id);
+    const [hasFrozenAttempt, setHasFrozenAttempt] = useState(false);
+    const [retryRequiresCritical, setRetryRequiresCritical] = useState(false);
+    const query = useQuery({
+        queryKey: key,
+        enabled: !!api && !!sessionId,
+        queryFn: ({ signal }) => {
+            if (!api) throw new Error('Подключение не готово');
+            return api({ action: 'load' }, signal);
+        },
+        refetchInterval: hasFrozenAttempt ? false : 60000,
+        refetchOnWindowFocus: !hasFrozenAttempt,
+    });
+    const [internalReason, setInternalReason] = useState('');
+    const [publicReason, setPublicReason] = useState('');
     const [second, setSecond] = useState('');
     const [canonical, setCanonical] = useState(id);
     const [choices, setChoices] = useState<Record<string, 'left' | 'right'>>({});
@@ -19,21 +67,36 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
     const [error, setError] = useState('');
     const [pending, setPending] = useState(false);
     const busy = useRef(false);
-    const retry = useRef<{ digest: string; key: string } | null>(null);
+    const retry = useRef<{ intent: string; command: ContentMutatingCommand } | null>(null);
     const beginRequest = useRequestSignal();
     async function run(command: ContentCommand) {
         if (busy.current) return;
+        const mutating = isContentMutatingCommand(command);
+        if (!mutating && retry.current) {
+            setError('Исход предыдущей команды неизвестен. Сначала повторите её без изменений.');
+            return;
+        }
+        if (isContentMutatingCommand(command)) {
+            const intent = contentCommandIntent(command);
+            if (retry.current && retry.current.intent !== intent) {
+                setError('Исход предыдущей команды неизвестен. Сначала повторите её без изменений.');
+                return;
+            }
+            const attempt = retry.current ?? { intent, command };
+            if (!retry.current) {
+                retry.current = attempt;
+                setHasFrozenAttempt(true);
+                setRetryRequiresCritical(command.action === 'moderate' || command.action === 'merge');
+            }
+            command = attempt.command;
+        }
         busy.current = true;
         setPending(true);
         setError('');
         setMessage('');
-        if (command.action !== 'load' && command.action !== 'compare') {
-            const digest = JSON.stringify({ ...command, data: { ...command.data, idempotencyKey: '' } });
-            if (retry.current?.digest !== digest) retry.current = { digest, key: command.data.idempotencyKey };
-            command = { ...command, data: { ...command.data, idempotencyKey: retry.current.key } } as ContentCommand;
-        }
         const signal = beginRequest();
         try {
+            if (!api) throw new Error('Подключение не готово');
             const result = await api(command, signal);
             signal.throwIfAborted();
             cache.setQueryData(key, result);
@@ -42,9 +105,54 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                 result.message || (command.action === 'compare' ? 'Предпросмотр обновлён.' : 'Решение сохранено.'),
             );
             retry.current = null;
+            setHasFrozenAttempt(false);
+            setRetryRequiresCritical(false);
+            if (mutating) await cache.invalidateQueries({ queryKey: adminRecordKeys.root });
         } catch (failure) {
-            if (!signal.aborted)
-                setError(failure instanceof Error ? failure.message : 'Не удалось выполнить действие.');
+            if (signal.aborted) return;
+            if (failure instanceof ApiError && (failure.status === 409 || failure.status === 412)) {
+                retry.current = null;
+                setHasFrozenAttempt(false);
+                setRetryRequiresCritical(false);
+                setPreview(null);
+                await Promise.all([
+                    cache.invalidateQueries({ queryKey: contentWorkflowKeys.workspace(sessionId, section, id) }),
+                    cache.invalidateQueries({ queryKey: adminRecordKeys.root }),
+                ]);
+                setError(
+                    'Данные изменились и обновлены. Проверьте актуальные версии и подготовьте новый предпросмотр.',
+                );
+                return;
+            }
+            if (mutating && (!(failure instanceof ApiError) || failure.status >= 500)) {
+                await cache.invalidateQueries({ queryKey: contentWorkflowKeys.workspace(sessionId, section, id) });
+                setError(
+                    'Исход команды неизвестен. Повторите её без изменений: будет отправлен тот же полный запрос и ключ.',
+                );
+                return;
+            }
+            if (mutating && failure instanceof ApiError && failure.status === 403) {
+                await cache.invalidateQueries({ queryKey: adminAuthStatusKey });
+                const status = cache.getQueryData<{ criticalUntil?: string | null } | null>(adminAuthStatusKey);
+                setError(
+                    contentForbiddenRecovery(status?.criticalUntil) === 'reconfirm'
+                        ? 'Критичное подтверждение отсутствует или истекло. Подтвердите действия и повторите прежнюю команду: полный запрос и ключ сохранены.'
+                        : 'Операция запрещена текущей ролью или разрешениями. Критичное подтверждение активно, поэтому повторный TOTP не поможет. Исходная команда и ключ сохранены на этом экране: после восстановления доступа выполните точный повтор либо обновите данные и выйдите из процесса.',
+                );
+                return;
+            }
+            if (mutating && failure instanceof ApiError && failure.status === 401) {
+                setError(
+                    'Служебная сессия отклонена. Пройдите восстановление доступа и перечитайте актуальные данные; после размонтирования экрана оператор должен проверить исход команды перед новым действием.',
+                );
+                return;
+            }
+            if (mutating) {
+                retry.current = null;
+                setHasFrozenAttempt(false);
+                setRetryRequiresCritical(false);
+            }
+            setError(failure instanceof Error ? failure.message : 'Не удалось выполнить действие.');
         } finally {
             busy.current = false;
             setPending(false);
@@ -80,6 +188,15 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
             {error && (
                 <p role="alert">
                     {error}{' '}
+                    {hasFrozenAttempt && (
+                        <button
+                            className="button outline"
+                            disabled={pending || (retryRequiresCritical && !criticalConfirmed)}
+                            onClick={() => retry.current && void run(retry.current.command)}
+                        >
+                            Повторить прежнюю команду
+                        </button>
+                    )}{' '}
                     <button
                         className="button outline"
                         disabled={pending}
@@ -95,20 +212,33 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
             {message && <p role="status">{message}</p>}
             {section === 'queues' ? (
                 <>
+                    <p>
+                        <strong>Статус проверки:</strong>{' '}
+                        {data.review
+                            ? contentReviewStatusLabel(data.review.status)
+                            : contentReviewStatusLabel(data.status)}
+                        . Старая публикация и текущая редакция на проверке могут быть разными.
+                    </p>
                     <div className={styles.columns}>
                         {(
                             [
-                                ['current', 'Публичная версия'],
-                                ['pending', 'Версия на проверке'],
+                                [
+                                    data.publication?.revision ?? data.current,
+                                    'Активная публичная редакция',
+                                    'publication',
+                                ],
+                                [data.review?.revision ?? data.pending, 'Редакция текущей проверки', 'review'],
                             ] as const
-                        ).map(([field, title]) => (
-                            <article key={field}>
+                        ).map(([revision, title, axis]) => (
+                            <article key={axis}>
                                 <h3>{title}</h3>
-                                {data[field] ? (
+                                {revision ? (
                                     <>
-                                        <p>Версия {data[field].version}</p>
+                                        <p>
+                                            Редакция {revision.version} · ID {revision.id}
+                                        </p>
                                         <dl>
-                                            {Object.entries(data[field].fields).map(([name, value]) => (
+                                            {Object.entries(revision.fields).map(([name, value]) => (
                                                 <div key={name}>
                                                     <dt>{name}</dt>
                                                     <dd>{value ?? 'Не указано'}</dd>
@@ -117,24 +247,54 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                         </dl>
                                     </>
                                 ) : (
-                                    <p>{field === 'current' ? 'Публичной версии нет.' : 'Ожидающей версии нет.'}</p>
+                                    <p>
+                                        {axis === 'publication'
+                                            ? 'Активной публичной редакции нет.'
+                                            : 'Редакция проверки недоступна.'}
+                                    </p>
+                                )}
+                                {axis === 'publication' && data.publication && (
+                                    <p>Опубликовано {new Date(data.publication.publishedAt).toLocaleString('ru-RU')}</p>
+                                )}
+                                {axis === 'review' && data.review?.publicReason && (
+                                    <p>
+                                        <strong>Причина для автора:</strong> {data.review.publicReason}
+                                    </p>
                                 )}
                             </article>
                         ))}
                     </div>
                     <p>
-                        Отклонение новой версии сохраняет прежнюю публичную. Скрытие сохраняет доступ автора и семьи;
-                        возврат в публикацию проходит модерацию.
+                        Full admin «Одобрить» сразу публикует редакцию. Отклонение новой редакции не снимает старую
+                        публикацию. «Скрыть» скрывает рецепт целиком; «Снять с публикации» не запрещает автору
+                        редактирование.
                     </p>
                     <label>
-                        Причина, видимая автору
+                        Внутренний комментарий
                         <textarea
-                            value={reason}
+                            value={internalReason}
                             maxLength={2000}
                             disabled={pending}
-                            onChange={(e) => setReason(e.target.value)}
+                            aria-describedby="internal-reason-help"
+                            onChange={(e) => setInternalReason(e.target.value)}
                         />
                     </label>
+                    <p id="internal-reason-help">Виден только сотрудникам и не передаётся автору.</p>
+                    <label>
+                        Причина для автора
+                        <textarea
+                            value={publicReason}
+                            minLength={3}
+                            maxLength={500}
+                            disabled={pending}
+                            aria-describedby="public-reason-help"
+                            onChange={(e) => setPublicReason(e.target.value)}
+                        />
+                    </label>
+                    <p id="public-reason-help">
+                        Автор увидит только этот санитизированный текст. Внутренний комментарий не раскрывается.
+                    </p>
+                    <CriticalConfirmation />
                     <div className={styles.actions}>
                         {(['approve', 'reject', 'hide', 'unpublish'] as const).map((action) => (
                             <button
@@ -142,8 +302,10 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                 key={action}
                                 disabled={
                                     pending ||
-                                    (action !== 'approve' && !reason.trim()) ||
-                                    (action === 'approve' || action === 'reject' ? !data.pending : !data.current)
+                                    !criticalConfirmed ||
+                                    (action !== 'approve' &&
+                                        (!internalReason.trim() || publicReason.trim().length < 3)) ||
+                                    (!hasFrozenAttempt && !contentActionAvailable(data, action))
                                 }
                                 onClick={() =>
                                     void run({
@@ -151,7 +313,8 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                         data: {
                                             action,
                                             version: data.version,
-                                            reason,
+                                            reason: internalReason,
+                                            publicReason: action === 'approve' ? null : publicReason,
                                             idempotencyKey: crypto.randomUUID(),
                                         },
                                     })
@@ -159,7 +322,7 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                             >
                                 {
                                     {
-                                        approve: 'Одобрить эту версию',
+                                        approve: 'Одобрить и опубликовать',
                                         reject: 'Отклонить с причиной',
                                         hide: 'Скрыть публично',
                                         unpublish: 'Снять с публикации',
@@ -182,6 +345,7 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                     disabled={pending}
                                     onChange={(e) => {
                                         setSecond(e.target.value);
+                                        setCanonical(id);
                                         setChoices({});
                                         setPreview(null);
                                     }}
@@ -262,7 +426,7 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                             </p>
                             <button
                                 className="button outline"
-                                disabled={pending || !compare}
+                                disabled={pending || !compare || hasFrozenAttempt}
                                 onClick={() => compare && void run({ action: 'compare', data: compare })}
                             >
                                 Предпросмотр объединения
@@ -293,9 +457,9 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                 Причина действия
                                 <textarea
                                     maxLength={2000}
-                                    value={reason}
+                                    value={internalReason}
                                     disabled={pending}
-                                    onChange={(e) => setReason(e.target.value)}
+                                    onChange={(e) => setInternalReason(e.target.value)}
                                 />
                             </label>
                             <CriticalConfirmation />
@@ -304,11 +468,13 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                     className="button outline"
                                     disabled={
                                         pending ||
+                                        !criticalConfirmed ||
                                         !compare ||
-                                        !preview ||
-                                        !!preview.blockedReason ||
-                                        preview.conflicts.some((field) => !choices[field]) ||
-                                        !reason.trim()
+                                        (!hasFrozenAttempt &&
+                                            (!preview ||
+                                                !!preview.blockedReason ||
+                                                preview.conflicts.some((field) => !choices[field]))) ||
+                                        !internalReason.trim()
                                     }
                                     onClick={() =>
                                         compare &&
@@ -318,7 +484,7 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                             data: {
                                                 ...compare,
                                                 previewKey: preview.previewKey,
-                                                reason,
+                                                reason: internalReason,
                                                 idempotencyKey: crypto.randomUUID(),
                                             },
                                         })
@@ -328,7 +494,7 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                 </button>
                                 <button
                                     className="button outline"
-                                    disabled={pending || !compare || !reason.trim()}
+                                    disabled={pending || !compare || !internalReason.trim()}
                                     onClick={() =>
                                         compare &&
                                         void run({
@@ -338,7 +504,7 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                                                 rightId: compare.rightId,
                                                 leftVersion: compare.leftVersion,
                                                 rightVersion: compare.rightVersion,
-                                                reason,
+                                                reason: internalReason,
                                                 idempotencyKey: crypto.randomUUID(),
                                             },
                                         })
@@ -352,7 +518,8 @@ export function ContentWorkspace({ section, id, api }: { section: 'queues' | 'ca
                 </>
             )}
             <details>
-                <summary>История решений ({data.history.length})</summary>
+                <summary>Внутренняя история решений ({data.history.length})</summary>
+                <p>Служебные комментарии ниже доступны только сотрудникам и не показываются автору.</p>
                 {data.history.map((entry, index) => (
                     <article key={index}>
                         <p>

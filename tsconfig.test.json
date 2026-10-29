@@ -12,7 +12,8 @@
         "src/mocks/**/*.ts",
         "src/shared/api/**/*.ts",
         "src/shared/auth/**/*.ts",
-        "src/shared/telemetry/**/*.ts"
+        "src/shared/telemetry/**/*.ts",
+        "src/entities/**/*.ts"
     ],
     "exclude": ["node_modules", "dist", "build"]
 }

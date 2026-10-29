@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { displayField, displayStatus } from '../src/features/admin/display-values.js';
+import { displayField, displayStatus } from '../src/entities/admin-record/presentation.js';
 
 await test('payment display preserves exact minor units, zero and missing values', () => {
     const amount = (value: string | null, currency?: string) => {

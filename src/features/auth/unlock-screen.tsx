@@ -1,18 +1,20 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { useRuntime } from '../../app/providers.js';
+import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import { setAdminUnlock } from '../../shared/auth/unlock.js';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { AuthShell } from './auth-shell.js';
-import { useRequestSignal } from './use-request-signal.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import styles from './security.module.css';
+
+export const adminAuthStatusKey = ['admin-auth-status'] as const;
 
 export function useAdminStatus() {
     const { api } = useRuntime();
     return useQuery({
-        queryKey: ['admin-auth-status'],
+        queryKey: adminAuthStatusKey,
         enabled: !!api,
         queryFn: async ({ signal }) => {
             if (!api) throw new Error('API not ready');
@@ -53,7 +55,7 @@ export function UnlockScreen({ returnTo }: { returnTo: string }) {
         } catch (failure) {
             if (signal.aborted) return;
             setError(failure instanceof ApiError ? failure.message : 'Не удалось проверить код. Повторите попытку.');
-            void runtime.queryClient.invalidateQueries({ queryKey: ['admin-auth-status'] });
+            void runtime.queryClient.invalidateQueries({ queryKey: adminAuthStatusKey });
         } finally {
             setCode('');
             setPending(false);

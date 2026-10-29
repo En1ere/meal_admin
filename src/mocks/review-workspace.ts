@@ -4,7 +4,7 @@ import {
     reviewResultSchema,
     type ReviewCommand,
     type ReviewResult,
-} from '../features/review/contracts.js';
+} from '../entities/compliance-review/index.js';
 import type { AdminState } from './admin-model.js';
 import { applyMockRollback, inspectMockRollback } from './rollback-registry.js';
 

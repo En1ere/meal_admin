@@ -21,10 +21,23 @@ export function accountDeletionReviewHandle(context: Context): Response | null {
     if (!context.critical) return context.fail(403, 'ADMIN_CONFIRMATION_REQUIRED');
     const input = contracts['POST /api/v1/admin/account-deletions/{id}/review'].request.safeParse(context.body);
     if (!input.success) return context.fail(400);
+    const key = `account-deletion-review:${context.actor.id}:${context.path}:${input.data.idempotencyKey}`;
+    const digest = JSON.stringify([
+        context.path,
+        context.actor.id,
+        input.data.decision,
+        input.data.expectedVersion,
+        input.data.reason,
+    ]);
+    const previous = context.state.admin.commands[key];
+    if (previous) {
+        if (previous.digest !== digest) return context.fail(409);
+        return context.success(JSON.parse(String(previous.result.response)));
+    }
     const row = context.state.admin.tables.legal_requests?.find((item) => item.id === match[1]);
     if (!row || !['account_deletion', 'deletion'].includes(String(row.kind))) return context.fail(404);
     if (Number(row.version ?? 1) !== input.data.expectedVersion) return context.fail(412);
-    if (!['requested', 'retention_wait', 'blocked', 'pending'].includes(String(row.status))) return context.fail(409);
+    if (!['requested', 'retention_wait', 'blocked'].includes(String(row.status))) return context.fail(409);
     const at = new Date(context.now).toISOString();
     row.status = input.data.decision === 'approve' ? 'retention_wait' : 'rejected';
     row.approved_at = input.data.decision === 'approve' ? at : null;
@@ -57,7 +70,7 @@ export function accountDeletionReviewHandle(context: Context): Response | null {
         created_at: at,
         version: '1',
     });
-    return context.success({
+    const result = {
         id: String(row.id),
         status: row.status,
         requestedAt: String(row.requested_at ?? row.created_at ?? at),
@@ -68,5 +81,7 @@ export function accountDeletionReviewHandle(context: Context): Response | null {
         policyVersion: row.policy_version ? String(row.policy_version) : null,
         blockers: Array.isArray(row.blocker_snapshot) ? row.blocker_snapshot : [],
         version: Number(row.version),
-    });
+    };
+    context.state.admin.commands[key] = { digest, result: { response: JSON.stringify(result) } };
+    return context.success(result);
 }

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { CriticalConfirmation } from '../auth/critical-confirmation.js';
-import { useRequestSignal } from '../auth/use-request-signal.js';
+import { CriticalConfirmation } from '../auth/access-client.js';
+import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { newsContentSchema, type NewsCommand, type NewsContent, type NewsItem, type NewsResult } from './contracts.js';
 import styles from './news-workspace.module.css';
 
