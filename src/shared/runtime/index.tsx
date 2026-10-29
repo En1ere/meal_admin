@@ -38,7 +38,13 @@ interface Runtime {
 
 const Context = createContext<Runtime | null>(null);
 
-export function RuntimeProvider({ children }: { children: ReactNode }) {
+export function RuntimeProvider({
+    children,
+    prepareApi,
+}: {
+    children: ReactNode;
+    prepareApi?: () => Promise<boolean | void>;
+}) {
     const [queryClient] = useState(
         () =>
             new QueryClient({
@@ -65,19 +71,7 @@ export function RuntimeProvider({ children }: { children: ReactNode }) {
         let active = true;
         async function start() {
             try {
-                if (import.meta.env.VITE_API_MODE === 'mock') {
-                    const { startBrowserMocks } = await import('../../mocks/browser.js');
-                    await startBrowserMocks();
-                } else if ('serviceWorker' in navigator) {
-                    const registrations = await navigator.serviceWorker.getRegistrations();
-                    for (const registration of registrations)
-                        if (registration.active?.scriptURL.endsWith('/mockServiceWorker.js'))
-                            await registration.unregister();
-                    if (navigator.serviceWorker.controller?.scriptURL.endsWith('/mockServiceWorker.js')) {
-                        window.location.reload();
-                        return;
-                    }
-                }
+                if ((await prepareApi?.()) === false) return;
                 const { ApiClient } = await import('../api/client.js');
                 if (active)
                     setApi(
@@ -97,7 +91,7 @@ export function RuntimeProvider({ children }: { children: ReactNode }) {
         return () => {
             active = false;
         };
-    }, [queryClient]);
+    }, [prepareApi, queryClient]);
     useEffect(() => {
         try {
             removeLegacyAdminPrivateStorage();

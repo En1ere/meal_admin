@@ -7,7 +7,7 @@ import { SupportConversation, SupportCreate } from '../../features/support/clien
 import { BillingWorkspace } from '../../features/billing/client.js';
 import { ContentPanel } from '../../features/content/client.js';
 import { FreeAiWorkspace, GovernanceActions } from '../../features/user-governance/client.js';
-import { OperationsWorkspace } from '../../features/operations/operations-workspace.js';
+import { OperationsWorkspace } from '../../features/operations/client.js';
 import { AccountDeletionReview, ReviewPanel } from '../../features/review/client.js';
 import type { Section } from '../../entities/admin-section/model.js';
 

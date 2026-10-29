@@ -8,34 +8,35 @@ import { findSection } from '../entities/admin-section/model.js';
 import { AdminWorkspaceShell } from '../widgets/admin-shell/AdminWorkspaceShell.js';
 import { SessionGuard } from '../widgets/session-guard/SessionGuard.js';
 import { PageLoader as ArcPageLoader } from '@meal-planner/design-system';
+import { prepareApiMode } from './api-mode.js';
 
 const AdminRecordPage = lazy(async () => ({
     default: (await import('../widgets/admin-record-page/client.js')).AdminRecordPage,
 }));
-const NewsPage = lazy(async () => ({ default: (await import('../features/news/news-page.js')).NewsPage }));
+const NewsPage = lazy(async () => ({ default: (await import('../features/news/client.js')).NewsPage }));
 const NotificationSettingsPage = lazy(async () => ({
-    default: (await import('../features/notifications/notification-settings.js')).NotificationSettingsPage,
+    default: await (await import('../features/notifications/client.js')).loadNotificationSettingsPage(),
 }));
 const NotificationCenterPage = lazy(async () => ({
-    default: (await import('../features/notifications/notification-center.js')).NotificationCenterPage,
+    default: await (await import('../features/notifications/client.js')).loadNotificationCenterPage(),
 }));
 const RecipePolicyPage = lazy(async () => ({
-    default: (await import('../features/settings/recipe-policy.js')).RecipePolicyPage,
+    default: (await import('../features/settings/client.js')).RecipePolicyPage,
 }));
 const AllergensPage = lazy(async () => ({
-    default: (await import('../features/allergens/allergens-page.js')).AllergensPage,
+    default: (await import('../features/allergens/client.js')).AllergensPage,
 }));
 const ReleasesPage = lazy(async () => ({
-    default: (await import('../features/releases/release-page.js')).ReleasesPage,
+    default: await (await import('../features/releases/client.js')).loadReleasesPage(),
 }));
 const ReleaseDetailPage = lazy(async () => ({
-    default: (await import('../features/releases/release-page.js')).ReleaseDetailPage,
+    default: await (await import('../features/releases/client.js')).loadReleaseDetailPage(),
 }));
 const AchievementsPage = lazy(async () => ({
-    default: (await import('../features/releases/catalog-pages.js')).AchievementsPage,
+    default: await (await import('../features/releases/client.js')).loadAchievementsPage(),
 }));
 const ReputationPage = lazy(async () => ({
-    default: (await import('../features/releases/catalog-pages.js')).ReputationPage,
+    default: await (await import('../features/releases/client.js')).loadReputationPage(),
 }));
 const ScenarioConsole =
     import.meta.env.DEV && import.meta.env.VITE_API_MODE === 'mock'
@@ -88,7 +89,7 @@ export function App() {
                 </a>
                 <RouteMetadata />
                 <AppErrorBoundary code="route_error">
-                    <Providers>
+                    <Providers prepareApi={prepareApiMode}>
                         <Suspense fallback={<ArcPageLoader />}>
                             <Routes>
                                 <Route element={<SessionGuard context="admin" />}>

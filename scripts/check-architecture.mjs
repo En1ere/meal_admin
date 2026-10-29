@@ -18,7 +18,8 @@ const contentFeatureRoot = path.join(sourceRoot, 'features', 'content');
 const contentWorkflowEntityRoot = path.join(sourceRoot, 'entities', 'content-workflow');
 const sourceExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs']);
 const layeredRoots = new Set(['app', 'widgets', 'features', 'entities', 'shared']);
-const importPattern = /(?:from\s*|import\s*)['"]([^'"]+)['"]/gu;
+const importPattern = /(?:from\s*|import\s*(?:\(\s*)?)['"]([^'"]+)['"]/gu;
+const appMockCompositionRoots = new Set(['app/api-mode.ts', 'app/app.tsx']);
 
 async function collect(directory) {
     const entries = await readdir(directory, { withFileTypes: true });
@@ -119,6 +120,22 @@ for (const file of await collect(sourceRoot)) {
 
         const targetParts = relative(target).split('/');
         const sourceParts = relativeFile.split('/');
+        if (targetParts[0] === 'mocks' && sourceParts[0] !== 'mocks') {
+            const allowedAppComposition =
+                sourceLayer === 'app' &&
+                appMockCompositionRoots.has(relativeFile) &&
+                source.includes('import.meta.env.DEV');
+            if (!allowedAppComposition)
+                failures.push(
+                    `${relativeFile} -> ${specifier}: mocks may only be loaded by an explicit development app composition root`,
+                );
+        }
+        if (
+            targetParts[0] === 'features' &&
+            !(sourceParts[0] === 'features' && sourceParts[1] === targetParts[1]) &&
+            !(targetParts[2] === 'client.js' || (targetParts[1] === 'auth' && targetParts[2] === 'access-client.js'))
+        )
+            failures.push(`${relativeFile} -> ${specifier}: consume ${targetParts[1]} through its client public API`);
         if (
             file.startsWith(`${adminRecordFeatureRoot}${path.sep}`) &&
             targetParts[0] === 'features' &&

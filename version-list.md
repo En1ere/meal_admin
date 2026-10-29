@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.123 - 29.10.2026 | 12:37 - Закрыт остаточный архитектурный checkpoint admin SPA: все route-level feature imports проходят через public client API с сохранением lazy boundaries, architecture gate проверяет static/dynamic imports и mock composition, browser mocks вынесены из shared/features в app adapter. Release workflow разделён на public entry, list/detail, draft hook и model без изменения URL/wire/exact-action семантики; auth CSS локализован, неиспользуемые landing styles удалены.
+
 0.0.122 - 29.10.2026 | 10:17 - В admin deployment runbook добавлена короткая операторская карта и зафиксирован фактический Docker cutover: `main` → checks → GHCR digest → allowlisted helper → loopback `3002`/host Nginx, health, MFA/theme smoke и UI-only rollback boundary; legacy symlink оставлен только как evidence, секреты не добавлялись.
 
 0.0.121 - 29.10.2026 | 10:07 - Admin CI передаёт dedicated `QA_OUTPUT_DIR` не только quality gate, но и Playwright `--list`, поэтому workflow больше не падает на fail-closed проверке временного каталога; runtime, wire-контракты и design-system не изменялись.

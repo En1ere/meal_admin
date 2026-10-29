@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import type { Success } from '../../shared/api/contracts.generated.js';
+import { stageAllergenAsset } from '../../shared/api/development-adapters.js';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import styles from './allergens.module.css';
 
@@ -195,10 +196,7 @@ export function AllergensPage() {
             return;
         }
         const checksumSha256 = [...new Uint8Array(digest)].map((value) => value.toString(16).padStart(2, '0')).join('');
-        if (uploadSimulation) {
-            const { registerAllergenAsset } = await import('../../mocks/allergen-assets.js');
-            registerAllergenAsset(checksumSha256, stagedIcon?.dataUrl ?? '');
-        }
+        if (uploadSimulation) stageAllergenAsset(checksumSha256, stagedIcon?.dataUrl ?? '');
         const succeeded = await mutate(
             'upload',
             async (current) =>

@@ -1,0 +1,170 @@
+.auth-content h1 {
+    font-size: 35px;
+    margin-top: 34px;
+}
+
+.auth-subtitle {
+    color: var(--muted);
+    margin: 12px 0 32px;
+    font-size: 17px;
+}
+
+.auth-content form {
+    text-align: left;
+}
+
+.auth-content label:not(:first-child) {
+    margin-top: 20px;
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 98px;
+}
+
+.password-field button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 0.5rem;
+    border: 0;
+    background: none;
+    color: var(--accent);
+}
+
+.auth-content form :where(.primary) {
+    width: 100%;
+    margin-top: 28px;
+    min-height: 55px;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 32px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    height: 1px;
+    background: var(--line);
+    flex: 1;
+}
+
+.auth-divider img {
+    width: 30px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.auth-links {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 15px;
+}
+
+.developer-accounts {
+    margin-top: 30px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+    text-align: left;
+}
+
+.developer-accounts summary {
+    cursor: pointer;
+}
+
+.developer-accounts p {
+    margin-top: 10px;
+}
+
+.account-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.account-list button {
+    min-height: 44px;
+    font-size: 11px;
+    border: 1px solid var(--line);
+    background: var(--soft);
+    color: var(--ink);
+    padding: 7px;
+    border-radius: 4px;
+}
+
+.developer-accounts nav {
+    display: flex;
+    gap: 18px;
+    margin-top: 14px;
+}
+
+.enrollment {
+    padding: 18px;
+    background: var(--soft);
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+.enrollment code {
+    display: block;
+    overflow-wrap: anywhere;
+    margin: 8px 0;
+}
+
+.recovery-codes {
+    display: grid;
+    gap: 8px;
+    text-align: left;
+    margin: 20px 0;
+}
+
+.recovery-codes code {
+    padding: 7px;
+    background: var(--soft);
+    overflow-wrap: anywhere;
+    font-size: 13px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 24px;
+}
+
+@media (width <= 760px) {
+    .auth-content h1 {
+        font-size: 30px;
+        margin-top: 28px;
+    }
+
+    .auth-subtitle {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+
+    .auth-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .auth-links > :last-child {
+        width: 100%;
+        border: 1px solid var(--accent);
+        text-align: center;
+        border-radius: 8px;
+        padding: 12px;
+    }
+}
