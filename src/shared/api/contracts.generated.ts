@@ -1,6 +1,6 @@
-// Generated from contracts/openapi.json. Do not edit. SHA256: 308270f58215e20a98c525779ac163232a8985f8e86465c93b475657f9c3bf5d
+// Generated from contracts/openapi.json. Do not edit. SHA256: aa2c8a940fbfd15fd5cb463c9cfb6b05eb96f3115e822f622a5dc42f3ad428c6
 import { z } from 'zod';
-export const contractVersion = '0.0.60';
+export const contractVersion = '0.0.61';
 export const contracts = {
     'GET /api/v1/recipe-policy': {
         params: null,

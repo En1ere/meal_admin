@@ -1,6 +1,6 @@
 # Meal Admin
 
-Самостоятельная административная React/Vite SPA Meal Planner. Версия: 0.0.119. Исходники и зависимости полностью находятся в этом репозитории; `design-system` — локальная копия npm workspace (0.0.10), без ссылок на соседние проекты. Архитектурные границы и поэтапная миграция описаны в `ARCHITECTURE.md`.
+Самостоятельная административная React/Vite SPA Meal Planner. Версия: 0.0.126. Исходники и зависимости полностью находятся в этом репозитории; `design-system` — локальная копия npm workspace (0.0.10), без ссылок на соседние проекты. Архитектурные границы и поэтапная миграция описаны в `ARCHITECTURE.md`.
 
 ## Установка и запуск
 
@@ -31,13 +31,13 @@ Production build всегда real; mock в build/preview запрещён. `npm
 
 Production image собирается через `Dockerfile`: multi-stage build создаёт только real SPA, проверяет browser budget и production artifact gate, затем unprivileged Nginx выдаёт статику на внутреннем порту `8080`. `/healthz` проверяет выдачу контейнера, `/api` внутри контейнера намеренно отвечает `404`: same-origin `/api` обязан маршрутизировать внешний host Nginx напрямую в backend. Контейнер не публикует порт самостоятельно и рассчитан на read-only filesystem с writable tmpfs `/tmp`. Development `mockServiceWorker.js`, source maps и env-файлы в production artifact не допускаются.
 
-Тестовый production-стенд развёрнут на `https://admin.abstract-usable-gazebo.ruweb.place`: Nginx выдаёт `build` со SPA fallback и проксирует same-origin `/api` к loopback backend. Собственный release/rollback runbook находится в `DEPLOYMENT.md`; общие службы, PostgreSQL, backup, TLS и сеть описаны в `meal_backend/docs/DEPLOYMENT.md`. Пароль и MFA-секреты в Git не хранятся. Подробная ручная приёмка админки находится в `ADMIN_TESTING.md`.
+Тестовый production-стенд развёрнут на `https://admin.abstract-usable-gazebo.ruweb.place`: host Nginx проксирует SPA в hardened Docker-контейнер на loopback `127.0.0.1:3002`, а same-origin `/api` — в backend `3001`. Собственный release/rollback runbook находится в `DEPLOYMENT.md`; общие службы, PostgreSQL, backup, TLS и сеть описаны в `meal_backend/docs/DEPLOYMENT.md`. Планируемый `https://admin.meal.royalexander.online` остаётся pending DNS и не является текущим production origin до выпуска сертификата и отдельного cutover-smoke. Пароль и MFA-секреты в Git не хранятся. Подробная ручная приёмка админки находится в `ADMIN_TESTING.md`.
 
 ## Контракты и доступ
 
 Backend владеет roles/grants, staff auth/MFA и критичными операциями. Скрытая кнопка не заменяет серверную проверку. Снимки OpenAPI/HTTP cases в `contracts` переносимы; `node scripts/check-backend-contract.mjs <backend-openapi-path>` проверяет согласованность без импорта backend-кода. Изменения API требуют отдельного согласования.
 
-Текущий контракт синхронизирован с backend 0.0.128: OpenAPI 0.0.60, database schema v29. В recipe moderation обязательные серверные оси `review` и `publication` разделяют проверяемую редакцию и активную публикацию. Admin `0.0.117` и backend `0.0.128` развёрнуты: клиент безопасно нормализует только полностью legacy-ответ без обеих осей и не отправляет старому strict backend неизвестное поле `publicReason`; частичный или повреждённый новый ответ по-прежнему отклоняется generated-схемой. После первого ответа с обеими осями запросы используют новый контракт. Capability хранится только в текущем `ApiClient` и сбрасывается при смене/инвалидации сессии. Пользовательский frontend root/app `0.0.28` / `0.0.137` развёрнут и прошёл read-only desktop/mobile acceptance `24/24`. Admin `0.0.117` развёрнут в immutable release `20261028-0757`; репозиторная `0.0.119` добавляет контейнерный delivery path без изменения wire-контрактов и пока не развёрнута.
+Текущий контракт синхронизирован с backend `0.0.149`: OpenAPI `0.0.61`, database schema `v30`. В recipe moderation обязательные серверные оси `review` и `publication` разделяют проверяемую редакцию и активную публикацию; полностью legacy-ответ без обеих осей всё ещё нормализуется, а частичный schema drift отклоняется generated-схемой. Развёрнутая admin `0.0.125` дополнительно предоставляет `/admin/testing` с server-side каталогом из 83 приёмочных кейсов. Release `5f944b2` прошёл `Admin checks`, immutable image build/deploy и server verify; контейнер image ID `43e8bd3b0551` был подтверждён healthy после rollout. Полный registry digest хранится в защищённом server inventory и намеренно не дублируется сокращённым или вымышленным значением в README.
 
 Критичные действия сохраняют permission → re-auth/MFA → preview → confirm → execute → audit/readback. Внешние провайдеры работают fail-closed. Полезные сценарии и результаты переноса записаны в `TESTs.md`.
 

@@ -17,16 +17,19 @@
 | Параметр         | Значение                                                  |
 | ---------------- | --------------------------------------------------------- |
 | Публичный origin | `https://admin.abstract-usable-gazebo.ruweb.place`        |
-| Активный release | `ghcr.io/en1ere/meal_admin@sha256:822929…e28dc2`          |
-| Live-версия      | `0.0.121`                                                 |
-| Репозиторий      | `0.0.122` (следующий documentation/autodeploy release)    |
-| Contract/schema  | OpenAPI `0.0.60`, backend `0.0.137+`, schema `v29`        |
+| Custom origin    | `https://admin.meal.royalexander.online` — pending DNS    |
+| Активный release | source `5f944b2`; container image ID `43e8bd3b0551`       |
+| Live-версия      | `0.0.125`                                                 |
+| Репозиторий      | `0.0.126` (documentation/readiness sync)                  |
+| Contract/schema  | OpenAPI `0.0.61`, backend `0.0.149`, schema `v30`         |
 | Точка выдачи     | container `8080` → host loopback `127.0.0.1:3002`         |
 | API              | same-origin `/api`, proxy на `http://127.0.0.1:3001`      |
 | Liveness         | `https://abstract-usable-gazebo.ruweb.place/health/live`  |
 | Readiness        | `https://abstract-usable-gazebo.ruweb.place/health/ready` |
 
 С 29 октября live SPA выдаётся непривилегированным Docker-контейнером; legacy symlink `/srv/meal/admin/current` сохранён только как rollback-evidence и больше не является traffic source. Общий стек после reboot поднимает `meal-planner-compose.service`; backend, PostgreSQL, TLS и сетевая граница описаны в `meal_backend/docs/DEPLOYMENT.md`.
+
+Полный активный `ghcr.io/...@sha256:...` является source of truth только в root-owned server inventory (`images.env` и журнал deploy-helper). Документация не подменяет его сокращённым digest. До появления A-записи `admin.meal.royalexander.online → 91.201.42.153`, отсутствия конфликтующего AAAA, выпуска сертификата и полного smoke технический origin остаётся каноническим и Nginx cutover на custom domain запрещён.
 
 ## Контейнерный delivery path
 
@@ -40,7 +43,15 @@ Image job публикует BuildKit provenance и SBOM рядом с обра�
 
 Server helper обязан под lock проверить allowlist component/image/digest, сохранить предыдущий digest, выполнить pull/recreate, дождаться `/healthz`, проверить публичные root/deep-link и контролируемый JSON `401` от admin `auth/me`. При любой ошибке он восстанавливает предыдущий digest и повторяет smoke. Ручной rollback выполняется отдельным allowlisted helper; workflow не редактирует Compose/env на сервере и не выполняет destructive database actions.
 
-### Подтверждение rollout 28 октября 2026
+### Подтверждение rollout 29 октября 2026
+
+- Admin `0.0.125`, source `5f944b2`, прошла GitHub workflows `Admin checks` (`40867575748`) и `Admin image and deploy` (`40867740006`).
+- `/srv/meal/deployment/verify.sh --component admin` завершился успешно; контейнер image ID `43e8bd3b0551` находился в состоянии `healthy`.
+- Публичные `/`, `/auth` и `/admin/testing` возвращают SPA document; неавторизованный `/api/v1/admin/acceptance-tests` возвращает контролируемый JSON `401`.
+- В новой вкладке password/session flow корректно потребовал обязательный TOTP для доступа к `/admin/testing`; TOTP не обходился и не сохранялся в evidence. Browser console на auth boundary не содержал ошибок или предупреждений.
+- Backend `0.0.149`, OpenAPI `0.0.61` и migration/schema `v30` развёрнуты до admin smoke; admin rollout миграции не запускает.
+
+### Историческое подтверждение rollout 28 октября 2026
 
 - Сначала переключена backward-compatible admin `0.0.114`, затем применена schema `v29` и развёрнут backend `0.0.128`.
 - Публичный root и прямой `/auth` deep link отвечают `HTTP/2 200`; Nginx продолжает выдавать SPA через HTTPS.
@@ -91,64 +102,54 @@ Site-конфигурация принадлежит `/etc/nginx/sites-available
 server {
     listen 443 ssl;
     server_name admin.abstract-usable-gazebo.ruweb.place;
-    root /srv/meal/admin/current/build;
-    index index.html;
 
     location /api/ {
         proxy_pass http://127.0.0.1:3001;
         # Общие proxy headers/timeouts задаются server/site-конфигурацией.
     }
 
-    location = /index.html {
-        add_header Cache-Control "no-store" always;
-        try_files $uri =404;
-    }
-
-    location /assets/ {
-        try_files $uri =404;
-        add_header Cache-Control "public, max-age=31536000, immutable" always;
-    }
-
     location / {
-        try_files $uri /index.html;
+        proxy_pass http://127.0.0.1:3002;
+        # SPA fallback, cache policy и /healthz принадлежат admin container.
     }
 }
 ```
 
-Фактическая конфигурация также обязана сохранять TLS, security headers, upload/time limits и proxy headers из общей site-конфигурации. Перед reload выполните `nginx -t`; копирование сокращённого примера поверх рабочего site запрещено.
+Фактическая конфигурация также обязана сохранять TLS, security headers, upload/time limits и proxy headers из общей site-конфигурации. Перед reload выполните `nginx -t`; копирование сокращённого примера поверх рабочего site запрещено. `admin.meal.royalexander.online` добавляется только после DNS/ACME gate; до этого имени не должны появляться в активном `server_name` как будто сертификат уже существует.
 
 ## Публикация
 
-Для перехода на schema v29/backend 0.0.128 порядок обязателен: сначала совместимая admin 0.0.114, затем migration/backend. Перед backend-switch остановите новые moderation writes, дождитесь исхода незавершённых команд и закройте либо hard-reload все вкладки со старой admin 0.0.113; смешанные версии backend pods запрещены. До переключения backend откройте legacy moderation case и убедитесь, что admin читает `current/pending`, а moderation request не содержит `publicReason`. После backend-switch выполните hard reload, перечитайте case: raw response обязан содержать обе оси `review/publication`, и только после этого admin отправляет `publicReason`. Частичный ответ с одной осью — блокирующая contract error, а не legacy fallback. Возобновляйте writes только после этого smoke.
+Обычный admin release не меняет schema и не управляет backend. Если OpenAPI требует новую migration/backend, сначала выпускается совместимая admin, затем backend выполняет собственный backup/migration/rollout runbook, после чего admin перечитывает live contract. Частичный ответ с одной из обязательных осей — блокирующая contract error, а не legacy fallback.
 
-1. Зафиксировать текущий target: `readlink -f /srv/meal/admin/current`.
-2. Проверить `nginx -t`, backend `/health/live` и `/health/ready`, свободное место и ошибки Nginx за последние 15 минут.
-3. Создать новый `/srv/meal/admin/releases/<release-id>` и распаковать проверенный artifact. Убедиться, что абсолютный путь находится внутри `/srv/meal/admin/releases`.
-4. Выставить владельца/права так, чтобы Nginx мог только читать release. Не хранить `.env`, архив или checksum рядом с публичным `build`.
-5. До переключения проверить наличие `build/index.html`, ожидаемой версии и hashed assets; не изменять файлы release на месте.
-6. Создать новый временный symlink рядом с `current`, проверить его target и атомарно заменить `current` через rename. Не удалять прежний release.
-7. Выполнить `nginx -t` и reload Nginx только если site-конфигурация менялась. Для обычной смены symlink reload не требуется.
-8. Выполнить технический и ручной smoke ниже. Только после него release считается активным.
+1. GitHub workflow принимает только успешный `Admin checks` для актуального tip `main`; stale source SHA блокируется до image build и повторно до deploy.
+2. Собрать и опубликовать image по commit tag, получить registry digest и передать на VPS только `<image@digest>` вместе с точным source SHA.
+3. Deploy user вызывает только allowlisted `sudo /usr/local/sbin/meal-deploy admin <image@digest> <source-sha>`. Helper под общим lock сохраняет previous digest, pull/recreate выполняет только для `admin` и не редактирует БД/Nginx/secrets.
+4. Дождаться container `/healthz`, backend readiness и публичного smoke. При любом обязательном FAIL helper возвращает previous digest и повторяет verify.
+5. После success выполнить технический и ручной smoke ниже. Только затем release и server inventory считаются согласованными.
+
+Legacy `/srv/meal/admin/current` не является traffic source и не переключается при container rollout. Исторический порядок schema v29/backend 0.0.128 остаётся evidence прошлого перехода, но не является текущей процедурой публикации.
 
 ## Post-deploy smoke
 
 Техническая часть:
 
 ```sh
-test "$(readlink -f /srv/meal/admin/current)" = "/srv/meal/admin/releases/<release-id>"
-test -f /srv/meal/admin/current/build/index.html
+/srv/meal/deployment/verify.sh --component admin
 nginx -t
+docker compose --project-name meal-planner --env-file /srv/meal/deployment/images.env \
+  -f /srv/meal/deployment/compose.production.yml ps admin
+curl --fail --silent http://127.0.0.1:3002/healthz
 curl --fail --silent https://abstract-usable-gazebo.ruweb.place/health/live
 curl --fail --silent https://abstract-usable-gazebo.ruweb.place/health/ready
 curl --fail --silent --output /dev/null https://admin.abstract-usable-gazebo.ruweb.place/
 curl --fail --silent --output /dev/null https://admin.abstract-usable-gazebo.ruweb.place/auth
-curl --fail --silent --output /dev/null https://admin.abstract-usable-gazebo.ruweb.place/admin/news
+curl --fail --silent --output /dev/null https://admin.abstract-usable-gazebo.ruweb.place/admin/testing
 curl --silent --output /dev/null --write-out '%{http_code}\n' \
-  https://admin.abstract-usable-gazebo.ruweb.place/api/v1/admin/auth/me
+  https://admin.abstract-usable-gazebo.ruweb.place/api/v1/admin/acceptance-tests
 journalctl -u nginx --since "15 minutes ago" -p err --no-pager
 ```
 
-Неавторизованный `auth/me` обязан вернуть контролируемый `401`, а не `404`, `5xx`, HTML или upstream connection error. `/auth` и `/admin/news` должны вернуть SPA document; приватный deep link затем переводит неавторизованного пользователя в auth-flow и сохраняет безопасный `returnTo`.
+Неавторизованный admin API обязан вернуть контролируемый JSON `401`, а не `404`, `5xx`, HTML или upstream connection error. `/auth` и `/admin/testing` должны вернуть SPA document; приватный deep link затем переводит неавторизованного пользователя в auth-flow и сохраняет безопасный `returnTo`.
 
 Ручная часть в чистом browser profile:
 
@@ -165,13 +166,13 @@ journalctl -u nginx --since "15 minutes ago" -p err --no-pager
 
 Rollback SPA не меняет БД, но предыдущий frontend обязан быть совместим с текущим backend API.
 
-Для этого contract checkpoint rollback выполняется в обратном порядке: сначала остановить moderation writes и вернуть backend к совместимой legacy-версии по его runbook, затем при необходимости admin SPA. Сразу после backend rollback все вкладки обязаны выполнить hard reload или новую служебную сессию, чтобы сбросить capability; вкладка, уже увидевшая новый backend, до reload безопасно получит `400` от legacy strict request, но не должна использоваться для writes. Admin 0.0.114 умеет работать с обоими контрактами после нового read, а admin 0.0.113 и старше нельзя возвращать поверх backend, который уже требует оси `review/publication`.
+Если release менял только admin SPA, rollback возвращает предыдущий проверенный admin digest через allowlisted server helper и не трогает БД. Если contract checkpoint также включал backend/schema, сначала остановите writes и выполните совместимый backend rollback/forward-fix по его runbook; возврат admin раньше backend запрещён.
 
-1. Остановить публикацию и записать request IDs, симптомы и текущий release target.
-2. Проверить, что предыдущий immutable release существует, содержит `build/index.html` и совместим с текущим OpenAPI.
-3. Создать проверенный временный symlink на предыдущий release и атомарно заменить `current`.
-4. Повторить root/deep-link/API smoke, password → MFA → dashboard и logout.
-5. Сохранить failed artifact и логи для анализа; не исправлять release на месте.
+1. Остановить новые admin mutations и записать request IDs, симптомы, current/previous digest из защищённого server inventory и source SHA.
+2. Убедиться, что previous digest существует, совместим с текущим OpenAPI/schema и уже проходил health/smoke.
+3. Выполнить предусмотренную host runbook allowlisted rollback-команду; не редактировать `images.env` вручную и не использовать legacy symlink.
+4. Повторить `/healthz`, root/deep-link/API smoke, password → MFA → dashboard и logout.
+5. Сохранить failed digest и ограниченные логи для анализа; не исправлять immutable image на месте.
 
 Если проблема вызвана backend/schema, одного rollback SPA недостаточно: следуйте backend recovery plan и не выполняйте destructive DB rollback из этого runbook.
 
@@ -184,7 +185,8 @@ Rollback SPA не меняет БД, но предыдущий frontend обяз
 ## Известные gates
 
 - Юридические документы имеют статус `draft_blocked`; публичный коммерческий запуск запрещён.
-- Revision-aware admin `0.0.117`, backend `0.0.128` и schema `v29` развёрнуты; базовый cross-app smoke, password → MFA boundary и темы подтверждены. Полная ручная матрица модерации остаётся отдельной приёмкой по `ADMIN_TESTING.md`.
+- Admin `0.0.125`, backend `0.0.149`, OpenAPI `0.0.61` и schema `v30` развёрнуты; Docker verify, базовый cross-app smoke, обязательная MFA boundary, темы и новый `/admin/testing` подтверждены. Полная ручная матрица остаётся отдельной приёмкой по `ADMIN_TESTING.md` и server checklist.
 - Payment, production email/push, AI, external storage и scanner не настроены и должны оставаться fail-closed.
 - Off-host backup/RPO-RTO, external alert/log sink, capacity/soak и окно обновления/reboot ОС ещё не подтверждены.
-- Пользовательский frontend переключён на root/app `0.0.28` / `0.0.137` в release `/srv/meal/frontend/releases/20261028-0735-0.0.28-0.0.137`; read-only desktop/mobile acceptance прошёл `24/24` без mutation requests и runtime errors. Полный сквозной ручной сценарий создания и модерации рецепта всё ещё требует действующий второй фактор администратора.
+- Пользовательский frontend root/app `0.0.40` / `0.0.149` работает в Docker-контейнере на том же Compose-стеке. Полный сквозной ручной сценарий создания и модерации рецепта всё ещё требует действующий второй фактор администратора.
+- Custom origin `admin.meal.royalexander.online` остаётся pending DNS/ACME; до завершённого cutover технический origin продолжает обслуживать трафик без redirect.

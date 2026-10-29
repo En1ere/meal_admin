@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.126 - 29.10.2026 | 16:53 - Синхронизированы полный OpenAPI snapshot 0.0.61, generated metadata и production-документация с фактическим Docker release admin 0.0.125: backend 0.0.149 / schema v30, healthy container image ID и CI/deploy evidence, текущий technical origin и pending-DNS custom origin. Legacy symlink-процедура заменена актуальным immutable digest/helper rollout, verify и rollback runbook; wire paths и payload не менялись.
+
 0.0.125 - 29.10.2026 | 16:14 - Добавлен production-ready экран «Приёмочное тестирование» по выбранному двухпанельному варианту: versioned server catalog на 83 кейса, поиск/фильтры/прогресс, статусы и комментарии, CAS/idempotent save/reset с exact retry и readback reconciliation, responsive/a11y состояния, typed mock, route и документация. Все четыре темы используют только semantic tokens дизайн-системы.
 
 0.0.123 - 29.10.2026 | 12:37 - Закрыт остаточный архитектурный checkpoint admin SPA: все route-level feature imports проходят через public client API с сохранением lazy boundaries, architecture gate проверяет static/dynamic imports и mock composition, browser mocks вынесены из shared/features в app adapter. Release workflow разделён на public entry, list/detail, draft hook и model без изменения URL/wire/exact-action семантики; auth CSS локализован, неиспользуемые landing styles удалены.
