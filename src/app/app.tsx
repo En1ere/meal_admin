@@ -38,6 +38,9 @@ const AchievementsPage = lazy(async () => ({
 const ReputationPage = lazy(async () => ({
     default: await (await import('../features/releases/client.js')).loadReputationPage(),
 }));
+const ObservabilityPage = lazy(async () => ({
+    default: (await import('../features/observability/client.js')).ObservabilityPage,
+}));
 const ScenarioConsole =
     import.meta.env.DEV && import.meta.env.VITE_API_MODE === 'mock'
         ? lazy(async () => ({ default: (await import('../mocks/scenario-console.js')).ScenarioConsole }))
@@ -54,6 +57,7 @@ function RouteMetadata() {
             '/admin/catalog/allergens': 'Словарь аллергенов',
             '/admin/catalog/achievements': 'Достижения',
             '/admin/catalog/reputation': 'Репутация',
+            '/admin/observability': 'Наблюдаемость',
             '/settings/notifications': 'Настройки уведомлений',
             '/settings/recipes': 'Рецепты и антиспам',
             '/notifications': 'Центр уведомлений',
@@ -104,6 +108,7 @@ export function App() {
                                         <Route path="/admin/catalog/reputation" element={<ReputationPage />} />
                                         <Route path="/admin/releases" element={<ReleasesPage />} />
                                         <Route path="/admin/releases/:id" element={<ReleaseDetailPage />} />
+                                        <Route path="/admin/observability" element={<ObservabilityPage />} />
                                         <Route
                                             path="/admin/queues"
                                             element={<Navigate replace to="/admin/queues/recipes" />}

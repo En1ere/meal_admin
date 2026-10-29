@@ -23,6 +23,7 @@ import { releaseCommandSchema } from '../entities/content-release/index.js';
 import { releaseWorkspaceCommand, ReleaseMockError } from './release-workspace.js';
 import { releaseApi } from './release-api.js';
 import { accountDeletionReviewHandle } from './account-deletion-review.js';
+import { createObservabilityFixture } from './observability.js';
 import {
     fixturePassword,
     fixtureUserIds,
@@ -395,6 +396,8 @@ export class MockApi {
                     if (deletionReview) return deletionReview;
                     const params = matched?.params;
                     if (operation.params && !operation.params.safeParse(params).success) return fail(400);
+                    if (wirePath === '/api/v1/admin/observability' && request.method === 'GET')
+                        return success(createObservabilityFixture(now));
                     if (releaseCanonicalRoute) {
                         try {
                             const result = releaseApi(

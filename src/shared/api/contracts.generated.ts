@@ -1,4 +1,4 @@
-// Generated from contracts/openapi.json. Do not edit. SHA256: 3d427073a3a16a4044f49c7175fbaf7b5c8e92c2277822eaec46f8d7efd23fbe
+// Generated from contracts/openapi.json. Do not edit. SHA256: 7d012b76992a5c7ea07d6e5a0e6ff2d65a4b9b2eb5c3fc6de95abc3455dcff74
 import { z } from 'zod';
 export const contractVersion = '0.0.60';
 export const contracts = {
@@ -11832,6 +11832,342 @@ export const contracts = {
                     ),
                 }),
                 collections: z.array(z.strictObject({ key: z.string(), label: z.string() })),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/observability': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                schemaVersion: z.literal(1),
+                generatedAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+                completeness: z.union([z.literal('complete'), z.literal('partial')]),
+                host: z.strictObject({
+                    freshness: z.strictObject({
+                        state: z.union([
+                            z.literal('fresh'),
+                            z.literal('stale'),
+                            z.literal('unavailable'),
+                            z.literal('no_samples'),
+                        ]),
+                        observedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                        staleAfterSeconds: z.number().int().min(1).max(604800),
+                    }),
+                    unavailableReason: z
+                        .union([
+                            z.literal('disabled'),
+                            z.literal('missing'),
+                            z.literal('unreadable'),
+                            z.literal('invalid'),
+                            z.literal('clock_skew'),
+                        ])
+                        .nullable(),
+                    collectorStatus: z.union([z.literal('ok'), z.literal('partial')]).nullable(),
+                    durationMs: z.number().int().min(0).max(86400000).nullable(),
+                    memory: z
+                        .strictObject({
+                            totalBytes: z.number().int().min(0).max(9007199254740991),
+                            availableBytes: z.number().int().min(0).max(9007199254740991),
+                        })
+                        .nullable(),
+                    load1mMilli: z.number().int().min(0).max(1000000).nullable(),
+                    uptimeSeconds: z.number().int().min(0).max(3153600000).nullable(),
+                    rebootRequired: z.boolean().nullable(),
+                    filesystems: z
+                        .array(
+                            z.strictObject({
+                                scope: z.union([z.literal('root'), z.literal('deployment'), z.literal('backups')]),
+                                totalBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                availableBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                usedPercent: z.number().int().min(0).max(100).nullable(),
+                            }),
+                        )
+                        .max(3),
+                    containers: z
+                        .array(
+                            z.strictObject({
+                                service: z.union([
+                                    z.literal('postgres'),
+                                    z.literal('backend'),
+                                    z.literal('worker'),
+                                    z.literal('frontend'),
+                                    z.literal('admin'),
+                                ]),
+                                state: z.union([
+                                    z.literal('running'),
+                                    z.literal('exited'),
+                                    z.literal('restarting'),
+                                    z.literal('paused'),
+                                    z.literal('created'),
+                                    z.literal('missing'),
+                                    z.literal('unknown'),
+                                ]),
+                                health: z.union([
+                                    z.literal('healthy'),
+                                    z.literal('unhealthy'),
+                                    z.literal('starting'),
+                                    z.literal('none'),
+                                    z.literal('unknown'),
+                                ]),
+                                restartCount: z.number().int().min(0).max(1000000000).nullable(),
+                                cpuPermille: z.number().int().min(0).max(1000000).nullable(),
+                                memoryBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                memoryLimitBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                pids: z.number().int().min(0).max(1000000000).nullable(),
+                            }),
+                        )
+                        .max(5),
+                }),
+                database: z.strictObject({
+                    freshness: z.strictObject({
+                        state: z.union([
+                            z.literal('fresh'),
+                            z.literal('stale'),
+                            z.literal('unavailable'),
+                            z.literal('no_samples'),
+                        ]),
+                        observedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                        staleAfterSeconds: z.number().int().min(1).max(604800),
+                    }),
+                    queryDurationMs: z.number().int().min(0).max(86400000).nullable(),
+                    schemaVersion: z.number().int().min(0).max(100000).nullable(),
+                    databaseSizeBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                    backendPool: z
+                        .strictObject({
+                            max: z.number().int().min(1).max(50),
+                            total: z.number().int().min(0).max(50),
+                            idle: z.number().int().min(0).max(50),
+                            waiting: z.number().int().min(0).max(1000000000),
+                        })
+                        .nullable(),
+                }),
+                queue: z.strictObject({
+                    freshness: z.strictObject({
+                        state: z.union([
+                            z.literal('fresh'),
+                            z.literal('stale'),
+                            z.literal('unavailable'),
+                            z.literal('no_samples'),
+                        ]),
+                        observedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                        staleAfterSeconds: z.number().int().min(1).max(604800),
+                    }),
+                    counts: z
+                        .strictObject({
+                            pending: z.number().int().min(0).max(1000000000),
+                            queued: z.number().int().min(0).max(1000000000),
+                            running: z.number().int().min(0).max(1000000000),
+                            processing: z.number().int().min(0).max(1000000000),
+                            retrying: z.number().int().min(0).max(1000000000),
+                            failed: z.number().int().min(0).max(1000000000),
+                            deadLetter: z.number().int().min(0).max(1000000000),
+                            completed: z.number().int().min(0).max(1000000000),
+                            cancelled: z.number().int().min(0).max(1000000000),
+                            other: z.number().int().min(0).max(1000000000),
+                        })
+                        .nullable(),
+                    dueNow: z.number().int().min(0).max(1000000000).nullable(),
+                    oldestDueAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                }),
+                workers: z
+                    .array(
+                        z.strictObject({
+                            task: z.union([
+                                z.literal('scheduled-news'),
+                                z.literal('incident-ignore-expiry'),
+                                z.literal('retention-inspection'),
+                                z.literal('scheduled-sanctions'),
+                                z.literal('diary-portions'),
+                                z.literal('email-changes'),
+                                z.literal('exports'),
+                                z.literal('account-retention'),
+                                z.literal('ai-reconciliation'),
+                                z.literal('cooking-lifecycle'),
+                            ]),
+                            freshness: z.strictObject({
+                                state: z.union([
+                                    z.literal('fresh'),
+                                    z.literal('stale'),
+                                    z.literal('unavailable'),
+                                    z.literal('no_samples'),
+                                ]),
+                                observedAt: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                                staleAfterSeconds: z.number().int().min(1).max(604800),
+                            }),
+                            leaseState: z.union([z.literal('active'), z.literal('inactive'), z.literal('no_record')]),
+                            leaseExpiresAt: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.iso.datetime())
+                                .nullable(),
+                            lastOutcome: z
+                                .union([
+                                    z.literal('success'),
+                                    z.literal('partial'),
+                                    z.literal('skipped_overlap'),
+                                    z.literal('skipped_not_ready'),
+                                    z.literal('timeout'),
+                                    z.literal('failure'),
+                                ])
+                                .nullable(),
+                            lastFinishedAt: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.iso.datetime())
+                                .nullable(),
+                            lastDurationMs: z.number().int().min(0).max(86400000).nullable(),
+                            failuresLastHour: z.number().int().min(0).max(1000000000),
+                        }),
+                    )
+                    .min(10)
+                    .max(10),
+                providers: z.strictObject({
+                    windowSeconds: z.literal(3600),
+                    services: z
+                        .array(
+                            z.strictObject({
+                                service: z.union([
+                                    z.literal('ai'),
+                                    z.literal('payment'),
+                                    z.literal('object_storage'),
+                                    z.literal('key_management'),
+                                    z.literal('malware_scanner'),
+                                    z.literal('email'),
+                                    z.literal('web_push'),
+                                    z.literal('ocr'),
+                                ]),
+                                freshness: z.strictObject({
+                                    state: z.union([
+                                        z.literal('fresh'),
+                                        z.literal('stale'),
+                                        z.literal('unavailable'),
+                                        z.literal('no_samples'),
+                                    ]),
+                                    observedAt: z
+                                        .string()
+                                        .regex(
+                                            new RegExp(
+                                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                'u',
+                                            ),
+                                        )
+                                        .pipe(z.iso.datetime())
+                                        .nullable(),
+                                    ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                                    staleAfterSeconds: z.number().int().min(1).max(604800),
+                                }),
+                                lastOutcome: z
+                                    .union([
+                                        z.literal('success'),
+                                        z.literal('provider_error'),
+                                        z.literal('timeout'),
+                                        z.literal('cancelled'),
+                                        z.literal('boundary_rejected'),
+                                        z.literal('unavailable'),
+                                    ])
+                                    .nullable(),
+                                lastObservedAt: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                sampleCount: z.number().int().min(0).max(1000000000),
+                                success: z.number().int().min(0).max(1000000000),
+                                providerError: z.number().int().min(0).max(1000000000),
+                                timeout: z.number().int().min(0).max(1000000000),
+                                cancelled: z.number().int().min(0).max(1000000000),
+                                boundaryRejected: z.number().int().min(0).max(1000000000),
+                                unavailable: z.number().int().min(0).max(1000000000),
+                                averageDurationMs: z.number().int().min(0).max(86400000).nullable(),
+                            }),
+                        )
+                        .min(8)
+                        .max(8),
+                }),
             }),
             meta: z.strictObject({
                 requestId: z

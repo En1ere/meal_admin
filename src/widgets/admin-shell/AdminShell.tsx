@@ -15,8 +15,17 @@ export function AdminShell({ active, children }: { active: Section; children: Re
                 .map((section) => ({
                     href: sectionPath(section.id),
                     label: section.title,
-                    active: active === section.id,
+                    active: active === section.id && pathname !== '/admin/observability',
                 })),
+            ...(group === 'Система'
+                ? [
+                      {
+                          href: '/admin/observability',
+                          label: 'Наблюдаемость',
+                          active: pathname === '/admin/observability',
+                      },
+                  ]
+                : []),
             ...(group === 'Контент'
                 ? [
                       {

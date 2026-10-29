@@ -317,3 +317,5 @@ Generated DTO синхронизированы с OpenAPI 0.0.17 пользов�
 0.0.93 - 10.20.2026 | 21:42 - Admin Firefox/WebKit action sweep завершён тремя fresh-server итерациями: 600/600 без retry/flaky/skip. Стабилизированы MFA/tab unlock, release conflicts и exact action assertions; contracts/type/lint/style/format, unit 90/90 и production build PASS.
 
 0.0.94 - 10.22.2026 | 13:47 - Administrative frontend документация сведена к актуальным README/AGENTS и TESTs.md; удалены старые acceptance/audit/handoff-документы и дубли инструкции без изменения runtime и API.
+
+0.0.124 - 10.29.2026 | 15:18 - Добавлена read-only страница «Состояние системы» по финальному backend-контракту observability: 6 секций, ручное обновление, partial/stale/unavailable/no-samples/error состояния, typed mocks, FSD public API, route/navigation и тестовое покрытие.

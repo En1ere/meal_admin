@@ -16,6 +16,7 @@ const reviewFeatureRoot = path.join(sourceRoot, 'features', 'review');
 const complianceReviewEntityRoot = path.join(sourceRoot, 'entities', 'compliance-review');
 const contentFeatureRoot = path.join(sourceRoot, 'features', 'content');
 const contentWorkflowEntityRoot = path.join(sourceRoot, 'entities', 'content-workflow');
+const adminObservabilityEntityRoot = path.join(sourceRoot, 'entities', 'admin-observability');
 const sourceExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs']);
 const layeredRoots = new Set(['app', 'widgets', 'features', 'entities', 'shared']);
 const importPattern = /(?:from\s*|import\s*(?:\(\s*)?)['"]([^'"]+)['"]/gu;
@@ -232,6 +233,13 @@ for (const file of await collect(sourceRoot)) {
             target !== path.join(contentWorkflowEntityRoot, 'index.js')
         )
             failures.push(`${relativeFile} -> ${specifier}: consume content workflow through its entity public API`);
+        if (
+            sourceParts[0] !== 'entities' &&
+            sourceParts[0] !== 'test' &&
+            target.startsWith(`${adminObservabilityEntityRoot}${path.sep}`) &&
+            target !== path.join(adminObservabilityEntityRoot, 'index.js')
+        )
+            failures.push(`${relativeFile} -> ${specifier}: consume admin observability through its entity public API`);
     }
 }
 
