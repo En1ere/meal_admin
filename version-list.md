@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.122 - 29.10.2026 | 10:17 - В admin deployment runbook добавлена короткая операторская карта и зафиксирован фактический Docker cutover: `main` → checks → GHCR digest → allowlisted helper → loopback `3002`/host Nginx, health, MFA/theme smoke и UI-only rollback boundary; legacy symlink оставлен только как evidence, секреты не добавлялись.
+
 0.0.121 - 29.10.2026 | 10:07 - Admin CI передаёт dedicated `QA_OUTPUT_DIR` не только quality gate, но и Playwright `--list`, поэтому workflow больше не падает на fail-closed проверке временного каталога; runtime, wire-контракты и design-system не изменялись.
 
 0.0.120 - 29.10.2026 | 10:03 - GitHub Actions check переносит `QA_OUTPUT_DIR` с job-level на step-level `env`, где `runner.temp` доступен; устранён fail до создания job без изменения admin runtime, wire-контрактов и design-system.

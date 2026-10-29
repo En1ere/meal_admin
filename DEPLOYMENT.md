@@ -1,30 +1,38 @@
 # Deployment Meal Admin
 
-Актуально на 28 октября 2026 года. Документ описывает тестовый production-стенд и воспроизводимый выпуск самостоятельной административной SPA. Он не содержит пароль администратора, TOTP secret, recovery-коды, cookies, root-доступ, строки подключения или содержимое env-файлов.
+Актуально на 29 октября 2026 года. Документ описывает тестовый production-стенд и воспроизводимый выпуск самостоятельной административной SPA. Он не содержит пароль администратора, TOTP secret, recovery-коды, cookies, root-доступ, строки подключения или содержимое env-файлов.
+
+## Быстрая карта деплоя
+
+1. В `meal_admin` заливаются admin SPA, её design-system и admin-тесты; backend/Compose здесь не меняются.
+2. Push в `main` запускает `Admin checks`; только success запускает `.github/workflows/deploy.yml` через `workflow_run`.
+3. Image: `ghcr.io/en1ere/meal_admin:sha-<full-sha>`; на VPS передаются только immutable `@sha256:` и source SHA.
+4. CI вызывает `sudo /usr/local/sbin/meal-deploy admin <image@digest> <git-sha>`. Копировать `build/` в старый `/srv/meal/admin/current` после cutover не нужно.
+5. Container `8080` публикуется только на `127.0.0.1:3002`; host Nginx отдаёт admin HTTPS, а `/api/` направляет прямо в backend `3001`.
+6. Smoke: local `/healthz`, public `/`, `/auth`, `/admin/queues/recipes`, затем password → mandatory MFA → dashboard/logout и theme switcher.
+7. Admin rollout не ходит в БД и не запускает migrations; при verify failure helper возвращает previous admin digest.
 
 ## Адрес и подтверждённый release
 
 | Параметр         | Значение                                                  |
 | ---------------- | --------------------------------------------------------- |
 | Публичный origin | `https://admin.abstract-usable-gazebo.ruweb.place`        |
-| Активный release | `/srv/meal/admin/releases/20261028-0757-0.0.117`          |
-| Live-версия      | `0.0.117`                                                 |
-| Репозиторий      | `0.0.119` (container delivery; live SPA — `0.0.117`)      |
-| Contract/schema  | OpenAPI `0.0.60`, backend `0.0.128`, schema `v29`         |
-| Точка выдачи     | `/srv/meal/admin/current/build`                           |
+| Активный release | `ghcr.io/en1ere/meal_admin@sha256:822929…e28dc2`          |
+| Live-версия      | `0.0.121`                                                 |
+| Репозиторий      | `0.0.122` (следующий documentation/autodeploy release)    |
+| Contract/schema  | OpenAPI `0.0.60`, backend `0.0.137+`, schema `v29`        |
+| Точка выдачи     | container `8080` → host loopback `127.0.0.1:3002`         |
 | API              | same-origin `/api`, proxy на `http://127.0.0.1:3001`      |
 | Liveness         | `https://abstract-usable-gazebo.ruweb.place/health/live`  |
 | Readiness        | `https://abstract-usable-gazebo.ruweb.place/health/ready` |
 
-`/srv/meal/admin/current` — symlink на неизменяемый release directory. Админка не имеет собственного systemd-процесса: статический `build` выдаёт Nginx. Backend, PostgreSQL, TLS и общая сетевая граница описаны в `meal_backend/docs/DEPLOYMENT.md`.
-
-Это описание подтверждённого live-состояния до контейнерного rollout. Версия `0.0.119` добавляет новый delivery path, но сама по себе не меняет текущий стенд: до отдельного согласованного deploy symlink release остаётся источником live SPA.
+С 29 октября live SPA выдаётся непривилегированным Docker-контейнером; legacy symlink `/srv/meal/admin/current` сохранён только как rollback-evidence и больше не является traffic source. Общий стек после reboot поднимает `meal-planner-compose.service`; backend, PostgreSQL, TLS и сетевая граница описаны в `meal_backend/docs/DEPLOYMENT.md`.
 
 ## Контейнерный delivery path
 
 `Dockerfile` собирает real-only SPA на Node.js из `.node-version`, проверяет manifest version, production artifact и browser budget, затем переносит только `build` в unprivileged Nginx. Runtime слушает только внутренний `8080`; `/healthz` возвращает container liveness. Development `mockServiceWorker.js`, source maps и env-файлы блокируются artifact gate.
 
-Контейнер не проксирует API. Его `/api` и `/api/` намеренно отвечают `404`, чтобы ошибочная gateway-маршрутизация не вернула SPA HTML вместо API-ответа. Host Nginx завершает TLS и для admin origin обязан направлять `/api/` напрямую в backend, а остальные пути — в admin container. В Compose порт `8080` только `expose`, без host publish; runtime запускается с `read_only: true`, tmpfs `/tmp`, `cap_drop: [ALL]` и `no-new-privileges`.
+Контейнер не проксирует API. Его `/api` и `/api/` намеренно отвечают `404`, чтобы ошибочная gateway-маршрутизация не вернула SPA HTML вместо API-ответа. Host Nginx завершает TLS и для admin origin направляет `/api/` напрямую в backend, а остальные пути — в admin container. В Compose порт `8080` публикуется только на host loopback `127.0.0.1:3002`; runtime запускается с `read_only: true`, tmpfs `/tmp`, `cap_drop: [ALL]` и `no-new-privileges`.
 
 `.github/workflows/deploy.yml` запускается только после успешного `Admin checks` для push в `main`. Он checkout-ит проверенный `head_sha`, перед build и повторно перед deploy fail-closed сверяет его с актуальным tip `refs/heads/main`, публикует в GHCR только commit tag `sha-<full-sha>`, а deploy передаёт защищённому server helper только image reference с registry digest и source SHA. Mutable `latest` и semver tags, парольный SSH и inline server secrets не используются. GitHub Environment `test` (production-like технический стенд) должен хранить `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY` и pinned `DEPLOY_KNOWN_HOSTS`; deploy user не должен быть root и получает sudo только на allowlisted `/usr/local/sbin/meal-deploy`.
 
