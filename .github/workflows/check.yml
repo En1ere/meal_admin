@@ -17,3 +17,5 @@ jobs:
                   QA_OUTPUT_DIR: ${{ runner.temp }}/meal-admin-check
             - run: npm run build
             - run: npm run test:e2e:admin -- --list
+              env:
+                  QA_OUTPUT_DIR: ${{ runner.temp }}/meal-admin-check
