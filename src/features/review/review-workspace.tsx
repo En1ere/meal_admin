@@ -187,14 +187,14 @@ export function ReviewWorkspace({
                             <tbody>
                                 {data.items.map((item) => (
                                     <tr key={item.id}>
-                                        <td>{item.targetId}</td>
-                                        <td>
+                                        <td data-label="Объект">{item.targetId}</td>
+                                        <td data-label="До / после исходного действия">
                                             {item.before} → {item.after}
                                         </td>
-                                        <td>
+                                        <td data-label="Сейчас">
                                             {item.current} · версия {item.actualVersion}
                                         </td>
-                                        <td>
+                                        <td data-label="Результат проверки">
                                             <strong>
                                                 {
                                                     {

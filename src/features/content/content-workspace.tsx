@@ -389,10 +389,12 @@ export function ContentWorkspace({
                                         <tbody>
                                             {Object.keys(left.fields).map((field) => (
                                                 <tr key={field}>
-                                                    <th>{field}</th>
-                                                    <td>{left.fields[field] ?? 'Не указано'}</td>
-                                                    <td>{right.fields[field] ?? 'Не указано'}</td>
-                                                    <td>
+                                                    <th data-label="Поле">{field}</th>
+                                                    <td data-label="Текущая карточка">
+                                                        {left.fields[field] ?? 'Не указано'}
+                                                    </td>
+                                                    <td data-label="Кандидат">{right.fields[field] ?? 'Не указано'}</td>
+                                                    <td data-label="Итог">
                                                         {left.fields[field] === right.fields[field] ? (
                                                             'Совпадает'
                                                         ) : (

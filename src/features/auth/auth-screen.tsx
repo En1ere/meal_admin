@@ -11,6 +11,7 @@ import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { useAdminStatus } from './unlock-screen.js';
 import { UnlockScreen } from './unlock-screen.js';
 import { setAdminUnlock } from '../../shared/auth/unlock.js';
+import { formatRecoveryCodes, safeOtpAuthUri } from './enrollment-model.js';
 
 const neutralError = (error: unknown) =>
     error instanceof ApiError
@@ -74,7 +75,7 @@ export function SignIn({ context = 'admin' }: { context?: AuthContext }) {
     return (
         <AuthShell staff>
             <h1>Вход администратора</h1>
-            <p className="auth-subtitle">Служебный доступ с двухфакторной проверкой</p>
+            <p className="auth-subtitle">Для доступа к панели нужна отдельная административная сессия.</p>
             <form onSubmit={(event) => void submit(event)} aria-busy={pending || status.isPending}>
                 <label htmlFor="login">Логин</label>
                 <input
@@ -122,7 +123,7 @@ export function SignIn({ context = 'admin' }: { context?: AuthContext }) {
                     {pending ? 'Проверяем…' : status.isPending ? 'Проверяем сохранённый вход…' : 'Продолжить'}
                 </button>
             </form>
-            <p className="inline-note">Для входа нужны пароль и приложение-аутентификатор либо резервный код.</p>
+            <p className="inline-note">Следующий шаг — подтверждение второго фактора.</p>
             {import.meta.env.VITE_API_MODE === 'mock' && (
                 <details className="developer-accounts">
                     <summary>Тестовый аккаунт</summary>
@@ -137,6 +138,44 @@ export function SignIn({ context = 'admin' }: { context?: AuthContext }) {
         </AuthShell>
     );
 }
+
+function CopyValueButton({ value, label }: { value: string; label: string }) {
+    const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle');
+
+    useEffect(() => {
+        if (copyState !== 'copied') return;
+        const timeout = window.setTimeout(() => setCopyState('idle'), 5000);
+        return () => window.clearTimeout(timeout);
+    }, [copyState]);
+
+    async function copy() {
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopyState('copied');
+        } catch {
+            setCopyState('error');
+        }
+    }
+
+    return (
+        <div className="copy-action">
+            <button type="button" className="button outline" onClick={() => void copy()}>
+                {copyState === 'copied' ? 'Скопировано' : label}
+            </button>
+            <span className="copy-status" role="status" aria-live="polite" data-state={copyState}>
+                {copyState === 'copied'
+                    ? 'Скопировано в буфер обмена.'
+                    : copyState === 'error'
+                      ? 'Не удалось скопировать автоматически. Выделите значение вручную.'
+                      : ''}
+            </span>
+            <span className="clipboard-note">
+                Буфер обмена не очищается автоматически. Удалите значение вручную после сохранения.
+            </span>
+        </div>
+    );
+}
+
 export function MfaScreen({ context }: { context: 'admin' }) {
     const runtime = useRuntime();
     const navigate = useNavigate();
@@ -152,6 +191,8 @@ export function MfaScreen({ context }: { context: 'admin' }) {
     const [expired, setExpired] = useState(false);
     const inFlight = useRef(false);
     const beginRequest = useRequestSignal();
+    const errorRef = useRef<HTMLParagraphElement>(null);
+    const enrollmentUri = flow?.enrollment ? safeOtpAuthUri(flow.enrollment.uri, flow.enrollment.secret) : null;
     useEffect(() => {
         if (!flow) return;
         const timeout = setTimeout(
@@ -163,6 +204,9 @@ export function MfaScreen({ context }: { context: 'admin' }) {
         );
         return () => clearTimeout(timeout);
     }, [flow, clearMfa]);
+    useEffect(() => {
+        if (error) errorRef.current?.focus();
+    }, [error]);
     async function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!flow || !runtime.api || inFlight.current) return;
@@ -209,11 +253,14 @@ export function MfaScreen({ context }: { context: 'admin' }) {
                     <p className="auth-subtitle">
                         Каждый код работает один раз. Сохраните их в надёжном месте: повторно они не показываются.
                     </p>
-                    <div className="recovery-codes">
+                    <ul className="recovery-codes" aria-label="Резервные коды">
                         {recovery.map((value) => (
-                            <code key={value}>{value}</code>
+                            <li key={value}>
+                                <code>{value}</code>
+                            </li>
                         ))}
-                    </div>
+                    </ul>
+                    <CopyValueButton value={formatRecoveryCodes(recovery)} label="Скопировать коды" />
                     <label className="checkbox-label">
                         <input type="checkbox" checked={saved} onChange={(e) => setSaved(e.target.checked)} />Я сохранил
                         резервные коды
@@ -248,27 +295,51 @@ export function MfaScreen({ context }: { context: 'admin' }) {
                             : 'Введите код из приложения или одноразовый резервный код.'}
                     </p>
                     {flow.enrollment && (
-                        <section className="enrollment">
-                            <p>Ключ для ручной настройки</p>
+                        <section className="enrollment" aria-labelledby="enrollment-title">
+                            <h2 id="enrollment-title">Подключите приложение-аутентификатор</h2>
+                            <ol>
+                                <li>
+                                    Откройте Google Authenticator, Microsoft Authenticator, 1Password или другое
+                                    TOTP-приложение.
+                                </li>
+                                <li>Добавьте аккаунт вручную и укажите ключ ниже.</li>
+                                <li>Введите появившийся шестизначный код в форму.</li>
+                            </ol>
+                            <p className="enrollment-label">Ключ для ручной настройки</p>
                             <code>{flow.enrollment.secret}</code>
-                            <p>Meal Planner · TOTP · 6 цифр · 30 секунд</p>
+                            <CopyValueButton value={flow.enrollment.secret} label="Скопировать ключ" />
+                            {enrollmentUri && (
+                                <a className="button outline authenticator-link" href={enrollmentUri}>
+                                    Открыть в приложении-аутентификаторе
+                                </a>
+                            )}
+                            <p className="inline-note">Meal Planner · TOTP · 6 цифр · 30 секунд</p>
+                            <p className="inline-note">
+                                Не отправляйте ключ другим людям. После подтверждения он больше не будет показан.
+                            </p>
                         </section>
                     )}
                     <form onSubmit={(event) => void submit(event)} aria-busy={pending}>
-                        <label htmlFor="mfa-code">{method === 'totp' ? 'Код из приложения' : 'Резервный код'}</label>
+                        <label htmlFor="mfa-code">{method === 'totp' ? 'Код подтверждения' : 'Резервный код'}</label>
                         <input
                             id="mfa-code"
                             value={code}
-                            onChange={(e) => setCode(e.target.value)}
+                            onChange={(e) =>
+                                setCode(
+                                    method === 'totp' ? e.target.value.replace(/\D/gu, '').slice(0, 6) : e.target.value,
+                                )
+                            }
                             autoComplete="one-time-code"
                             inputMode={method === 'totp' ? 'numeric' : 'text'}
+                            pattern={method === 'totp' ? '[0-9]{6}' : undefined}
+                            placeholder={method === 'totp' ? 'Введите код' : 'Введите резервный код'}
                             required
                             minLength={6}
                             maxLength={method === 'totp' ? 6 : 64}
                             disabled={pending}
                         />
                         {error && (
-                            <p className="form-error" role="alert">
+                            <p className="form-error" role="alert" tabIndex={-1} ref={errorRef}>
                                 {error}
                             </p>
                         )}

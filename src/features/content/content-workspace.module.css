@@ -74,8 +74,61 @@
     text-align: left;
 }
 
-@media (width <= 700px) {
+@media (width <= 800px) {
     .columns {
         grid-template-columns: 1fr;
+    }
+
+    .table {
+        overflow: visible;
+    }
+
+    .table table,
+    .table tbody,
+    .table tr {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .table tr {
+        margin-block: 0 1rem;
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        background: var(--surface);
+    }
+
+    .table th,
+    .table td {
+        display: grid;
+        grid-template-columns: minmax(7.5rem, 36%) minmax(0, 1fr);
+        gap: 0.75rem;
+        align-items: start;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        overflow-wrap: anywhere;
+    }
+
+    .table tr > :last-child {
+        border-bottom: 0;
+    }
+
+    .table th::before,
+    .table td::before {
+        color: var(--muted);
+        font-weight: 600;
+        content: attr(data-label);
     }
 }

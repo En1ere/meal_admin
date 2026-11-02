@@ -45,6 +45,7 @@ const routes = [
     '/dev/scenarios',
     '/does-not-exist',
 ];
+const workspaceRoutes = new Set(['/notifications', '/settings/notifications', '/settings/recipes']);
 
 async function loginAdmin(page: Page) {
     await page.goto('/auth');
@@ -56,7 +57,7 @@ async function loginAdmin(page: Page) {
     await page.waitForURL(/\/auth\/mfa/u);
     const secret = await page.locator('.enrollment code').textContent();
     expect(secret).toBeTruthy();
-    await enterFreshTotp(page.getByLabel('Код из приложения'), secret!);
+    await enterFreshTotp(page.getByLabel('Код подтверждения'), secret!);
     await page.getByRole('button', { name: 'Подтвердить' }).click();
     const saved = page.getByLabel(/Я сохранил/u);
     await expect(saved).toBeVisible({ timeout: 10_000 });
@@ -100,5 +101,8 @@ for (const [index, chunk] of routeChunks.entries())
             await expect(page, route).not.toHaveTitle(/Вход администратора/u);
             expect(errors, route).toEqual([]);
             await expect(page.locator('body'), route).not.toContainText('Application error');
+            if (workspaceRoutes.has(expected)) {
+                await expect(page.getByRole('navigation', { name: 'Разделы администрирования' })).toBeVisible();
+            }
         }
     });

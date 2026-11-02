@@ -153,11 +153,11 @@ export function FreeAiWorkspace({ id }: { id: string }) {
                         <tbody>
                             {data.buckets.map((bucket) => (
                                 <tr key={bucket.id}>
-                                    <td>{kindLabels[bucket.kind] ?? bucket.kind}</td>
-                                    <td>{bucket.granted}</td>
-                                    <td>{bucket.available}</td>
-                                    <td>{bucket.reserved}</td>
-                                    <td>
+                                    <td data-label="Источник">{kindLabels[bucket.kind] ?? bucket.kind}</td>
+                                    <td data-label="Выдано">{bucket.granted}</td>
+                                    <td data-label="Доступно">{bucket.available}</td>
+                                    <td data-label="Резерв">{bucket.reserved}</td>
+                                    <td data-label="Срок">
                                         {bucket.expiresAt ? new Date(bucket.expiresAt).toLocaleString() : 'Без срока'}
                                     </td>
                                 </tr>

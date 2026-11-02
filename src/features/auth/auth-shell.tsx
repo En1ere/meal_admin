@@ -11,13 +11,16 @@ export function AuthShell({ children, staff = false }: { children: ReactNode; st
             themeControl={<ThemeControl />}
             art={{ src: '/assets/auth-cover-720x768.webp', alt: 'Уютная кухня в зелёной теме' }}
             artCaption={
-                <p>
-                    Планируйте вкусные блюда и экономьте
-                    <br />
-                    время каждый день.
-                </p>
+                staff ? undefined : (
+                    <p>
+                        Планируйте вкусные блюда и экономьте
+                        <br />
+                        время каждый день.
+                    </p>
+                )
             }
         >
+            {staff && <p className="auth-context">Администрирование</p>}
             {children}
         </DesignSystemAuthShell>
     );

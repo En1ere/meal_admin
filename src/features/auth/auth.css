@@ -1,6 +1,14 @@
 .auth-content h1 {
-    font-size: 35px;
-    margin-top: 34px;
+    font-size: clamp(36px, 3.2vw, 50px);
+    margin-top: 18px;
+}
+
+.auth-context {
+    margin-top: 26px;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .auth-subtitle {
@@ -112,16 +120,73 @@
 }
 
 .enrollment {
-    padding: 18px;
+    padding: 20px;
     background: var(--soft);
     margin: 20px 0;
     border-radius: 8px;
+    border: 1px solid var(--line);
+    text-align: left;
+}
+
+.enrollment h2 {
+    font-size: 24px;
+}
+
+.enrollment ol {
+    margin: 14px 0 18px;
+    padding-left: 22px;
+    color: var(--muted);
+}
+
+.enrollment li + li {
+    margin-top: 8px;
+}
+
+.enrollment-label {
+    font-weight: 600;
 }
 
 .enrollment code {
     display: block;
     overflow-wrap: anywhere;
     margin: 8px 0;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+}
+
+.copy-action {
+    display: grid;
+    gap: 8px;
+}
+
+.copy-action .button,
+.authenticator-link {
+    width: 100%;
+}
+
+.copy-status {
+    min-height: 1.5em;
+    font-size: 13px;
+}
+
+.copy-status[data-state='copied'] {
+    color: var(--success);
+}
+
+.copy-status[data-state='error'] {
+    color: var(--danger);
+}
+
+.clipboard-note {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.authenticator-link {
+    margin-top: 10px;
 }
 
 .recovery-codes {
@@ -129,6 +194,8 @@
     gap: 8px;
     text-align: left;
     margin: 20px 0;
+    padding: 0;
+    list-style: none;
 }
 
 .recovery-codes code {
@@ -145,8 +212,12 @@
 
 @media (width <= 760px) {
     .auth-content h1 {
-        font-size: 30px;
-        margin-top: 28px;
+        font-size: 36px;
+        margin-top: 16px;
+    }
+
+    .auth-context {
+        margin-top: 22px;
     }
 
     .auth-subtitle {

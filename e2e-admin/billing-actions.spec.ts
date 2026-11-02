@@ -17,7 +17,7 @@ async function enrollAdmin(page: Page) {
     await page.waitForURL(/\/auth\/mfa/u);
     const secret = await page.locator('.enrollment code').textContent();
     expect(secret).toBeTruthy();
-    await enterFreshTotp(page.getByLabel('Код из приложения'), secret!);
+    await enterFreshTotp(page.getByLabel('Код подтверждения'), secret!);
     await page.getByRole('button', { name: 'Подтвердить', exact: true }).click();
     await expect(page.locator('.recovery-codes code')).toHaveCount(10);
     const recoveryCodes = await page.locator('.recovery-codes code').allTextContents();

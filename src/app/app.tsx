@@ -132,10 +132,10 @@ export function App() {
                                         />
                                         <Route path="/admin/:section" element={<AdminRecordPage />} />
                                         <Route path="/admin/:section/:id" element={<AdminRecordPage />} />
+                                        <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
+                                        <Route path="/settings/recipes" element={<RecipePolicyPage />} />
+                                        <Route path="/notifications" element={<NotificationCenterPage />} />
                                     </Route>
-                                    <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
-                                    <Route path="/settings/recipes" element={<RecipePolicyPage />} />
-                                    <Route path="/notifications" element={<NotificationCenterPage />} />
                                     {ScenarioConsole && <Route path="/dev/scenarios" element={<ScenarioConsole />} />}
                                 </Route>
                                 <Route path="/auth" element={<SignIn />} />
