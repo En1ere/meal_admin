@@ -8,7 +8,8 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const output = process.env.QA_OUTPUT_DIR;
 const assets = output ? path.join(output, 'build', 'assets') : path.join(root, 'build', 'assets');
 const budgets = {
-    chunks: 20,
+    // The runtime settings registry is an intentional independently loaded route.
+    chunks: 21,
     maxRawBytes: 500_000,
     maxGzipBytes: 100_000,
     totalRawBytes: 1_100_000,
