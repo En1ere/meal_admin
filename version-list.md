@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.130 - 02.11.2026 | 11:23 - Добавлено one-shot восстановление после stale Vite lazy chunk при immutable-деплое: `vite:preloadError` перехватывается до React render, точный URL перезагружается один раз, а sessionStorage marker изолирован по версии и location и исключает reload-loop. При недоступном tab storage поведение остаётся fail-closed через существующий route error boundary. Добавлены regression-тесты и ручной cross-release сценарий; API и контракты не изменены.
+
 0.0.129 - 02.11.2026 | 09:18 - Auth/MFA onboarding приведён к backend-контракту: первый admin login показывает пошаговую ручную TOTP-настройку, безопасную otpauth-ссылку, копирование секрета и recovery-кодов, numeric validation и доступные ошибки; sign-in/MFA copy и иерархия согласованы с UI-макетами. Четыре темы теперь управляют native color-scheme и на служебных shell без принудительной тёмной схемы. Настройки уведомлений, рецептов и центр уведомлений сохраняют общий admin shell; его типографика, overlay и touch-targets используют дизайн-токены. Таблицы сравнения контента, отката и Free AI на узких экранах преобразуются в подписанные label/value-карточки без горизонтального переполнения. OpenAPI не менялся; отсутствие reset/re-enrollment и service-account endpoint зафиксировано как backend-блокер.
 
 0.0.128 - 29.10.2026 | 18:22 - Release metadata синхронизирована с backend runtime 0.0.152 после устранения APP_VERSION drift; OpenAPI 0.0.61, schema v31 и wire-контракты не менялись.
