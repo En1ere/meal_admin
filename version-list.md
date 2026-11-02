@@ -331,3 +331,5 @@ Generated DTO синхронизированы с OpenAPI 0.0.17 пользов�
 0.0.94 - 10.22.2026 | 13:47 - Administrative frontend документация сведена к актуальным README/AGENTS и TESTs.md; удалены старые acceptance/audit/handoff-документы и дубли инструкции без изменения runtime и API.
 
 0.0.124 - 10.29.2026 | 15:18 - Добавлена read-only страница «Состояние системы» по финальному backend-контракту observability: 6 секций, ручное обновление, partial/stale/unavailable/no-samples/error состояния, typed mocks, FSD public API, route/navigation и тестовое покрытие.
+
+0.0.131 - 11.02.2026 | 14:18 - Синхронизированы OpenAPI/HTTP snapshots с backend 0.0.160, OpenAPI 0.0.63 и schema v33; regenerated admin client проверяет 106 разрешённых операций и намеренно исключает user-session media endpoints. README и TESTs фиксируют fail-closed границу до отдельного staff media-контракта и VPS capacity/OOM drill.

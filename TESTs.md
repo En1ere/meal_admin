@@ -1,5 +1,13 @@
 # Проверка Meal Admin
 
+## Синхронизация backend media-контракта 0.0.131 — 02.11.2026
+
+1. `contracts/openapi.json` и `contracts/http-cases.json` должны побайтно соответствовать backend `0.0.160`; `npm run contracts:check` проверяет OpenAPI `0.0.63` и 106 административных операций.
+2. Generated admin client не должен экспортировать пользовательские `/api/v1/media/*`: эти маршруты требуют user-session и не являются staff/admin API.
+3. Существующие auth/MFA, testing workspace, moderation и observability маршруты должны сохранить сигнатуры и defensive error envelopes.
+4. Появление staff media moderation допускается только после отдельного backend endpoint/grant/audit контракта; ослаблять фильтр generator или обращаться к user endpoint из админки запрещено.
+5. Schema v33 и media processor не означают включение пользовательских загрузок: до отдельного capacity/OOM drill UI не должен показывать фиктивно успешную media-операцию.
+
 ## Восстановление после stale lazy chunk 0.0.130 — 02.11.2026
 
 1. Открыть админку, оставить вкладку на уже загруженной версии, развернуть новую immutable-сборку и перейти на ранее не открывавшийся lazy-маршрут, например `/admin/testing`.
