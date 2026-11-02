@@ -44,6 +44,9 @@ const ObservabilityPage = lazy(async () => ({
 const AcceptanceTestingPage = lazy(async () => ({
     default: (await import('../features/acceptance-testing/client.js')).AcceptanceTestingPage,
 }));
+const RuntimeSettingsPage = lazy(async () => ({
+    default: (await import('../features/runtime-settings/client.js')).RuntimeSettingsPage,
+}));
 const ScenarioConsole =
     import.meta.env.DEV && import.meta.env.VITE_API_MODE === 'mock'
         ? lazy(async () => ({ default: (await import('../mocks/scenario-console.js')).ScenarioConsole }))
@@ -62,6 +65,7 @@ function RouteMetadata() {
             '/admin/catalog/reputation': 'Репутация',
             '/admin/observability': 'Наблюдаемость',
             '/admin/testing': 'Приёмочное тестирование',
+            '/admin/runtime-settings': 'Конфигурация сервиса',
             '/settings/notifications': 'Настройки уведомлений',
             '/settings/recipes': 'Рецепты и антиспам',
             '/notifications': 'Центр уведомлений',
@@ -114,6 +118,7 @@ export function App() {
                                         <Route path="/admin/releases/:id" element={<ReleaseDetailPage />} />
                                         <Route path="/admin/observability" element={<ObservabilityPage />} />
                                         <Route path="/admin/testing" element={<AcceptanceTestingPage />} />
+                                        <Route path="/admin/runtime-settings" element={<RuntimeSettingsPage />} />
                                         <Route
                                             path="/admin/queues"
                                             element={<Navigate replace to="/admin/queues/recipes" />}

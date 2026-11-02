@@ -7,7 +7,8 @@ import { ThemeControl } from '../../shared/ui/theme-control.js';
 
 export function AdminShell({ active, children }: { active: Section; children: ReactNode }) {
     const { pathname } = useLocation();
-    const standaloneWorkspace = pathname === '/admin/observability' || pathname === '/admin/testing';
+    const standaloneWorkspace =
+        pathname === '/admin/observability' || pathname === '/admin/testing' || pathname === '/admin/runtime-settings';
     const groups: ServiceNavigationGroup[] = [...new Set(sections.map((section) => section.group))].map((group) => ({
         label: group,
         items: [
@@ -29,6 +30,11 @@ export function AdminShell({ active, children }: { active: Section; children: Re
                           href: '/admin/testing',
                           label: 'Тестирование',
                           active: pathname === '/admin/testing',
+                      },
+                      {
+                          href: '/admin/runtime-settings',
+                          label: 'Конфигурация',
+                          active: pathname === '/admin/runtime-settings',
                       },
                   ]
                 : []),

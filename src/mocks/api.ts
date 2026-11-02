@@ -25,6 +25,7 @@ import { releaseApi } from './release-api.js';
 import { accountDeletionReviewHandle } from './account-deletion-review.js';
 import { createObservabilityFixture } from './observability.js';
 import { acceptanceTestingHandle } from './acceptance-testing.js';
+import { runtimeSettingsMock } from './runtime-settings.js';
 import {
     fixturePassword,
     fixtureUserIds,
@@ -399,6 +400,18 @@ export class MockApi {
                     if (operation.params && !operation.params.safeParse(params).success) return fail(400);
                     if (wirePath === '/api/v1/admin/observability' && request.method === 'GET')
                         return success(createObservabilityFixture(now));
+                    const runtimeSettings = runtimeSettingsMock(state.admin, {
+                        method: request.method,
+                        path: wirePath,
+                        tab: new URL(request.url).searchParams.get('tab'),
+                        body: parsed?.success ? parsed.data : body,
+                        critical: !!adminCriticalUntil(session, now),
+                        now,
+                    });
+                    if (runtimeSettings)
+                        return runtimeSettings.kind === 'success'
+                            ? success(runtimeSettings.data)
+                            : fail(runtimeSettings.status, runtimeSettings.code);
                     if (releaseCanonicalRoute) {
                         try {
                             const result = releaseApi(

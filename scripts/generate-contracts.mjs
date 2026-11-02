@@ -88,11 +88,11 @@ function schema(s) {
     );
 }
 const entries = [];
-for (const [path, item] of Object.entries(document.paths))
+for (const [path, item] of Object.entries(document.paths)) {
+    if (!includedPath(path)) continue;
     for (const [method, operation] of Object.entries(item)) {
         if (!['get', 'post', 'put', 'patch'].includes(method))
             throw Error('Review new HTTP method before generating mocks');
-        if (!includedPath(path)) continue;
         const request = operation.requestBody?.content['application/json']?.schema;
         const pathParameters = operation.parameters?.filter((parameter) => parameter.in === 'path') ?? [];
         const params = pathParameters.length
@@ -102,6 +102,7 @@ for (const [path, item] of Object.entries(document.paths))
             `${JSON.stringify(`${method.toUpperCase()} ${path}`)}:{params:${params},request:${request ? schema(request) : 'null'},success:${schema((operation.responses['200'] ?? operation.responses['201']).content['application/json'].schema)}}`,
         );
     }
+}
 const error = Object.values(document.paths)
     .flatMap((item) => Object.values(item))
     .find((operation) => operation.responses?.['401'])?.responses['401'].content['application/json'].schema;

@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.134 - 11.02.2026 | 18:25 - Добавлен безопасный реестр конфигурации `/admin/runtime-settings` по выбранному варианту 2: семь вкладок, таблица состояния и боковая карточка с источником, готовностью, затронутыми сервисами, проверками, блокерами, инструкцией и историей. Секреты никогда не показываются значением — только presence/fingerprint/rotation. Web Push policy изменяется только через version-bound backend preview, свежее critical confirmation, execute и readback; env/VPS/GitHub-параметры остаются read-only. Добавлены partial/error/empty/stale-safe состояния, адаптивная таблица, четыре темы через semantic tokens, contract/UI regression tests и ручные тест-кейсы.
+
 0.0.133 - 11.02.2026 | 17:36 - Deployment runbook синхронизирован с исправленным server gate: параллельные backend/frontend/admin rollout теперь ограниченно ожидают общий lock вместо ложного немедленного падения. Повторный immutable admin rollout используется как сквозная проверка исправления; UI, OpenAPI и публичные контракты не изменены.
 
 0.0.132 - 11.02.2026 | 16:55 - OpenAPI snapshot и generated admin client синхронизированы с backend 0.0.162 / OpenAPI 0.0.63 после добавления isolated OCR preview contract. Новая admin-страница не требуется: sidecar и его ошибки остаются в существующей operations/observability модели; admin runtime, routes и permissions не изменены.
