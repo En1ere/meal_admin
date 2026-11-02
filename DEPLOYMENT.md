@@ -41,7 +41,7 @@
 
 Image job публикует BuildKit provenance и SBOM рядом с образом. `NODE_IMAGE` и `NGINX_IMAGE` в `Dockerfile` закреплены проверенными references с `@sha256:`; при плановом обновлении версии сначала получить новый digest из registry, проверить image build/runtime smoke и обновить tag вместе с digest. Итоговый admin image развёртывается только по digest.
 
-Server helper обязан под lock проверить allowlist component/image/digest, сохранить предыдущий digest, выполнить pull/recreate, дождаться `/healthz`, проверить публичные root/deep-link и контролируемый JSON `401` от admin `auth/me`. При любой ошибке он восстанавливает предыдущий digest и повторяет smoke. Ручной rollback выполняется отдельным allowlisted helper; workflow не редактирует Compose/env на сервере и не выполняет destructive database actions.
+Server helper обязан под общим lock проверить allowlist component/image/digest, сохранить предыдущий digest, выполнить pull/recreate, дождаться `/healthz`, проверить публичные root/deep-link и контролируемый JSON `401` от admin `auth/me`. Параллельные backend/frontend/admin rollout ожидают lock ограниченное время (server default 300 секунд), а не падают сразу из-за штатного пересечения workflow. При любой ошибке helper восстанавливает предыдущий digest и повторяет smoke. Ручной rollback выполняется отдельным allowlisted helper; workflow не редактирует Compose/env на сервере и не выполняет destructive database actions.
 
 ### Подтверждение rollout 29 октября 2026
 

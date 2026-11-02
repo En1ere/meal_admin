@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.133 - 11.02.2026 | 17:36 - Deployment runbook синхронизирован с исправленным server gate: параллельные backend/frontend/admin rollout теперь ограниченно ожидают общий lock вместо ложного немедленного падения. Повторный immutable admin rollout используется как сквозная проверка исправления; UI, OpenAPI и публичные контракты не изменены.
+
 0.0.132 - 11.02.2026 | 16:55 - OpenAPI snapshot и generated admin client синхронизированы с backend 0.0.162 / OpenAPI 0.0.63 после добавления isolated OCR preview contract. Новая admin-страница не требуется: sidecar и его ошибки остаются в существующей operations/observability модели; admin runtime, routes и permissions не изменены.
 
 0.0.130 - 02.11.2026 | 11:23 - Добавлено one-shot восстановление после stale Vite lazy chunk при immutable-деплое: `vite:preloadError` перехватывается до React render, точный URL перезагружается один раз, а sessionStorage marker изолирован по версии и location и исключает reload-loop. При недоступном tab storage поведение остаётся fail-closed через существующий route error boundary. Добавлены regression-тесты и ручной cross-release сценарий; API и контракты не изменены.
