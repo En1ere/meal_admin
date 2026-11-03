@@ -222,7 +222,7 @@ function DetailsPanel({ item, close }: { item: RuntimeSetting; close: () => void
             )}
             {item.instruction && (
                 <section>
-                    <h3>Как изменить</h3>
+                    <h3>{item.section === 'backup_recovery' ? 'Как сохранить безопасно' : 'Как изменить'}</h3>
                     <p>{item.instruction}</p>
                 </section>
             )}

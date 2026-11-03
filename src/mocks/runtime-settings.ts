@@ -6,6 +6,7 @@ const tabs = [
     ['storage', 'Хранилище и OCR'],
     ['security', 'Безопасность'],
     ['deploy_backup', 'Деплой и backup'],
+    ['backup_recovery', 'Recovery-доступ'],
     ['integrations', 'Интеграции'],
     ['legal', 'Юридические данные'],
 ] as const;
@@ -14,6 +15,7 @@ const labels: Record<string, string> = {
     storage: 'Media storage и OCR',
     security: 'Ключи и доступ',
     deploy_backup: 'Deployment и backup',
+    backup_recovery: 'Recovery-доступ',
     integrations: 'AI и оплаты',
     legal: 'Юридические данные',
 };
@@ -80,28 +82,58 @@ export function runtimeSettingsMock(
                           policy: webPolicy,
                       },
                   ]
-                : [
-                      {
-                          key: `${tab}-readiness`,
-                          label: labels[tab] ?? tab,
-                          description: 'Безопасная агрегированная готовность раздела.',
-                          value: 'missing',
-                          status: 'blocked',
-                          source: 'derived',
-                          readiness: 'owner_input',
-                          editable: false,
-                          sensitive: true,
-                          updatedAt: null,
-                          version: null,
-                          blockers: ['Требуются данные владельца'],
-                          affectedServices: ['backend'],
-                          checks: [],
-                          instruction: 'Следуйте production runbook соответствующего сервиса.',
-                          history: [],
-                          secret: { configured: false, fingerprint: null, rotatedAt: null },
-                          policy: null,
-                      },
-                  ];
+                : tab === 'backup_recovery'
+                  ? [
+                        {
+                            key: 'local-backup-recovery-access',
+                            label: 'Recovery-доступ к локальному backup',
+                            description:
+                                'Где получить, как независимо сохранить и безопасно ротировать recovery password.',
+                            value: 'ключ настроен на VPS · независимая копия не подтверждена',
+                            status: 'partial',
+                            source: 'vps_secret',
+                            readiness: 'owner_input',
+                            editable: false,
+                            sensitive: true,
+                            updatedAt: new Date(input.now).toISOString(),
+                            version: 1,
+                            blockers: ['offline_recovery_copy_unconfirmed'],
+                            affectedServices: ['restic', 'local-backup'],
+                            checks: [
+                                'password file: /etc/meal-planner/secrets/local-backup-password',
+                                'repository: /var/backups/meal-planner/local-restic',
+                                'root:root 0600',
+                                'никаких plaintext-копий',
+                            ],
+                            instruction:
+                                'Получите password через root SSH и сохраните напрямую в encrypted secure note. Не редактируйте password file вручную.',
+                            history: [],
+                            secret: { configured: true, fingerprint: null, rotatedAt: null },
+                            policy: null,
+                        },
+                    ]
+                  : [
+                        {
+                            key: `${tab}-readiness`,
+                            label: labels[tab] ?? tab,
+                            description: 'Безопасная агрегированная готовность раздела.',
+                            value: 'missing',
+                            status: 'blocked',
+                            source: 'derived',
+                            readiness: 'owner_input',
+                            editable: false,
+                            sensitive: true,
+                            updatedAt: null,
+                            version: null,
+                            blockers: ['Требуются данные владельца'],
+                            affectedServices: ['backend'],
+                            checks: [],
+                            instruction: 'Следуйте production runbook соответствующего сервиса.',
+                            history: [],
+                            secret: { configured: false, fingerprint: null, rotatedAt: null },
+                            policy: null,
+                        },
+                    ];
         return {
             kind: 'success' as const,
             data: {

@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.136 - 11.03.2026 | 12:50 - В реестр конфигурации добавлена отдельная вкладка `Recovery-доступ` с одной смысловой карточкой: фиксированные пути restic password/repository, root-only получение, encrypted secure note, запрет plaintext/Git/.env/email/chat и безопасная последовательность ротации. Secret value/hash и reveal/copy-secret действие отсутствуют; состояние остаётся partial, пока независимая копия владельца не подтверждается отдельным механизмом. Контракт синхронизирован с backend 0.0.170 / OpenAPI 0.0.65 / schema v34.
+
 0.0.135 - 11.02.2026 | 19:39 - Production browser budget baseline обновлён с 20 до 21 JavaScript chunk для новой независимо загружаемой страницы runtime settings. Лимиты максимального и суммарного raw/gzip-размера, проверка server-only маркеров и artifact gate не ослаблены; исправлен обнаруженный CI image-build regression.
 
 0.0.134 - 11.02.2026 | 18:25 - Добавлен безопасный реестр конфигурации `/admin/runtime-settings` по выбранному варианту 2: семь вкладок, таблица состояния и боковая карточка с источником, готовностью, затронутыми сервисами, проверками, блокерами, инструкцией и историей. Секреты никогда не показываются значением — только presence/fingerprint/rotation. Web Push policy изменяется только через version-bound backend preview, свежее critical confirmation, execute и readback; env/VPS/GitHub-параметры остаются read-only. Добавлены partial/error/empty/stale-safe состояния, адаптивная таблица, четыре темы через semantic tokens, contract/UI regression tests и ручные тест-кейсы.

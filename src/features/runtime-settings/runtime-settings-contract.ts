@@ -7,6 +7,7 @@ export const runtimeSettingSectionSchema = z.enum([
     'storage',
     'security',
     'deploy_backup',
+    'backup_recovery',
     'integrations',
     'legal',
 ]);

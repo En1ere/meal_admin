@@ -1,5 +1,14 @@
 # Проверка Meal Admin
 
+## Recovery-доступ к backup 0.0.136 — 03.11.2026
+
+1. Backend и admin contract должны принимать отдельный tab code `backup_recovery`; неизвестный tab по-прежнему отклоняется strict schema.
+2. Вкладка содержит одну карточку `local-backup-recovery-access`, чтобы не дублировать operational health из «Деплой и backup».
+3. Карточка показывает только фиксированные пути password file/repository, права `root:root 0600`, root SSH-инструкцию, правила encrypted secure note и последовательность restic rotation.
+4. Response, DOM, console и network не содержат password, его hash/fingerprint или кнопку reveal/copy-secret. `secret` содержит только configured boolean и `null` metadata.
+5. Даже при configured key состояние остаётся partial с owner input `offline_recovery_copy_unconfirmed`: без отдельного critical attestation API нельзя утверждать, что независимая копия создана.
+6. Проверить четыре темы, keyboard navigation и mobile viewport: восьмая вкладка доступна через горизонтальный tab scroll, карточка читается без горизонтального переполнения.
+
 ## Синхронизация backend media-контракта 0.0.131 — 02.11.2026
 
 1. `contracts/openapi.json` и `contracts/http-cases.json` должны побайтно соответствовать backend `0.0.160`; `npm run contracts:check` проверяет OpenAPI `0.0.63` и 106 административных операций.

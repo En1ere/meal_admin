@@ -4,6 +4,7 @@ export const runtimeSettingSections = [
     ['storage', 'Хранилище и OCR'],
     ['security', 'Безопасность'],
     ['deploy_backup', 'Деплой и backup'],
+    ['backup_recovery', 'Recovery-доступ'],
     ['integrations', 'Интеграции'],
     ['legal', 'Юридические данные'],
 ] as const;

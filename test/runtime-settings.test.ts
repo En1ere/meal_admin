@@ -58,12 +58,46 @@ void test('runtime settings contract is strict and never accepts a secret value'
     assert.deepEqual(model.items[0]?.editablePolicy?.ttlSeconds, entry.policy.ttlSeconds);
 });
 
+void test('runtime settings accepts the recovery tab and keeps recovery password value server-side', () => {
+    const recovery = {
+        data: {
+            tabs: [{ code: 'backup_recovery' as const, label: 'Recovery-доступ' }],
+            selectedTab: 'backup_recovery' as const,
+            entries: [
+                {
+                    ...entry,
+                    key: 'local-backup-recovery-access',
+                    label: 'Recovery-доступ к локальному backup',
+                    value: 'ключ настроен на VPS · независимая копия не подтверждена',
+                    status: 'partial' as const,
+                    readiness: 'owner_input' as const,
+                    instruction: 'Получите password через root SSH и сохраните в encrypted secure note.',
+                    policy: null,
+                    editable: false,
+                    secret: { configured: true, fingerprint: null, rotatedAt: null },
+                },
+            ],
+            generatedAt: '2026-11-03T01:00:00.000Z',
+            completeness: 'complete' as const,
+            unavailableSources: [],
+        },
+        meta: { requestId: crypto.randomUUID() },
+    };
+    assert.equal(runtimeSettingsRegistryEnvelopeSchema.safeParse(recovery).success, true);
+    const model = mapRuntimeSettingsRegistry(recovery.data);
+    assert.equal(model.items[0]?.section, 'backup_recovery');
+    assert.equal(model.items[0]?.secret?.configured, true);
+    assert.equal(model.items[0]?.secret?.fingerprint, null);
+    assert.doesNotMatch(JSON.stringify(recovery), /actual-secret|recoveryPasswordValue/);
+});
+
 void test('configuration page keeps preview, critical confirmation and responsive labelled rows', async () => {
     const source = await readFile('src/features/runtime-settings/runtime-settings-page.tsx', 'utf8');
     const styles = await readFile('src/features/runtime-settings/runtime-settings.module.css', 'utf8');
     assert.match(source, /Предпросмотр изменений/);
     assert.match(source, /<CriticalConfirmation/);
     assert.match(source, /Значение никогда не передаётся в admin UI/);
+    assert.match(source, /Как сохранить безопасно/);
     assert.match(source, /data-label="Источник"/);
     assert.match(source, /data-label="Состояние \/ готовность"/);
     assert.match(source, /Проверяем актуальность снимка/);
