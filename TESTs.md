@@ -109,3 +109,11 @@
 Собранный admin preview, production Next frontend и API на 3001 с основной PostgreSQL проверены совместно: database readiness, CSRF/cookie, анонимный me→401 и HTML доступны. В четырёх браузерных контекстах (оба интерфейса desktop/mobile) проверены отсутствие development mocks, pageerror и горизонтального переполнения.
 
 На отдельном API 3003 с временным изолированным PostgreSQL и синтетическими fixtures выполнены реальные браузерные auth-сценарии: пользователь login→me200→logout→me401; администратор password+TOTP→me/status200 unlocked→logout с очищенным tab proof. Pageerror не возникли. Это проверка подключения и авторизации; полный E2E-набор, полная визуальная бизнес-приёмка и реальные внешние провайдеры не проверялись. Тестовые fixtures создавались в отдельном временном кластере, а не в основной БД сервиса.
+
+## Reliability checkpoint 03.11.2026
+
+- Полный `npm run check`: design-system 7/7, contracts OpenAPI 0.0.65 / 109 операций, architecture/type/lint/style/format PASS, unit 136/136.
+- Production build/browser budget PASS: 21 chunk, max raw/gzip 398,129/88,287 B, total raw/gzip 1,008,420/224,641 B; dependency audit — 0 vulnerabilities.
+- Edge desktop/mobile reliability pack 28/28 PASS; отдельный moderation residual pack 10/10 PASS без retry/flaky.
+- VPS PostgreSQL/application restart и frontend immutable rollback/roll-forward завершены all-component verify; после global backend limiter окна admin `/auth` вернул 200.
+- Physical screen reader/device, реальные payment/SMTP/AI/scanner providers и production RUM остаются внешними release gates.

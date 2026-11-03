@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.137 - 11.03.2026 | 14:21 - Зафиксирован финальный reliability checkpoint без изменения admin runtime/API: полный check 136/136, build/browser budget и audit 0; Edge desktop/mobile основной pack 28/28 и recipe moderation residual 10/10 подтвердили auth/MFA, четыре темы, observability/runtime settings/recovery, approve/hide/unpublish, 409/503 и unknown-outcome readback. VPS restart и frontend immutable rollback/roll-forward завершились полным deployment verify; внешние providers и physical-device accessibility остаются отдельными gates.
+
 0.0.136 - 11.03.2026 | 12:50 - В реестр конфигурации добавлена отдельная вкладка `Recovery-доступ` с одной смысловой карточкой: фиксированные пути restic password/repository, root-only получение, encrypted secure note, запрет plaintext/Git/.env/email/chat и безопасная последовательность ротации. Secret value/hash и reveal/copy-secret действие отсутствуют; состояние остаётся partial, пока независимая копия владельца не подтверждается отдельным механизмом. Контракт синхронизирован с backend 0.0.170 / OpenAPI 0.0.65 / schema v34.
 
 0.0.135 - 11.02.2026 | 19:39 - Production browser budget baseline обновлён с 20 до 21 JavaScript chunk для новой независимо загружаемой страницы runtime settings. Лимиты максимального и суммарного raw/gzip-размера, проверка server-only маркеров и artifact gate не ослаблены; исправлен обнаруженный CI image-build regression.

@@ -304,3 +304,12 @@
 - Все destructive-команды выполнены только на одноразовых фикстурах и подтверждены readback/audit.
 - Внешние интеграции без настроенных провайдеров явно fail-closed.
 - После теста стенд очищен или восстановлен до зафиксированного baseline.
+
+## Финальный reliability checkpoint 03.11.2026
+
+1. Запустить `npm run check`, `npm run test:performance:budget` и dependency audit. Ожидается: design-system 7/7, admin unit 136/136, contracts/architecture/type/lint/style/format/build PASS, 0 vulnerabilities; max chunk gzip не более принятого budget.
+2. В Edge desktop и mobile пройти auth-onboarding, переключатель всех четырёх тем, content workflow, observability и runtime settings/recovery. Автоматический пакет: 28/28 PASS.
+3. Отдельно пройти recipe moderation: approve → hide, approve → unpublish, `409` с сохранением причины и явным retry, unknown outcome с тем же command/idempotency key и readback одного эффекта, различение `404` detail и transient `503`. Автоматический пакет: 10/10 PASS.
+4. После frontend submit открыть canonical moderation route. Решение относится к точной revision; более новая pending/rejected revision не должна подменять активную публикацию. Internal notes и actor IDs не попадают пользователю.
+5. После VPS restart войти password + TOTP, открыть `/admin/testing`, `/admin/runtime-settings` и `/admin/observability`. Проверить отсутствие console/page errors, корректные loading/partial/stale/error состояния и сохранение темы после reload.
+6. После application rollback/roll-forward убедиться, что admin остаётся на текущем immutable digest, а backend `/health/ready`, frontend и admin возвращают 200. Внешние payment/SMTP/AI/scanner success не имитировать.
