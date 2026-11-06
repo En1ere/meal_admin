@@ -37,15 +37,27 @@ const financialLabels = {
     released: 'Освобождено',
     reconciliation_hold: 'Удержано до сверки',
 } as const;
+const stopLossLabels = {
+    unconfigured: 'Лимит не задан',
+    disabled: 'Выполнение выключено',
+    ready: 'Лимит активен',
+    exhausted: 'Лимит исчерпан',
+} as const;
 
 const formatDate = (value: string) =>
     new Intl.DateTimeFormat('ru-RU', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value));
+const formatUsd = (value: string | null) =>
+    value === null
+        ? '—'
+        : new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'USD', maximumFractionDigits: 4 }).format(
+              Number(value),
+          );
 
-function Metric({ label, value, note }: { label: string; value: number; note?: string }) {
+function Metric({ label, value, note }: { label: string; value: number | string; note?: string }) {
     return (
         <div className={styles.metric}>
             <span>{label}</span>
-            <strong>{value.toLocaleString('ru-RU')}</strong>
+            <strong>{typeof value === 'number' ? value.toLocaleString('ru-RU') : value}</strong>
             {note && <small>{note}</small>}
         </div>
     );
@@ -97,12 +109,59 @@ function AiControlContent({ data }: { data: AdminAiControlPlane }) {
                         <dd>{data.provider.model ?? '—'}</dd>
                     </div>
                     <div>
+                        <dt>Pricing profile</dt>
+                        <dd>{data.provider.profileVersion ?? '—'}</dd>
+                    </div>
+                    <div>
                         <dt>Task policy</dt>
                         <dd>{data.policies.task.version}</dd>
                     </div>
                     <div>
                         <dt>Context policy</dt>
                         <dd>{data.policies.context.version}</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section className={styles.surface} aria-labelledby="ai-budget-heading">
+                <div className={styles.sectionHeading}>
+                    <div>
+                        <h2 id="ai-budget-heading">Бюджет и stop-loss</h2>
+                        <p>Расходы текущего UTC-месяца; pending и unknown учитываются по консервативной оценке.</p>
+                    </div>
+                </div>
+                {data.cost.stopLossState !== 'ready' && (
+                    <div className={styles.warning} role="status">
+                        <strong>{stopLossLabels[data.cost.stopLossState]}</strong>
+                        <p>
+                            {data.cost.stopLossState === 'exhausted'
+                                ? 'Новые provider-запросы блокируются до следующего месяца или согласованного изменения лимита.'
+                                : 'AI-выполнение недоступно, пока профиль, ключ и положительный месячный лимит не настроены полностью.'}
+                        </p>
+                    </div>
+                )}
+                <div className={styles.statuses}>
+                    <Metric label="Месячный лимит" value={formatUsd(data.provider.monthlyBudgetUsd)} />
+                    <Metric label="Фактический расход" value={formatUsd(data.cost.actualUsd)} />
+                    <Metric label="Удержанная оценка" value={formatUsd(data.cost.heldUsd)} />
+                    <Metric label="Остаток" value={formatUsd(data.cost.remainingUsd)} />
+                </div>
+                <dl className={styles.details}>
+                    <div>
+                        <dt>Stop-loss</dt>
+                        <dd>{stopLossLabels[data.cost.stopLossState]}</dd>
+                    </div>
+                    <div>
+                        <dt>Использование лимита</dt>
+                        <dd>
+                            {data.cost.utilizationPercent === null
+                                ? '—'
+                                : `${data.cost.utilizationPercent.toLocaleString('ru-RU')}%`}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Начало расчётного месяца</dt>
+                        <dd>{formatDate(data.cost.monthStartsAt)}</dd>
                     </div>
                 </dl>
             </section>

@@ -1,6 +1,6 @@
-// Generated from contracts/openapi.json. Do not edit. SHA256: 24eab36da1df7b885b426737e1aa5790cf24ad86699721e5a88b12947cc5b90b
+// Generated from contracts/openapi.json. Do not edit. SHA256: 2165d0b4d8b53d750c0785b71060ae5ce560d944650e41b1aa23aba22086d74d
 import { z } from 'zod';
-export const contractVersion = '0.0.70';
+export const contractVersion = '0.0.71';
 export const contracts = {
     'GET /api/v1/recipe-policy': {
         params: null,
@@ -8245,7 +8245,7 @@ export const contracts = {
         request: null,
         success: z.strictObject({
             data: z.strictObject({
-                schemaVersion: z.literal(2),
+                schemaVersion: z.literal(3),
                 generatedAt: z
                     .string()
                     .regex(
@@ -8260,6 +8260,8 @@ export const contracts = {
                     configured: z.boolean(),
                     kind: z.union([z.literal('disabled'), z.literal('openai_compatible')]),
                     model: z.string().nullable(),
+                    profileVersion: z.string().nullable(),
+                    monthlyBudgetUsd: z.string().regex(new RegExp('^\\d{1,7}\\.\\d{8}$', 'u')).nullable(),
                 }),
                 policies: z.strictObject({
                     task: z.strictObject({
@@ -8304,6 +8306,28 @@ export const contracts = {
                         refunded: z.number().int().min(0).max(1000000000),
                         failed: z.number().int().min(0).max(1000000000),
                     }),
+                }),
+                cost: z.strictObject({
+                    monthStartsAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                    actualUsd: z.string().regex(new RegExp('^\\d{1,7}\\.\\d{8}$', 'u')),
+                    heldUsd: z.string().regex(new RegExp('^\\d{1,7}\\.\\d{8}$', 'u')),
+                    spentOrHeldUsd: z.string().regex(new RegExp('^\\d{1,7}\\.\\d{8}$', 'u')),
+                    remainingUsd: z.string().regex(new RegExp('^\\d{1,7}\\.\\d{8}$', 'u')).nullable(),
+                    utilizationPercent: z.number().min(0).max(100000).nullable(),
+                    stopLossState: z.union([
+                        z.literal('unconfigured'),
+                        z.literal('disabled'),
+                        z.literal('ready'),
+                        z.literal('exhausted'),
+                    ]),
                 }),
                 statuses: z.array(
                     z.strictObject({

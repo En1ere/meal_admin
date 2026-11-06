@@ -80,10 +80,16 @@ const tasks = [
 export function createAdminAiFixture(now: Date | number): AdminAiControlPlane {
     const generatedAt = new Date(now).toISOString();
     return {
-        schemaVersion: 2,
+        schemaVersion: 3,
         generatedAt,
         executionAvailable: true,
-        provider: { configured: true, kind: 'openai_compatible', model: 'gpt-6-luna' },
+        provider: {
+            configured: true,
+            kind: 'openai_compatible',
+            model: 'gpt-6-luna',
+            profileVersion: 'openai-gpt-6-luna-standard-2026-11-07',
+            monthlyBudgetUsd: '10.00000000',
+        },
         policies: {
             task: { version: 'ai-task-policy-v3', effectiveAt: generatedAt },
             context: { version: 'ai-context-v1', effectiveAt: generatedAt },
@@ -91,6 +97,17 @@ export function createAdminAiFixture(now: Date | number): AdminAiControlPlane {
         usage: {
             last24Hours: { tasks: 4, actions: 7, completed: 3, refunded: 1, failed: 0 },
             last30Days: { tasks: 36, actions: 72, completed: 33, refunded: 2, failed: 1 },
+        },
+        cost: {
+            monthStartsAt: new Date(
+                Date.UTC(new Date(now).getUTCFullYear(), new Date(now).getUTCMonth(), 1),
+            ).toISOString(),
+            actualUsd: '0.12000000',
+            heldUsd: '0.03000000',
+            spentOrHeldUsd: '0.15000000',
+            remainingUsd: '9.85000000',
+            utilizationPercent: 1.5,
+            stopLossState: 'ready',
         },
         statuses: [
             { status: 'completed', count: 33 },

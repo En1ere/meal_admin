@@ -15,6 +15,8 @@ void test('AI control plane uses generated strict contract and session-scoped qu
     );
     assert.equal(data.tasks.length, 18);
     assert.equal(data.operations.reconciliationHoldCount, 1);
+    assert.equal(data.cost.stopLossState, 'ready');
+    assert.equal(data.provider.profileVersion, 'openai-gpt-6-luna-standard-2026-11-07');
     assert.notDeepEqual(adminAiKeys.snapshot('session-a'), adminAiKeys.snapshot('session-b'));
 });
 
@@ -27,5 +29,8 @@ void test('AI control page is read-only and exposes actionable loading, error an
     assert.match(source, /availableOn/);
     assert.match(source, /Массовый автоматический возврат запрещён/);
     assert.match(source, /operations\.financial/);
+    assert.match(source, /Бюджет и stop-loss/);
+    assert.match(source, /provider\.monthlyBudgetUsd/);
+    assert.match(source, /cost\.heldUsd/);
     assert.match(source, /refetchOnWindowFocus:\s*false/);
 });
