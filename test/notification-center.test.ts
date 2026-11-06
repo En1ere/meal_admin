@@ -5,7 +5,7 @@ import {
     notificationCenterHandle,
     type NotificationCenterState,
 } from '../src/mocks/notification-center.js';
-import { notificationQuietNow } from '../src/features/notifications/center-contracts.js';
+import { notificationQuietNow } from '../src/entities/admin-notification/center-contracts.js';
 
 void test('notification settings reject stale versions and isolate administrators', () => {
     const state: NotificationCenterState = {};

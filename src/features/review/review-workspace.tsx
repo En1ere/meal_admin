@@ -5,7 +5,7 @@ import { adminRecordKeys } from '../../entities/admin-record/index.js';
 import { complianceReviewKeys, type ReviewCommand, type ReviewResult } from '../../entities/compliance-review/index.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
 import { ApiError } from '../../shared/api/client.js';
-import { CriticalConfirmation } from '../auth/access-client.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import styles from './review-workspace.module.css';
 export type ReviewApi = (command: ReviewCommand, signal?: AbortSignal) => Promise<ReviewResult>;

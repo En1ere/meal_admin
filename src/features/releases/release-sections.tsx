@@ -1,5 +1,5 @@
-import { CriticalConfirmation } from '../auth/access-client.js';
-import type { Release, ReleaseChange } from './contracts.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
+import type { Release, ReleaseChange } from '../../entities/content-release/index.js';
 import { statusLabel } from './release-model.js';
 import { ReleaseSummary } from './release-list-page.js';
 import styles from './releases.module.css';

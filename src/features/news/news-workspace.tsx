@@ -1,8 +1,15 @@
 import { useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { CriticalConfirmation } from '../auth/access-client.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
-import { newsContentSchema, type NewsCommand, type NewsContent, type NewsItem, type NewsResult } from './contracts.js';
+import {
+    newsContentSchema,
+    newsKeys,
+    type NewsCommand,
+    type NewsContent,
+    type NewsItem,
+    type NewsResult,
+} from '../../entities/news/index.js';
 import styles from './news-workspace.module.css';
 
 export type NewsApi = (command: NewsCommand, signal?: AbortSignal) => Promise<NewsResult>;
@@ -34,7 +41,7 @@ const statuses = {
 export function NewsWorkspace({ api }: { api: NewsApi }) {
     const cache = useQueryClient();
     const query = useQuery({
-        queryKey: ['admin-news-workspace'],
+        queryKey: newsKeys.workspace,
         queryFn: ({ signal }) => api({ action: 'list' }, signal),
     });
     const [selected, setSelected] = useState<NewsItem | null>(null);
@@ -84,7 +91,7 @@ export function NewsWorkspace({ api }: { api: NewsApi }) {
         try {
             const result = await api(command, signal);
             signal.throwIfAborted();
-            cache.setQueryData(['admin-news-workspace'], result);
+            cache.setQueryData(newsKeys.workspace, result);
             const item = result.items.find((value) => value.id === id);
             if (item) {
                 setSelected(item);

@@ -99,7 +99,7 @@ for (const [path, item] of Object.entries(document.paths)) {
             ? `z.strictObject({${pathParameters.map((parameter) => `${JSON.stringify(parameter.name)}:${schema(parameter.schema)}`).join(',')}})`
             : 'null';
         entries.push(
-            `${JSON.stringify(`${method.toUpperCase()} ${path}`)}:{params:${params},request:${request ? schema(request) : 'null'},success:${schema((operation.responses['200'] ?? operation.responses['201']).content['application/json'].schema)}}`,
+            `${JSON.stringify(`${method.toUpperCase()} ${path}`)}:{params:${params},request:${request ? schema(request) : 'null'},success:${schema((operation.responses['200'] ?? operation.responses['201'] ?? operation.responses['202']).content['application/json'].schema)}}`,
         );
     }
 }

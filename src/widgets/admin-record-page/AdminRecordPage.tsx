@@ -9,7 +9,7 @@ import { ContentPanel } from '../../features/content/client.js';
 import { FreeAiWorkspace, GovernanceActions } from '../../features/user-governance/client.js';
 import { OperationsWorkspace } from '../../features/operations/client.js';
 import { AccountDeletionReview, ReviewPanel } from '../../features/review/client.js';
-import type { Section } from '../../entities/admin-section/model.js';
+import type { Section } from '../../entities/admin-section/index.js';
 
 const sectionsWithCustomActions = new Set<Section>([
     'users',

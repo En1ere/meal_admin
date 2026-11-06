@@ -1,6 +1,6 @@
-// Generated from contracts/openapi.json. Do not edit. SHA256: 6b5c94e251f2d6bdf0ef44ef8691b1d3f1219193a47ef65f2e25b58c217ac422
+// Generated from contracts/openapi.json. Do not edit. SHA256: 24eab36da1df7b885b426737e1aa5790cf24ad86699721e5a88b12947cc5b90b
 import { z } from 'zod';
-export const contractVersion = '0.0.65';
+export const contractVersion = '0.0.70';
 export const contracts = {
     'GET /api/v1/recipe-policy': {
         params: null,
@@ -62,175 +62,6 @@ export const contracts = {
                 submissionDailyLimit: z.number().int().min(1).max(10000),
                 commentHourlyLimit: z.number().int().min(1).max(10000),
                 reportDailyLimit: z.number().int().min(1).max(10000),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/free-ai/users/{id}': {
-        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                user: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    login: z.string(),
-                    displayName: z.string(),
-                    status: z.string(),
-                    version: z.string().regex(new RegExp('^[1-9][0-9]*$', 'u')),
-                }),
-                buckets: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        kind: z.union([
-                            z.literal('subscription'),
-                            z.literal('transferred'),
-                            z.literal('family_reserve'),
-                            z.literal('purchased'),
-                            z.literal('trial'),
-                        ]),
-                        granted: z.number().int().min(0).max(9007199254740991),
-                        balance: z.number().int().min(0).max(9007199254740991),
-                        reserved: z.number().int().min(0).max(9007199254740991),
-                        available: z.number().int().min(0).max(9007199254740991),
-                        requiresConfirmation: z.boolean(),
-                        expiresAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                    }),
-                ),
-                total: z.number().int().min(0).max(9007199254740991),
-                reserved: z.number().int().min(0).max(9007199254740991),
-                available: z.number().int().min(0).max(9007199254740991),
-                recentOperations: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        taskId: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        status: z.string(),
-                        cost: z.number().int().min(0).max(9007199254740991),
-                        createdAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime()),
-                    }),
-                ),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/free-ai/users/{id}/grants': {
-        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
-        request: z.strictObject({
-            expectedUserVersion: z.string().regex(new RegExp('^[1-9][0-9]*$', 'u')),
-            actions: z.number().int().min(1).max(10000),
-            expiresAt: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                        'u',
-                    ),
-                )
-                .pipe(z.iso.datetime())
-                .nullable(),
-            reason: z.string().min(1).max(2000),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            confirmed: z.literal(true),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                bucketId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                granted: z.number().int().gt(0).max(9007199254740991),
-                balance: z.number().int().gt(0).max(9007199254740991),
-                expiresAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime())
-                    .nullable(),
             }),
             meta: z.strictObject({
                 requestId: z
@@ -628,2216 +459,24 @@ export const contracts = {
             }),
         }),
     },
-    'GET /api/v1/admin/news-workspace': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().gt(0).max(9007199254740991),
-                        content: z.strictObject({
-                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                            title: z.string().min(1).max(200),
-                            pages: z
-                                .array(
-                                    z.strictObject({
-                                        blocks: z
-                                            .array(
-                                                z
-                                                    .union([
-                                                        z.strictObject({
-                                                            kind: z.literal('text'),
-                                                            text: z.string().min(1).max(10000),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('image'),
-                                                            url: z.string().pipe(z.url()),
-                                                            alt: z.string().min(1).max(300),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('link'),
-                                                            url: z.string().pipe(z.url()),
-                                                            text: z.string().min(1).max(300),
-                                                        }),
-                                                    ])
-                                                    .refine(
-                                                        (value) =>
-                                                            [
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ].filter((branch) => branch.safeParse(value).success)
-                                                                .length === 1,
-                                                    ),
-                                            )
-                                            .min(1)
-                                            .max(30),
-                                    }),
-                                )
-                                .min(1)
-                                .max(10),
-                            sources: z
-                                .array(
-                                    z.strictObject({
-                                        claim: z.string().min(1).max(500),
-                                        source: z.string().min(1).max(10000),
-                                    }),
-                                )
-                                .max(30),
-                            audience: z.strictObject({
-                                plans: z
-                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                    .max(3),
-                                genders: z
-                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
-                                    .max(3),
-                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                registeredFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                registeredTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                            }),
-                            channels: z
-                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                .min(1)
-                                .max(3),
-                            category: z.union([z.literal('service'), z.literal('marketing')]),
-                        }),
-                        status: z.union([
-                            z.literal('draft'),
-                            z.literal('scheduled'),
-                            z.literal('published'),
-                            z.literal('cancelled'),
-                        ]),
-                        scheduledAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        history: z.array(
-                            z.strictObject({
-                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                                at: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime()),
-                                content: z.strictObject({
-                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                                    title: z.string().min(1).max(200),
-                                    pages: z
-                                        .array(
-                                            z.strictObject({
-                                                blocks: z
-                                                    .array(
-                                                        z
-                                                            .union([
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ])
-                                                            .refine(
-                                                                (value) =>
-                                                                    [
-                                                                        z.strictObject({
-                                                                            kind: z.literal('text'),
-                                                                            text: z.string().min(1).max(10000),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('image'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            alt: z.string().min(1).max(300),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('link'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            text: z.string().min(1).max(300),
-                                                                        }),
-                                                                    ].filter(
-                                                                        (branch) => branch.safeParse(value).success,
-                                                                    ).length === 1,
-                                                            ),
-                                                    )
-                                                    .min(1)
-                                                    .max(30),
-                                            }),
-                                        )
-                                        .min(1)
-                                        .max(10),
-                                    sources: z
-                                        .array(
-                                            z.strictObject({
-                                                claim: z.string().min(1).max(500),
-                                                source: z.string().min(1).max(10000),
-                                            }),
-                                        )
-                                        .max(30),
-                                    audience: z.strictObject({
-                                        plans: z
-                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                            .max(3),
-                                        genders: z
-                                            .array(
-                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
-                                            )
-                                            .max(3),
-                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                        registeredFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        registeredTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                    }),
-                                    channels: z
-                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                        .min(1)
-                                        .max(3),
-                                    category: z.union([z.literal('service'), z.literal('marketing')]),
-                                }),
-                            }),
-                        ),
-                    }),
-                ),
-                preview: z
-                    .strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                        recipients: z.number().int().min(0).max(9007199254740991),
-                        preliminary: z.literal(true),
-                        mock: z.boolean(),
-                    })
-                    .nullable(),
-                message: z.string(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/news-workspace/save': {
+    'POST /api/v1/admin/telemetry/browser': {
         params: null,
         request: z.strictObject({
-            action: z.literal('save'),
-            id: z
+            application: z.union([z.literal('front'), z.literal('admin')]),
+            code: z.union([
+                z.literal('root_error'),
+                z.literal('route_error'),
+                z.literal('unhandled_error'),
+                z.literal('unhandled_rejection'),
+            ]),
+            appVersion: z
                 .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            version: z.number().int().min(0).max(9007199254740991),
-            content: z.strictObject({
-                type: z
-                    .union([z.literal('article'), z.literal('important')])
-                    .default('article')
-                    .optional(),
-                title: z.string().min(1).max(200),
-                pages: z
-                    .array(
-                        z.strictObject({
-                            blocks: z
-                                .array(
-                                    z
-                                        .union([
-                                            z.strictObject({
-                                                kind: z.literal('text'),
-                                                text: z.string().min(1).max(10000),
-                                            }),
-                                            z.strictObject({
-                                                kind: z.literal('image'),
-                                                url: z.string().pipe(z.url()),
-                                                alt: z.string().min(1).max(300),
-                                            }),
-                                            z.strictObject({
-                                                kind: z.literal('link'),
-                                                url: z.string().pipe(z.url()),
-                                                text: z.string().min(1).max(300),
-                                            }),
-                                        ])
-                                        .refine(
-                                            (value) =>
-                                                [
-                                                    z.strictObject({
-                                                        kind: z.literal('text'),
-                                                        text: z.string().min(1).max(10000),
-                                                    }),
-                                                    z.strictObject({
-                                                        kind: z.literal('image'),
-                                                        url: z.string().pipe(z.url()),
-                                                        alt: z.string().min(1).max(300),
-                                                    }),
-                                                    z.strictObject({
-                                                        kind: z.literal('link'),
-                                                        url: z.string().pipe(z.url()),
-                                                        text: z.string().min(1).max(300),
-                                                    }),
-                                                ].filter((branch) => branch.safeParse(value).success).length === 1,
-                                        ),
-                                )
-                                .min(1)
-                                .max(30),
-                        }),
-                    )
-                    .min(1)
-                    .max(10),
-                sources: z
-                    .array(z.strictObject({ claim: z.string().min(1).max(500), source: z.string().min(1).max(10000) }))
-                    .max(30),
-                audience: z.strictObject({
-                    plans: z.array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')])).max(3),
-                    genders: z.array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')])).max(3),
-                    families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                    registeredFrom: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                    registeredTo: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                    activeFrom: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                    activeTo: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                }),
-                channels: z
-                    .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                    .min(1)
-                    .max(3),
-                category: z.union([z.literal('service'), z.literal('marketing')]),
-            }),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().gt(0).max(9007199254740991),
-                        content: z.strictObject({
-                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                            title: z.string().min(1).max(200),
-                            pages: z
-                                .array(
-                                    z.strictObject({
-                                        blocks: z
-                                            .array(
-                                                z
-                                                    .union([
-                                                        z.strictObject({
-                                                            kind: z.literal('text'),
-                                                            text: z.string().min(1).max(10000),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('image'),
-                                                            url: z.string().pipe(z.url()),
-                                                            alt: z.string().min(1).max(300),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('link'),
-                                                            url: z.string().pipe(z.url()),
-                                                            text: z.string().min(1).max(300),
-                                                        }),
-                                                    ])
-                                                    .refine(
-                                                        (value) =>
-                                                            [
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ].filter((branch) => branch.safeParse(value).success)
-                                                                .length === 1,
-                                                    ),
-                                            )
-                                            .min(1)
-                                            .max(30),
-                                    }),
-                                )
-                                .min(1)
-                                .max(10),
-                            sources: z
-                                .array(
-                                    z.strictObject({
-                                        claim: z.string().min(1).max(500),
-                                        source: z.string().min(1).max(10000),
-                                    }),
-                                )
-                                .max(30),
-                            audience: z.strictObject({
-                                plans: z
-                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                    .max(3),
-                                genders: z
-                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
-                                    .max(3),
-                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                registeredFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                registeredTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                            }),
-                            channels: z
-                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                .min(1)
-                                .max(3),
-                            category: z.union([z.literal('service'), z.literal('marketing')]),
-                        }),
-                        status: z.union([
-                            z.literal('draft'),
-                            z.literal('scheduled'),
-                            z.literal('published'),
-                            z.literal('cancelled'),
-                        ]),
-                        scheduledAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        history: z.array(
-                            z.strictObject({
-                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                                at: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime()),
-                                content: z.strictObject({
-                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                                    title: z.string().min(1).max(200),
-                                    pages: z
-                                        .array(
-                                            z.strictObject({
-                                                blocks: z
-                                                    .array(
-                                                        z
-                                                            .union([
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ])
-                                                            .refine(
-                                                                (value) =>
-                                                                    [
-                                                                        z.strictObject({
-                                                                            kind: z.literal('text'),
-                                                                            text: z.string().min(1).max(10000),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('image'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            alt: z.string().min(1).max(300),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('link'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            text: z.string().min(1).max(300),
-                                                                        }),
-                                                                    ].filter(
-                                                                        (branch) => branch.safeParse(value).success,
-                                                                    ).length === 1,
-                                                            ),
-                                                    )
-                                                    .min(1)
-                                                    .max(30),
-                                            }),
-                                        )
-                                        .min(1)
-                                        .max(10),
-                                    sources: z
-                                        .array(
-                                            z.strictObject({
-                                                claim: z.string().min(1).max(500),
-                                                source: z.string().min(1).max(10000),
-                                            }),
-                                        )
-                                        .max(30),
-                                    audience: z.strictObject({
-                                        plans: z
-                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                            .max(3),
-                                        genders: z
-                                            .array(
-                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
-                                            )
-                                            .max(3),
-                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                        registeredFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        registeredTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                    }),
-                                    channels: z
-                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                        .min(1)
-                                        .max(3),
-                                    category: z.union([z.literal('service'), z.literal('marketing')]),
-                                }),
-                            }),
-                        ),
-                    }),
-                ),
-                preview: z
-                    .strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                        recipients: z.number().int().min(0).max(9007199254740991),
-                        preliminary: z.literal(true),
-                        mock: z.boolean(),
-                    })
-                    .nullable(),
-                message: z.string(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/news-workspace/preview': {
-        params: null,
-        request: z.strictObject({
-            action: z.literal('preview'),
-            id: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            version: z.number().int().gt(0).max(9007199254740991),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().gt(0).max(9007199254740991),
-                        content: z.strictObject({
-                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                            title: z.string().min(1).max(200),
-                            pages: z
-                                .array(
-                                    z.strictObject({
-                                        blocks: z
-                                            .array(
-                                                z
-                                                    .union([
-                                                        z.strictObject({
-                                                            kind: z.literal('text'),
-                                                            text: z.string().min(1).max(10000),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('image'),
-                                                            url: z.string().pipe(z.url()),
-                                                            alt: z.string().min(1).max(300),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('link'),
-                                                            url: z.string().pipe(z.url()),
-                                                            text: z.string().min(1).max(300),
-                                                        }),
-                                                    ])
-                                                    .refine(
-                                                        (value) =>
-                                                            [
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ].filter((branch) => branch.safeParse(value).success)
-                                                                .length === 1,
-                                                    ),
-                                            )
-                                            .min(1)
-                                            .max(30),
-                                    }),
-                                )
-                                .min(1)
-                                .max(10),
-                            sources: z
-                                .array(
-                                    z.strictObject({
-                                        claim: z.string().min(1).max(500),
-                                        source: z.string().min(1).max(10000),
-                                    }),
-                                )
-                                .max(30),
-                            audience: z.strictObject({
-                                plans: z
-                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                    .max(3),
-                                genders: z
-                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
-                                    .max(3),
-                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                registeredFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                registeredTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                            }),
-                            channels: z
-                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                .min(1)
-                                .max(3),
-                            category: z.union([z.literal('service'), z.literal('marketing')]),
-                        }),
-                        status: z.union([
-                            z.literal('draft'),
-                            z.literal('scheduled'),
-                            z.literal('published'),
-                            z.literal('cancelled'),
-                        ]),
-                        scheduledAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        history: z.array(
-                            z.strictObject({
-                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                                at: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime()),
-                                content: z.strictObject({
-                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                                    title: z.string().min(1).max(200),
-                                    pages: z
-                                        .array(
-                                            z.strictObject({
-                                                blocks: z
-                                                    .array(
-                                                        z
-                                                            .union([
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ])
-                                                            .refine(
-                                                                (value) =>
-                                                                    [
-                                                                        z.strictObject({
-                                                                            kind: z.literal('text'),
-                                                                            text: z.string().min(1).max(10000),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('image'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            alt: z.string().min(1).max(300),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('link'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            text: z.string().min(1).max(300),
-                                                                        }),
-                                                                    ].filter(
-                                                                        (branch) => branch.safeParse(value).success,
-                                                                    ).length === 1,
-                                                            ),
-                                                    )
-                                                    .min(1)
-                                                    .max(30),
-                                            }),
-                                        )
-                                        .min(1)
-                                        .max(10),
-                                    sources: z
-                                        .array(
-                                            z.strictObject({
-                                                claim: z.string().min(1).max(500),
-                                                source: z.string().min(1).max(10000),
-                                            }),
-                                        )
-                                        .max(30),
-                                    audience: z.strictObject({
-                                        plans: z
-                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                            .max(3),
-                                        genders: z
-                                            .array(
-                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
-                                            )
-                                            .max(3),
-                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                        registeredFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        registeredTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                    }),
-                                    channels: z
-                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                        .min(1)
-                                        .max(3),
-                                    category: z.union([z.literal('service'), z.literal('marketing')]),
-                                }),
-                            }),
-                        ),
-                    }),
-                ),
-                preview: z
-                    .strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                        recipients: z.number().int().min(0).max(9007199254740991),
-                        preliminary: z.literal(true),
-                        mock: z.boolean(),
-                    })
-                    .nullable(),
-                message: z.string(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/news-workspace/launch': {
-        params: null,
-        request: z.strictObject({
-            action: z.literal('launch'),
-            id: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            version: z.number().int().gt(0).max(9007199254740991),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            scheduledAt: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                        'u',
-                    ),
-                )
-                .pipe(z.iso.datetime())
+                .max(64)
+                .regex(new RegExp('^\\d+\\.\\d+\\.\\d+(?:[-+][0-9A-Za-z.-]+)?$', 'u'))
                 .nullable(),
         }),
         success: z.strictObject({
-            data: z.strictObject({
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().gt(0).max(9007199254740991),
-                        content: z.strictObject({
-                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                            title: z.string().min(1).max(200),
-                            pages: z
-                                .array(
-                                    z.strictObject({
-                                        blocks: z
-                                            .array(
-                                                z
-                                                    .union([
-                                                        z.strictObject({
-                                                            kind: z.literal('text'),
-                                                            text: z.string().min(1).max(10000),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('image'),
-                                                            url: z.string().pipe(z.url()),
-                                                            alt: z.string().min(1).max(300),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('link'),
-                                                            url: z.string().pipe(z.url()),
-                                                            text: z.string().min(1).max(300),
-                                                        }),
-                                                    ])
-                                                    .refine(
-                                                        (value) =>
-                                                            [
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ].filter((branch) => branch.safeParse(value).success)
-                                                                .length === 1,
-                                                    ),
-                                            )
-                                            .min(1)
-                                            .max(30),
-                                    }),
-                                )
-                                .min(1)
-                                .max(10),
-                            sources: z
-                                .array(
-                                    z.strictObject({
-                                        claim: z.string().min(1).max(500),
-                                        source: z.string().min(1).max(10000),
-                                    }),
-                                )
-                                .max(30),
-                            audience: z.strictObject({
-                                plans: z
-                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                    .max(3),
-                                genders: z
-                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
-                                    .max(3),
-                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                registeredFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                registeredTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                            }),
-                            channels: z
-                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                .min(1)
-                                .max(3),
-                            category: z.union([z.literal('service'), z.literal('marketing')]),
-                        }),
-                        status: z.union([
-                            z.literal('draft'),
-                            z.literal('scheduled'),
-                            z.literal('published'),
-                            z.literal('cancelled'),
-                        ]),
-                        scheduledAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        history: z.array(
-                            z.strictObject({
-                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                                at: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime()),
-                                content: z.strictObject({
-                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                                    title: z.string().min(1).max(200),
-                                    pages: z
-                                        .array(
-                                            z.strictObject({
-                                                blocks: z
-                                                    .array(
-                                                        z
-                                                            .union([
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ])
-                                                            .refine(
-                                                                (value) =>
-                                                                    [
-                                                                        z.strictObject({
-                                                                            kind: z.literal('text'),
-                                                                            text: z.string().min(1).max(10000),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('image'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            alt: z.string().min(1).max(300),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('link'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            text: z.string().min(1).max(300),
-                                                                        }),
-                                                                    ].filter(
-                                                                        (branch) => branch.safeParse(value).success,
-                                                                    ).length === 1,
-                                                            ),
-                                                    )
-                                                    .min(1)
-                                                    .max(30),
-                                            }),
-                                        )
-                                        .min(1)
-                                        .max(10),
-                                    sources: z
-                                        .array(
-                                            z.strictObject({
-                                                claim: z.string().min(1).max(500),
-                                                source: z.string().min(1).max(10000),
-                                            }),
-                                        )
-                                        .max(30),
-                                    audience: z.strictObject({
-                                        plans: z
-                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                            .max(3),
-                                        genders: z
-                                            .array(
-                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
-                                            )
-                                            .max(3),
-                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                        registeredFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        registeredTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                    }),
-                                    channels: z
-                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                        .min(1)
-                                        .max(3),
-                                    category: z.union([z.literal('service'), z.literal('marketing')]),
-                                }),
-                            }),
-                        ),
-                    }),
-                ),
-                preview: z
-                    .strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                        recipients: z.number().int().min(0).max(9007199254740991),
-                        preliminary: z.literal(true),
-                        mock: z.boolean(),
-                    })
-                    .nullable(),
-                message: z.string(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/news-workspace/cancel': {
-        params: null,
-        request: z.strictObject({
-            action: z.literal('cancel'),
-            id: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            version: z.number().int().gt(0).max(9007199254740991),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().gt(0).max(9007199254740991),
-                        content: z.strictObject({
-                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                            title: z.string().min(1).max(200),
-                            pages: z
-                                .array(
-                                    z.strictObject({
-                                        blocks: z
-                                            .array(
-                                                z
-                                                    .union([
-                                                        z.strictObject({
-                                                            kind: z.literal('text'),
-                                                            text: z.string().min(1).max(10000),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('image'),
-                                                            url: z.string().pipe(z.url()),
-                                                            alt: z.string().min(1).max(300),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('link'),
-                                                            url: z.string().pipe(z.url()),
-                                                            text: z.string().min(1).max(300),
-                                                        }),
-                                                    ])
-                                                    .refine(
-                                                        (value) =>
-                                                            [
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ].filter((branch) => branch.safeParse(value).success)
-                                                                .length === 1,
-                                                    ),
-                                            )
-                                            .min(1)
-                                            .max(30),
-                                    }),
-                                )
-                                .min(1)
-                                .max(10),
-                            sources: z
-                                .array(
-                                    z.strictObject({
-                                        claim: z.string().min(1).max(500),
-                                        source: z.string().min(1).max(10000),
-                                    }),
-                                )
-                                .max(30),
-                            audience: z.strictObject({
-                                plans: z
-                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                    .max(3),
-                                genders: z
-                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
-                                    .max(3),
-                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                registeredFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                registeredTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                            }),
-                            channels: z
-                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                .min(1)
-                                .max(3),
-                            category: z.union([z.literal('service'), z.literal('marketing')]),
-                        }),
-                        status: z.union([
-                            z.literal('draft'),
-                            z.literal('scheduled'),
-                            z.literal('published'),
-                            z.literal('cancelled'),
-                        ]),
-                        scheduledAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        history: z.array(
-                            z.strictObject({
-                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                                at: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime()),
-                                content: z.strictObject({
-                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                                    title: z.string().min(1).max(200),
-                                    pages: z
-                                        .array(
-                                            z.strictObject({
-                                                blocks: z
-                                                    .array(
-                                                        z
-                                                            .union([
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ])
-                                                            .refine(
-                                                                (value) =>
-                                                                    [
-                                                                        z.strictObject({
-                                                                            kind: z.literal('text'),
-                                                                            text: z.string().min(1).max(10000),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('image'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            alt: z.string().min(1).max(300),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('link'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            text: z.string().min(1).max(300),
-                                                                        }),
-                                                                    ].filter(
-                                                                        (branch) => branch.safeParse(value).success,
-                                                                    ).length === 1,
-                                                            ),
-                                                    )
-                                                    .min(1)
-                                                    .max(30),
-                                            }),
-                                        )
-                                        .min(1)
-                                        .max(10),
-                                    sources: z
-                                        .array(
-                                            z.strictObject({
-                                                claim: z.string().min(1).max(500),
-                                                source: z.string().min(1).max(10000),
-                                            }),
-                                        )
-                                        .max(30),
-                                    audience: z.strictObject({
-                                        plans: z
-                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                            .max(3),
-                                        genders: z
-                                            .array(
-                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
-                                            )
-                                            .max(3),
-                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                        registeredFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        registeredTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                    }),
-                                    channels: z
-                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                        .min(1)
-                                        .max(3),
-                                    category: z.union([z.literal('service'), z.literal('marketing')]),
-                                }),
-                            }),
-                        ),
-                    }),
-                ),
-                preview: z
-                    .strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                        recipients: z.number().int().min(0).max(9007199254740991),
-                        preliminary: z.literal(true),
-                        mock: z.boolean(),
-                    })
-                    .nullable(),
-                message: z.string(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/news-workspace/test': {
-        params: null,
-        request: z.strictObject({
-            action: z.literal('test'),
-            id: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            version: z.number().int().gt(0).max(9007199254740991),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            recipients: z
-                .array(z.union([z.literal('admin'), z.literal('moderator')]))
-                .min(1)
-                .max(2),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().gt(0).max(9007199254740991),
-                        content: z.strictObject({
-                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                            title: z.string().min(1).max(200),
-                            pages: z
-                                .array(
-                                    z.strictObject({
-                                        blocks: z
-                                            .array(
-                                                z
-                                                    .union([
-                                                        z.strictObject({
-                                                            kind: z.literal('text'),
-                                                            text: z.string().min(1).max(10000),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('image'),
-                                                            url: z.string().pipe(z.url()),
-                                                            alt: z.string().min(1).max(300),
-                                                        }),
-                                                        z.strictObject({
-                                                            kind: z.literal('link'),
-                                                            url: z.string().pipe(z.url()),
-                                                            text: z.string().min(1).max(300),
-                                                        }),
-                                                    ])
-                                                    .refine(
-                                                        (value) =>
-                                                            [
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ].filter((branch) => branch.safeParse(value).success)
-                                                                .length === 1,
-                                                    ),
-                                            )
-                                            .min(1)
-                                            .max(30),
-                                    }),
-                                )
-                                .min(1)
-                                .max(10),
-                            sources: z
-                                .array(
-                                    z.strictObject({
-                                        claim: z.string().min(1).max(500),
-                                        source: z.string().min(1).max(10000),
-                                    }),
-                                )
-                                .max(30),
-                            audience: z.strictObject({
-                                plans: z
-                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                    .max(3),
-                                genders: z
-                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
-                                    .max(3),
-                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                registeredFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                registeredTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeFrom: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                activeTo: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                            }),
-                            channels: z
-                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                .min(1)
-                                .max(3),
-                            category: z.union([z.literal('service'), z.literal('marketing')]),
-                        }),
-                        status: z.union([
-                            z.literal('draft'),
-                            z.literal('scheduled'),
-                            z.literal('published'),
-                            z.literal('cancelled'),
-                        ]),
-                        scheduledAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        history: z.array(
-                            z.strictObject({
-                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                                at: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime()),
-                                content: z.strictObject({
-                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
-                                    title: z.string().min(1).max(200),
-                                    pages: z
-                                        .array(
-                                            z.strictObject({
-                                                blocks: z
-                                                    .array(
-                                                        z
-                                                            .union([
-                                                                z.strictObject({
-                                                                    kind: z.literal('text'),
-                                                                    text: z.string().min(1).max(10000),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('image'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    alt: z.string().min(1).max(300),
-                                                                }),
-                                                                z.strictObject({
-                                                                    kind: z.literal('link'),
-                                                                    url: z.string().pipe(z.url()),
-                                                                    text: z.string().min(1).max(300),
-                                                                }),
-                                                            ])
-                                                            .refine(
-                                                                (value) =>
-                                                                    [
-                                                                        z.strictObject({
-                                                                            kind: z.literal('text'),
-                                                                            text: z.string().min(1).max(10000),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('image'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            alt: z.string().min(1).max(300),
-                                                                        }),
-                                                                        z.strictObject({
-                                                                            kind: z.literal('link'),
-                                                                            url: z.string().pipe(z.url()),
-                                                                            text: z.string().min(1).max(300),
-                                                                        }),
-                                                                    ].filter(
-                                                                        (branch) => branch.safeParse(value).success,
-                                                                    ).length === 1,
-                                                            ),
-                                                    )
-                                                    .min(1)
-                                                    .max(30),
-                                            }),
-                                        )
-                                        .min(1)
-                                        .max(10),
-                                    sources: z
-                                        .array(
-                                            z.strictObject({
-                                                claim: z.string().min(1).max(500),
-                                                source: z.string().min(1).max(10000),
-                                            }),
-                                        )
-                                        .max(30),
-                                    audience: z.strictObject({
-                                        plans: z
-                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
-                                            .max(3),
-                                        genders: z
-                                            .array(
-                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
-                                            )
-                                            .max(3),
-                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
-                                        registeredFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        registeredTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeFrom: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                        activeTo: z
-                                            .string()
-                                            .regex(
-                                                new RegExp(
-                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                    'u',
-                                                ),
-                                            )
-                                            .pipe(z.iso.datetime())
-                                            .nullable(),
-                                    }),
-                                    channels: z
-                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
-                                        .min(1)
-                                        .max(3),
-                                    category: z.union([z.literal('service'), z.literal('marketing')]),
-                                }),
-                            }),
-                        ),
-                    }),
-                ),
-                preview: z
-                    .strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
-                        recipients: z.number().int().min(0).max(9007199254740991),
-                        preliminary: z.literal(true),
-                        mock: z.boolean(),
-                    })
-                    .nullable(),
-                message: z.string(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/account-deletions/{id}/review': {
-        params: z.strictObject({ id: z.string() }),
-        request: z.strictObject({
-            decision: z.union([z.literal('approve'), z.literal('reject')]),
-            expectedVersion: z.number().int().gt(0).max(9007199254740991),
-            reason: z.string().min(10).max(1000),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                id: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                status: z.union([
-                    z.literal('requested'),
-                    z.literal('retention_wait'),
-                    z.literal('ready'),
-                    z.literal('cancelled'),
-                    z.literal('rejected'),
-                    z.literal('finalized'),
-                    z.literal('blocked'),
-                ]),
-                requestedAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime()),
-                cancelUntil: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime())
-                    .nullable(),
-                finalizationNotBefore: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime())
-                    .nullable(),
-                cancelledAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime())
-                    .nullable(),
-                finalizedAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime())
-                    .nullable(),
-                policyVersion: z.string().nullable(),
-                blockers: z.array(
-                    z.strictObject({
-                        code: z.union([
-                            z.literal('family_owner'),
-                            z.literal('active_subscription'),
-                            z.literal('payment_records'),
-                            z.literal('support_history'),
-                            z.literal('audit_history'),
-                            z.literal('legal_hold'),
-                            z.literal('retention_policy_unconfigured'),
-                            z.literal('retention_policy_changed'),
-                            z.literal('admin_approval_required'),
-                            z.literal('retention_wait'),
-                            z.literal('export_not_ready'),
-                            z.literal('backup_exclusion'),
-                        ]),
-                        message: z.string().min(1).max(400),
-                        blocksFinalization: z.boolean(),
-                    }),
-                ),
-                version: z.number().int().gt(0).max(9007199254740991),
-            }),
+            data: z.strictObject({ accepted: z.literal(true) }),
             meta: z.strictObject({
                 requestId: z
                     .string()
@@ -8094,6 +5733,42 @@ export const contracts = {
             }),
         }),
     },
+    'GET /health/live': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({ status: z.literal('ok') }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /health/ready': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({ status: z.literal('ok') }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
     'GET /api/v1/admin/notification-center': {
         params: null,
         request: null,
@@ -8468,96 +6143,21 @@ export const contracts = {
             }),
         }),
     },
-    'GET /api/v1/admin/governance/{section}/{id}': {
-        params: z.strictObject({
-            section: z.union([z.literal('users'), z.literal('sanctions'), z.literal('access')]),
-            id: z.string().pipe(z.uuid()),
-        }),
+    'GET /api/v1/admin/notification-preferences': {
+        params: null,
         request: null,
         success: z.strictObject({
             data: z.strictObject({
-                id: z
+                preferences: z.strictObject({ browser: z.boolean(), mobilePush: z.boolean(), email: z.boolean() }),
+                verifiedEmail: z
                     .string()
                     .regex(
                         new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
                             'u',
                         ),
                     )
-                    .pipe(z.uuid()),
-                version: z.string(),
-                userId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                name: z.string(),
-                role: z.string().nullable(),
-                soleAdmin: z.boolean(),
-                scope: z.string().nullable(),
-                endsAt: z.string().nullable(),
-                status: z.string(),
-                appeals: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        version: z.string(),
-                        body: z.string(),
-                        status: z.string(),
-                        response: z.string().nullable(),
-                        submittedAt: z.string(),
-                        resolvedAt: z.string().nullable(),
-                    }),
-                ),
-                history: z.array(z.strictObject({ action: z.string(), reason: z.string(), at: z.string() })),
-                familySubscription: z
-                    .strictObject({
-                        subscriptionId: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        familyId: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        familyName: z.string(),
-                        candidates: z.array(
-                            z.strictObject({
-                                userId: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.uuid()),
-                                displayName: z.string(),
-                                login: z.string(),
-                            }),
-                        ),
-                    })
+                    .pipe(z.email())
                     .nullable(),
             }),
             meta: z.strictObject({
@@ -8573,11 +6173,41 @@ export const contracts = {
             }),
         }),
     },
-    'POST /api/v1/admin/governance/{section}/{id}': {
-        params: z.strictObject({
-            section: z.union([z.literal('users'), z.literal('sanctions'), z.literal('access')]),
-            id: z.string().pipe(z.uuid()),
+    'POST /api/v1/admin/notification-preferences': {
+        params: null,
+        request: z.strictObject({
+            channel: z.union([z.literal('browser'), z.literal('mobilePush'), z.literal('email')]),
+            enabled: z.boolean(),
         }),
+        success: z.strictObject({
+            data: z.strictObject({
+                preferences: z.strictObject({ browser: z.boolean(), mobilePush: z.boolean(), email: z.boolean() }),
+                verifiedEmail: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                            'u',
+                        ),
+                    )
+                    .pipe(z.email())
+                    .nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/support/{id}/reply': {
+        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
         request: z.strictObject({
             version: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')),
             idempotencyKey: z
@@ -8589,81 +6219,11 @@ export const contracts = {
                     ),
                 )
                 .pipe(z.uuid()),
-            action: z.union([
-                z.literal('ban'),
-                z.literal('revoke'),
-                z.literal('extend'),
-                z.literal('grantModerator'),
-                z.literal('revokeRole'),
-                z.literal('acceptAppeal'),
-                z.literal('rejectAppeal'),
-            ]),
-            appealId: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid())
-                .optional(),
-            appealVersion: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')).optional(),
-            category: z
-                .union([
-                    z.literal('spam'),
-                    z.literal('harassment'),
-                    z.literal('discrimination'),
-                    z.literal('privacy'),
-                    z.literal('copyright'),
-                    z.literal('dangerous'),
-                    z.literal('inappropriate'),
-                    z.literal('fraud'),
-                    z.literal('evasion'),
-                    z.literal('other'),
-                    z.literal('rules'),
-                ])
-                .nullable(),
-            scope: z.union([z.literal('account'), z.literal('ai'), z.literal('publications'), z.literal('comments')]),
-            startsAt: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                        'u',
-                    ),
-                )
-                .pipe(z.iso.datetime())
-                .nullable(),
-            endsAt: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                        'u',
-                    ),
-                )
-                .pipe(z.iso.datetime())
-                .nullable(),
-            reason: z.string().min(1).max(5000),
-            privateNote: z.string().max(5000),
-            allowTemporaryBan: z.boolean(),
-            subscriptionDisposition: z.union([z.literal('keep'), z.literal('transfer')]),
-            subscriptionRecipientUserId: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid())
-                .nullable(),
-            confirmed: z.literal(true),
+            body: z.string().min(1).max(10000),
         }),
         success: z.strictObject({
             data: z.strictObject({
-                id: z
+                ticketId: z
                     .string()
                     .regex(
                         new RegExp(
@@ -8673,6 +6233,313 @@ export const contracts = {
                     )
                     .pipe(z.uuid()),
                 version: z.string(),
+                status: z.string(),
+                assigneeId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid())
+                    .nullable(),
+                messageId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid())
+                    .nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/support/{id}/reopen': {
+        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
+        request: z.strictObject({
+            version: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                ticketId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                version: z.string(),
+                status: z.string(),
+                assigneeId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid())
+                    .nullable(),
+                messageId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid())
+                    .nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/support/{id}/messages/search': {
+        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
+        request: z.strictObject({
+            cursor: z.string().max(1500).regex(new RegExp('^[A-Za-z0-9_-]+$', 'u')).optional(),
+            limit: z.number().int().min(1).max(50).default(25).optional(),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                items: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        body: z.string(),
+                        authorId: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        createdAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime()),
+                        internal: z.literal(false),
+                    }),
+                ),
+                nextCursor: z.string().nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/free-ai/users/{id}': {
+        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                user: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    login: z.string(),
+                    displayName: z.string(),
+                    status: z.string(),
+                    version: z.string().regex(new RegExp('^[1-9][0-9]*$', 'u')),
+                }),
+                buckets: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        kind: z.union([
+                            z.literal('subscription'),
+                            z.literal('transferred'),
+                            z.literal('family_reserve'),
+                            z.literal('purchased'),
+                            z.literal('trial'),
+                        ]),
+                        granted: z.number().int().min(0).max(9007199254740991),
+                        balance: z.number().int().min(0).max(9007199254740991),
+                        reserved: z.number().int().min(0).max(9007199254740991),
+                        available: z.number().int().min(0).max(9007199254740991),
+                        requiresConfirmation: z.boolean(),
+                        expiresAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                    }),
+                ),
+                total: z.number().int().min(0).max(9007199254740991),
+                reserved: z.number().int().min(0).max(9007199254740991),
+                available: z.number().int().min(0).max(9007199254740991),
+                recentOperations: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        taskId: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        status: z.string(),
+                        cost: z.number().int().min(0).max(9007199254740991),
+                        createdAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime()),
+                    }),
+                ),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/free-ai/users/{id}/grants': {
+        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
+        request: z.strictObject({
+            expectedUserVersion: z.string().regex(new RegExp('^[1-9][0-9]*$', 'u')),
+            actions: z.number().int().min(1).max(10000),
+            expiresAt: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                        'u',
+                    ),
+                )
+                .pipe(z.iso.datetime())
+                .nullable(),
+            reason: z.string().min(1).max(2000),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            confirmed: z.literal(true),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                bucketId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                granted: z.number().int().gt(0).max(9007199254740991),
+                balance: z.number().int().gt(0).max(9007199254740991),
+                expiresAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime())
+                    .nullable(),
             }),
             meta: z.strictObject({
                 requestId: z
@@ -8940,6 +6807,1610 @@ export const contracts = {
                 ),
                 preview: z.strictObject({ summary: z.string(), critical: z.boolean() }).nullable(),
                 message: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/governance/{section}/{id}': {
+        params: z.strictObject({
+            section: z.union([z.literal('users'), z.literal('sanctions'), z.literal('access')]),
+            id: z.string().pipe(z.uuid()),
+        }),
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                id: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                version: z.string(),
+                userId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                name: z.string(),
+                role: z.string().nullable(),
+                soleAdmin: z.boolean(),
+                scope: z.string().nullable(),
+                endsAt: z.string().nullable(),
+                status: z.string(),
+                appeals: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.string(),
+                        body: z.string(),
+                        status: z.string(),
+                        response: z.string().nullable(),
+                        submittedAt: z.string(),
+                        resolvedAt: z.string().nullable(),
+                    }),
+                ),
+                history: z.array(z.strictObject({ action: z.string(), reason: z.string(), at: z.string() })),
+                familySubscription: z
+                    .strictObject({
+                        subscriptionId: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        familyId: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        familyName: z.string(),
+                        candidates: z.array(
+                            z.strictObject({
+                                userId: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.uuid()),
+                                displayName: z.string(),
+                                login: z.string(),
+                            }),
+                        ),
+                    })
+                    .nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/governance/{section}/{id}': {
+        params: z.strictObject({
+            section: z.union([z.literal('users'), z.literal('sanctions'), z.literal('access')]),
+            id: z.string().pipe(z.uuid()),
+        }),
+        request: z.strictObject({
+            version: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            action: z.union([
+                z.literal('ban'),
+                z.literal('revoke'),
+                z.literal('extend'),
+                z.literal('grantModerator'),
+                z.literal('revokeRole'),
+                z.literal('acceptAppeal'),
+                z.literal('rejectAppeal'),
+            ]),
+            appealId: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid())
+                .optional(),
+            appealVersion: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')).optional(),
+            category: z
+                .union([
+                    z.literal('spam'),
+                    z.literal('harassment'),
+                    z.literal('discrimination'),
+                    z.literal('privacy'),
+                    z.literal('copyright'),
+                    z.literal('dangerous'),
+                    z.literal('inappropriate'),
+                    z.literal('fraud'),
+                    z.literal('evasion'),
+                    z.literal('other'),
+                    z.literal('rules'),
+                ])
+                .nullable(),
+            scope: z.union([z.literal('account'), z.literal('ai'), z.literal('publications'), z.literal('comments')]),
+            startsAt: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                        'u',
+                    ),
+                )
+                .pipe(z.iso.datetime())
+                .nullable(),
+            endsAt: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                        'u',
+                    ),
+                )
+                .pipe(z.iso.datetime())
+                .nullable(),
+            reason: z.string().min(1).max(5000),
+            privateNote: z.string().max(5000),
+            allowTemporaryBan: z.boolean(),
+            subscriptionDisposition: z.union([z.literal('keep'), z.literal('transfer')]),
+            subscriptionRecipientUserId: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid())
+                .nullable(),
+            confirmed: z.literal(true),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                id: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                version: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/account-deletions/{id}/review': {
+        params: z.strictObject({ id: z.string() }),
+        request: z.strictObject({
+            decision: z.union([z.literal('approve'), z.literal('reject')]),
+            expectedVersion: z.number().int().gt(0).max(9007199254740991),
+            reason: z.string().min(10).max(1000),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                id: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                status: z.union([
+                    z.literal('requested'),
+                    z.literal('retention_wait'),
+                    z.literal('ready'),
+                    z.literal('cancelled'),
+                    z.literal('rejected'),
+                    z.literal('finalized'),
+                    z.literal('blocked'),
+                ]),
+                requestedAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+                cancelUntil: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime())
+                    .nullable(),
+                finalizationNotBefore: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime())
+                    .nullable(),
+                cancelledAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime())
+                    .nullable(),
+                finalizedAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime())
+                    .nullable(),
+                policyVersion: z.string().nullable(),
+                blockers: z.array(
+                    z.strictObject({
+                        code: z.union([
+                            z.literal('family_owner'),
+                            z.literal('active_subscription'),
+                            z.literal('payment_records'),
+                            z.literal('support_history'),
+                            z.literal('audit_history'),
+                            z.literal('legal_hold'),
+                            z.literal('retention_policy_unconfigured'),
+                            z.literal('retention_policy_changed'),
+                            z.literal('admin_approval_required'),
+                            z.literal('retention_wait'),
+                            z.literal('export_not_ready'),
+                            z.literal('backup_exclusion'),
+                        ]),
+                        message: z.string().min(1).max(400),
+                        blocksFinalization: z.boolean(),
+                    }),
+                ),
+                version: z.number().int().gt(0).max(9007199254740991),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/auth/csrf': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({ token: z.string() }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/auth/login': {
+        params: null,
+        request: z.strictObject({
+            login: z.string().regex(new RegExp('^[A-Za-z0-9_]{3,30}$', 'u')),
+            password: z.string().min(1).max(1024),
+            context: z.literal('admin'),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                status: z.literal('mfa_required'),
+                challenge: z.string(),
+                expiresAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+                enrollment: z.strictObject({ secret: z.string(), uri: z.string() }).nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/auth/mfa/verify': {
+        params: null,
+        request: z.strictObject({
+            challenge: z.string().regex(new RegExp('^[A-Za-z0-9_-]{43}$', 'u')),
+            code: z.string().min(6).max(64),
+            method: z.union([z.literal('totp'), z.literal('recovery')]),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                user: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    displayName: z.string(),
+                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
+                    expiresAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                    sessionId: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                }),
+                recoveryCodes: z.array(z.string()),
+                unlockToken: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/auth/status': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                user: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    displayName: z.string(),
+                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
+                    expiresAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                    sessionId: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                }),
+                status: z.union([z.literal('locked'), z.literal('unlocked')]),
+                criticalUntil: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime())
+                    .nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/auth/unlock': {
+        params: null,
+        request: z.strictObject({
+            code: z.string().min(6).max(64),
+            method: z.union([z.literal('totp'), z.literal('recovery')]),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                user: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    displayName: z.string(),
+                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
+                    expiresAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                    sessionId: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                }),
+                unlockToken: z.string(),
+                criticalUntil: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime())
+                    .nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/auth/critical-confirm': {
+        params: null,
+        request: z.strictObject({
+            code: z.string().min(6).max(64),
+            method: z.union([z.literal('totp'), z.literal('recovery')]),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                criticalUntil: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/auth/me': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                user: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    displayName: z.string(),
+                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
+                    expiresAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                    sessionId: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                }),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/auth/sessions': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                sessions: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
+                        authenticatedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime()),
+                        expiresAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime()),
+                        current: z.boolean(),
+                    }),
+                ),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/auth/sessions/revoke-others': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({ revokedCount: z.number().int().min(0).max(9007199254740991) }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/auth/logout': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({ loggedOut: z.literal(true) }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/acceptance-tests': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                schemaVersion: z.literal(1),
+                catalog: z.strictObject({
+                    version: z.string().min(1).max(80),
+                    publishedOn: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.date()),
+                }),
+                run: z
+                    .strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        createdAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime()),
+                    })
+                    .nullable(),
+                summary: z.strictObject({
+                    total: z.number().int().min(0).max(9007199254740991),
+                    notTested: z.number().int().min(0).max(9007199254740991),
+                    passed: z.number().int().min(0).max(9007199254740991),
+                    partial: z.number().int().min(0).max(9007199254740991),
+                    failed: z.number().int().min(0).max(9007199254740991),
+                    completed: z.number().int().min(0).max(9007199254740991),
+                }),
+                groups: z
+                    .array(
+                        z.strictObject({
+                            id: z.union([
+                                z.literal('database'),
+                                z.literal('backend'),
+                                z.literal('admin'),
+                                z.literal('frontend'),
+                            ]),
+                            title: z.string().min(1).max(80),
+                            order: z.number().int().gt(0).max(9007199254740991),
+                            cases: z
+                                .array(
+                                    z.strictObject({
+                                        id: z
+                                            .string()
+                                            .min(3)
+                                            .max(80)
+                                            .regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
+                                        displayCode: z
+                                            .string()
+                                            .regex(new RegExp('^(?:DB|API|ADMIN|FRONTEND)-\\d{2}$', 'u')),
+                                        order: z.number().int().gt(0).max(9007199254740991),
+                                        title: z.string().min(1).max(240),
+                                        steps: z.array(z.string().min(1).max(2000)).min(1).max(100),
+                                        expectedResult: z.string().min(1).max(2000),
+                                        source: z.strictObject({
+                                            file: z.string().min(1).max(240),
+                                            anchor: z.string().min(1).max(240),
+                                            checksum: z.string().regex(new RegExp('^[0-9a-f]{64}$', 'u')),
+                                        }),
+                                        result: z.strictObject({
+                                            status: z.union([
+                                                z.literal('not_tested'),
+                                                z.literal('passed'),
+                                                z.literal('partial'),
+                                                z.literal('failed'),
+                                            ]),
+                                            comment: z.string().max(1000),
+                                            version: z.number().int().min(0).max(9007199254740991),
+                                            checkedBy: z
+                                                .strictObject({
+                                                    id: z
+                                                        .string()
+                                                        .regex(
+                                                            new RegExp(
+                                                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                                                'u',
+                                                            ),
+                                                        )
+                                                        .pipe(z.uuid()),
+                                                    login: z.string().min(1).max(100),
+                                                    displayName: z.string().min(1).max(200).nullable(),
+                                                })
+                                                .nullable(),
+                                            checkedAt: z
+                                                .string()
+                                                .regex(
+                                                    new RegExp(
+                                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                        'u',
+                                                    ),
+                                                )
+                                                .pipe(z.iso.datetime())
+                                                .nullable(),
+                                            updatedAt: z
+                                                .string()
+                                                .regex(
+                                                    new RegExp(
+                                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                        'u',
+                                                    ),
+                                                )
+                                                .pipe(z.iso.datetime())
+                                                .nullable(),
+                                        }),
+                                    }),
+                                )
+                                .min(1)
+                                .max(50),
+                        }),
+                    )
+                    .min(4)
+                    .max(4),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'PUT /api/v1/admin/acceptance-tests/{caseId}': {
+        params: z.strictObject({ caseId: z.string().min(3).max(80) }),
+        request: z.strictObject({
+            status: z.union([z.literal('passed'), z.literal('partial'), z.literal('failed')]),
+            comment: z.string().max(1000),
+            expectedVersion: z.number().int().min(0).max(9007199254740991),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                caseId: z.string().min(3).max(80).regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
+                run: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    createdAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                }),
+                result: z.strictObject({
+                    status: z.union([
+                        z.literal('not_tested'),
+                        z.literal('passed'),
+                        z.literal('partial'),
+                        z.literal('failed'),
+                    ]),
+                    comment: z.string().max(1000),
+                    version: z.number().int().min(0).max(9007199254740991),
+                    checkedBy: z
+                        .strictObject({
+                            id: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.uuid()),
+                            login: z.string().min(1).max(100),
+                            displayName: z.string().min(1).max(200).nullable(),
+                        })
+                        .nullable(),
+                    checkedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    updatedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                }),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/acceptance-tests/{caseId}/reset': {
+        params: z.strictObject({ caseId: z.string().min(3).max(80) }),
+        request: z.strictObject({
+            expectedVersion: z.number().int().min(0).max(9007199254740991),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                caseId: z.string().min(3).max(80).regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
+                run: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    createdAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime()),
+                }),
+                result: z.strictObject({
+                    status: z.union([
+                        z.literal('not_tested'),
+                        z.literal('passed'),
+                        z.literal('partial'),
+                        z.literal('failed'),
+                    ]),
+                    comment: z.string().max(1000),
+                    version: z.number().int().min(0).max(9007199254740991),
+                    checkedBy: z
+                        .strictObject({
+                            id: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.uuid()),
+                            login: z.string().min(1).max(100),
+                            displayName: z.string().min(1).max(200).nullable(),
+                        })
+                        .nullable(),
+                    checkedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    updatedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                }),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/observability': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                schemaVersion: z.literal(1),
+                generatedAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+                completeness: z.union([z.literal('complete'), z.literal('partial')]),
+                host: z.strictObject({
+                    freshness: z.strictObject({
+                        state: z.union([
+                            z.literal('fresh'),
+                            z.literal('stale'),
+                            z.literal('unavailable'),
+                            z.literal('no_samples'),
+                        ]),
+                        observedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                        staleAfterSeconds: z.number().int().min(1).max(604800),
+                    }),
+                    unavailableReason: z
+                        .union([
+                            z.literal('disabled'),
+                            z.literal('missing'),
+                            z.literal('unreadable'),
+                            z.literal('invalid'),
+                            z.literal('clock_skew'),
+                        ])
+                        .nullable(),
+                    collectorStatus: z.union([z.literal('ok'), z.literal('partial')]).nullable(),
+                    durationMs: z.number().int().min(0).max(86400000).nullable(),
+                    memory: z
+                        .strictObject({
+                            totalBytes: z.number().int().min(0).max(9007199254740991),
+                            availableBytes: z.number().int().min(0).max(9007199254740991),
+                        })
+                        .nullable(),
+                    load1mMilli: z.number().int().min(0).max(1000000).nullable(),
+                    uptimeSeconds: z.number().int().min(0).max(3153600000).nullable(),
+                    rebootRequired: z.boolean().nullable(),
+                    filesystems: z
+                        .array(
+                            z.strictObject({
+                                scope: z.union([z.literal('root'), z.literal('deployment'), z.literal('backups')]),
+                                totalBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                availableBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                usedPercent: z.number().int().min(0).max(100).nullable(),
+                            }),
+                        )
+                        .max(3),
+                    containers: z
+                        .array(
+                            z.strictObject({
+                                service: z.union([
+                                    z.literal('postgres'),
+                                    z.literal('backend'),
+                                    z.literal('worker'),
+                                    z.literal('frontend'),
+                                    z.literal('admin'),
+                                ]),
+                                state: z.union([
+                                    z.literal('running'),
+                                    z.literal('exited'),
+                                    z.literal('restarting'),
+                                    z.literal('paused'),
+                                    z.literal('created'),
+                                    z.literal('missing'),
+                                    z.literal('unknown'),
+                                ]),
+                                health: z.union([
+                                    z.literal('healthy'),
+                                    z.literal('unhealthy'),
+                                    z.literal('starting'),
+                                    z.literal('none'),
+                                    z.literal('unknown'),
+                                ]),
+                                restartCount: z.number().int().min(0).max(1000000000).nullable(),
+                                cpuPermille: z.number().int().min(0).max(1000000).nullable(),
+                                memoryBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                memoryLimitBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                                pids: z.number().int().min(0).max(1000000000).nullable(),
+                            }),
+                        )
+                        .max(5),
+                }),
+                database: z.strictObject({
+                    freshness: z.strictObject({
+                        state: z.union([
+                            z.literal('fresh'),
+                            z.literal('stale'),
+                            z.literal('unavailable'),
+                            z.literal('no_samples'),
+                        ]),
+                        observedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                        staleAfterSeconds: z.number().int().min(1).max(604800),
+                    }),
+                    queryDurationMs: z.number().int().min(0).max(86400000).nullable(),
+                    schemaVersion: z.number().int().min(0).max(100000).nullable(),
+                    databaseSizeBytes: z.number().int().min(0).max(9007199254740991).nullable(),
+                    backendPool: z
+                        .strictObject({
+                            max: z.number().int().min(1).max(50),
+                            total: z.number().int().min(0).max(50),
+                            idle: z.number().int().min(0).max(50),
+                            waiting: z.number().int().min(0).max(1000000000),
+                        })
+                        .nullable(),
+                }),
+                queue: z.strictObject({
+                    freshness: z.strictObject({
+                        state: z.union([
+                            z.literal('fresh'),
+                            z.literal('stale'),
+                            z.literal('unavailable'),
+                            z.literal('no_samples'),
+                        ]),
+                        observedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                        staleAfterSeconds: z.number().int().min(1).max(604800),
+                    }),
+                    counts: z
+                        .strictObject({
+                            pending: z.number().int().min(0).max(1000000000),
+                            queued: z.number().int().min(0).max(1000000000),
+                            running: z.number().int().min(0).max(1000000000),
+                            processing: z.number().int().min(0).max(1000000000),
+                            retrying: z.number().int().min(0).max(1000000000),
+                            failed: z.number().int().min(0).max(1000000000),
+                            deadLetter: z.number().int().min(0).max(1000000000),
+                            completed: z.number().int().min(0).max(1000000000),
+                            cancelled: z.number().int().min(0).max(1000000000),
+                            other: z.number().int().min(0).max(1000000000),
+                        })
+                        .nullable(),
+                    dueNow: z.number().int().min(0).max(1000000000).nullable(),
+                    oldestDueAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                }),
+                workers: z
+                    .array(
+                        z.strictObject({
+                            task: z.union([
+                                z.literal('scheduled-news'),
+                                z.literal('incident-ignore-expiry'),
+                                z.literal('retention-inspection'),
+                                z.literal('scheduled-sanctions'),
+                                z.literal('diary-portions'),
+                                z.literal('email-changes'),
+                                z.literal('exports'),
+                                z.literal('account-retention'),
+                                z.literal('ai-reconciliation'),
+                                z.literal('cooking-lifecycle'),
+                            ]),
+                            freshness: z.strictObject({
+                                state: z.union([
+                                    z.literal('fresh'),
+                                    z.literal('stale'),
+                                    z.literal('unavailable'),
+                                    z.literal('no_samples'),
+                                ]),
+                                observedAt: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                                staleAfterSeconds: z.number().int().min(1).max(604800),
+                            }),
+                            leaseState: z.union([z.literal('active'), z.literal('inactive'), z.literal('no_record')]),
+                            leaseExpiresAt: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.iso.datetime())
+                                .nullable(),
+                            lastOutcome: z
+                                .union([
+                                    z.literal('success'),
+                                    z.literal('partial'),
+                                    z.literal('skipped_overlap'),
+                                    z.literal('skipped_not_ready'),
+                                    z.literal('timeout'),
+                                    z.literal('failure'),
+                                ])
+                                .nullable(),
+                            lastFinishedAt: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.iso.datetime())
+                                .nullable(),
+                            lastDurationMs: z.number().int().min(0).max(86400000).nullable(),
+                            failuresLastHour: z.number().int().min(0).max(1000000000),
+                        }),
+                    )
+                    .min(10)
+                    .max(10),
+                providers: z.strictObject({
+                    windowSeconds: z.literal(3600),
+                    services: z
+                        .array(
+                            z.strictObject({
+                                service: z.union([
+                                    z.literal('ai'),
+                                    z.literal('payment'),
+                                    z.literal('object_storage'),
+                                    z.literal('key_management'),
+                                    z.literal('malware_scanner'),
+                                    z.literal('email'),
+                                    z.literal('web_push'),
+                                    z.literal('ocr'),
+                                ]),
+                                freshness: z.strictObject({
+                                    state: z.union([
+                                        z.literal('fresh'),
+                                        z.literal('stale'),
+                                        z.literal('unavailable'),
+                                        z.literal('no_samples'),
+                                    ]),
+                                    observedAt: z
+                                        .string()
+                                        .regex(
+                                            new RegExp(
+                                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                'u',
+                                            ),
+                                        )
+                                        .pipe(z.iso.datetime())
+                                        .nullable(),
+                                    ageSeconds: z.number().int().min(0).max(31536000).nullable(),
+                                    staleAfterSeconds: z.number().int().min(1).max(604800),
+                                }),
+                                lastOutcome: z
+                                    .union([
+                                        z.literal('success'),
+                                        z.literal('provider_error'),
+                                        z.literal('timeout'),
+                                        z.literal('cancelled'),
+                                        z.literal('boundary_rejected'),
+                                        z.literal('unavailable'),
+                                    ])
+                                    .nullable(),
+                                lastObservedAt: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                sampleCount: z.number().int().min(0).max(1000000000),
+                                success: z.number().int().min(0).max(1000000000),
+                                providerError: z.number().int().min(0).max(1000000000),
+                                timeout: z.number().int().min(0).max(1000000000),
+                                cancelled: z.number().int().min(0).max(1000000000),
+                                boundaryRejected: z.number().int().min(0).max(1000000000),
+                                unavailable: z.number().int().min(0).max(1000000000),
+                                averageDurationMs: z.number().int().min(0).max(86400000).nullable(),
+                            }),
+                        )
+                        .min(8)
+                        .max(8),
+                }),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/ai': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                schemaVersion: z.literal(2),
+                generatedAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+                executionAvailable: z.boolean(),
+                provider: z.strictObject({
+                    configured: z.boolean(),
+                    kind: z.union([z.literal('disabled'), z.literal('openai_compatible')]),
+                    model: z.string().nullable(),
+                }),
+                policies: z.strictObject({
+                    task: z.strictObject({
+                        version: z.string(),
+                        effectiveAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                    }),
+                    context: z.strictObject({
+                        version: z.string(),
+                        effectiveAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                    }),
+                }),
+                usage: z.strictObject({
+                    last24Hours: z.strictObject({
+                        tasks: z.number().int().min(0).max(1000000000),
+                        actions: z.number().int().min(0).max(1000000000),
+                        completed: z.number().int().min(0).max(1000000000),
+                        refunded: z.number().int().min(0).max(1000000000),
+                        failed: z.number().int().min(0).max(1000000000),
+                    }),
+                    last30Days: z.strictObject({
+                        tasks: z.number().int().min(0).max(1000000000),
+                        actions: z.number().int().min(0).max(1000000000),
+                        completed: z.number().int().min(0).max(1000000000),
+                        refunded: z.number().int().min(0).max(1000000000),
+                        failed: z.number().int().min(0).max(1000000000),
+                    }),
+                }),
+                statuses: z.array(
+                    z.strictObject({
+                        status: z.union([
+                            z.literal('preview'),
+                            z.literal('processing'),
+                            z.literal('completed'),
+                            z.literal('failed'),
+                            z.literal('refunded'),
+                        ]),
+                        count: z.number().int().min(0).max(1000000000),
+                    }),
+                ),
+                operations: z.strictObject({
+                    lifecycle: z.array(
+                        z.strictObject({
+                            state: z.union([
+                                z.literal('accepted'),
+                                z.literal('queued'),
+                                z.literal('running'),
+                                z.literal('succeeded'),
+                                z.literal('failed'),
+                                z.literal('cancelled'),
+                                z.literal('unknown'),
+                            ]),
+                            count: z.number().int().min(0).max(1000000000),
+                        }),
+                    ),
+                    financial: z.array(
+                        z.strictObject({
+                            state: z.union([
+                                z.literal('none'),
+                                z.literal('reserved'),
+                                z.literal('captured'),
+                                z.literal('released'),
+                                z.literal('reconciliation_hold'),
+                            ]),
+                            count: z.number().int().min(0).max(1000000000),
+                        }),
+                    ),
+                    oldestQueuedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    oldestRunningAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    unknownCount: z.number().int().min(0).max(1000000000),
+                    reconciliationHoldCount: z.number().int().min(0).max(1000000000),
+                }),
+                tasks: z.array(
+                    z.strictObject({
+                        code: z.union([
+                            z.literal('culinary_question'),
+                            z.literal('recipe_from_stock'),
+                            z.literal('substitution'),
+                            z.literal('storage_advice'),
+                            z.literal('meal_plan_generation'),
+                            z.literal('shopping_list_generation'),
+                            z.literal('registry_analysis'),
+                            z.literal('personal_recommendation'),
+                            z.literal('nutrition_calculation'),
+                            z.literal('product_classification'),
+                            z.literal('ingredient_extraction'),
+                            z.literal('review_summary'),
+                            z.literal('beverage_pairing'),
+                            z.literal('event_menu'),
+                            z.literal('portion_cost_calculation'),
+                            z.literal('seasonal_analysis'),
+                            z.literal('recipe_adaptation'),
+                            z.literal('document_analysis'),
+                        ]),
+                        label: z.string().min(1),
+                        taskClass: z.union([z.literal('standard'), z.literal('advanced'), z.literal('heavy')]),
+                        cost: z.number().int().min(1).max(5),
+                        availableOn: z.array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')])).max(3),
+                        requiredContext: z.array(
+                            z.union([
+                                z.literal('user_prompt'),
+                                z.literal('personal_inventory'),
+                                z.literal('preferences'),
+                                z.literal('nutrition_profile'),
+                            ]),
+                        ),
+                        optionalContext: z.array(
+                            z.union([
+                                z.literal('user_prompt'),
+                                z.literal('personal_inventory'),
+                                z.literal('preferences'),
+                                z.literal('nutrition_profile'),
+                            ]),
+                        ),
+                    }),
+                ),
             }),
             meta: z.strictObject({
                 requestId: z
@@ -10292,49 +9763,37 @@ export const contracts = {
             }),
         }),
     },
-    'GET /api/v1/admin/billing/{section}/{id}': {
+    'POST /api/v1/admin/{section}/{id}/related/{collection}/search': {
         params: z.strictObject({
+            section: z.union([
+                z.literal('overview'),
+                z.literal('queues'),
+                z.literal('users'),
+                z.literal('sanctions'),
+                z.literal('subscriptions'),
+                z.literal('families'),
+                z.literal('payments'),
+                z.literal('support'),
+                z.literal('catalog'),
+                z.literal('news'),
+                z.literal('audit'),
+                z.literal('rollback'),
+                z.literal('legal-requests'),
+                z.literal('operations'),
+                z.literal('errors'),
+                z.literal('metrics'),
+                z.literal('access'),
+            ]),
             id: z.string().pipe(z.uuid()),
-            section: z.union([z.literal('users'), z.literal('subscriptions'), z.literal('payments')]),
+            collection: z.string().regex(new RegExp('^[a-z][a-z-]{0,63}$', 'u')),
         }),
-        request: null,
+        request: z.strictObject({
+            cursor: z.string().max(1500).regex(new RegExp('^[A-Za-z0-9_-]+$', 'u')).optional(),
+            limit: z.number().int().min(1).max(50).optional(),
+        }),
         success: z.strictObject({
             data: z.strictObject({
-                id: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                version: z.string(),
-                ownerId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                payerId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid())
-                    .nullable(),
-                plan: z.string(),
-                status: z.string(),
-                frozen: z.boolean(),
-                quota: z.number().int().min(0).max(9007199254740991),
-                refreshAt: z.string().nullable(),
-                periods: z.array(
+                items: z.array(
                     z.strictObject({
                         id: z
                             .string()
@@ -10345,34 +9804,66 @@ export const contracts = {
                                 ),
                             )
                             .pipe(z.uuid()),
-                        source: z.union([z.literal('paid'), z.literal('gift')]),
-                        startsAt: z.string(),
-                        endsAt: z.string(),
-                        revoked: z.boolean(),
-                    }),
-                ),
-                payment: z
-                    .strictObject({
-                        paidMinor: z.string(),
-                        returnedMinor: z.string(),
-                        reservedMinor: z.string(),
-                        currency: z.literal('RUB'),
-                        status: z.string(),
-                        targetId: z
+                        title: z.string(),
+                        status: z.string().nullable(),
+                        updatedAt: z
                             .string()
                             .regex(
                                 new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
                                     'u',
                                 ),
                             )
-                            .pipe(z.uuid()),
-                        targetKind: z.union([z.literal('period'), z.literal('package')]),
-                        packageRemaining: z.number().int().min(0).max(9007199254740991).nullable(),
-                    })
-                    .nullable(),
-                history: z.array(z.strictObject({ action: z.string(), reason: z.string(), at: z.string() })),
-                notice: z.string(),
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        version: z.string(),
+                        fields: z.array(
+                            z.strictObject({ key: z.string(), label: z.string(), value: z.string().nullable() }),
+                        ),
+                        related: z.array(
+                            z.strictObject({
+                                label: z.string(),
+                                section: z.union([
+                                    z.literal('overview'),
+                                    z.literal('queues'),
+                                    z.literal('users'),
+                                    z.literal('sanctions'),
+                                    z.literal('subscriptions'),
+                                    z.literal('families'),
+                                    z.literal('payments'),
+                                    z.literal('support'),
+                                    z.literal('catalog'),
+                                    z.literal('news'),
+                                    z.literal('audit'),
+                                    z.literal('rollback'),
+                                    z.literal('legal-requests'),
+                                    z.literal('operations'),
+                                    z.literal('errors'),
+                                    z.literal('metrics'),
+                                    z.literal('access'),
+                                ]),
+                                id: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.uuid()),
+                            }),
+                        ),
+                        actions: z.array(
+                            z.strictObject({
+                                key: z.string(),
+                                label: z.string(),
+                                enabled: z.boolean(),
+                                reason: z.string().nullable(),
+                            }),
+                        ),
+                    }),
+                ),
+                nextCursor: z.string().nullable(),
             }),
             meta: z.strictObject({
                 requestId: z
@@ -10387,13 +9878,504 @@ export const contracts = {
             }),
         }),
     },
-    'POST /api/v1/admin/billing/{section}/{id}': {
+    'POST /api/v1/admin/{section}/search': {
         params: z.strictObject({
-            id: z.string().pipe(z.uuid()),
-            section: z.union([z.literal('users'), z.literal('subscriptions'), z.literal('payments')]),
+            section: z.union([
+                z.literal('overview'),
+                z.literal('queues'),
+                z.literal('users'),
+                z.literal('sanctions'),
+                z.literal('subscriptions'),
+                z.literal('families'),
+                z.literal('payments'),
+                z.literal('support'),
+                z.literal('catalog'),
+                z.literal('news'),
+                z.literal('audit'),
+                z.literal('rollback'),
+                z.literal('legal-requests'),
+                z.literal('operations'),
+                z.literal('errors'),
+                z.literal('metrics'),
+                z.literal('access'),
+            ]),
         }),
         request: z.strictObject({
-            version: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')),
+            queue: z.literal('recipes').optional(),
+            query: z.string().max(100).optional(),
+            status: z.string().max(64).optional(),
+            cursor: z.string().max(1500).regex(new RegExp('^[A-Za-z0-9_-]+$', 'u')).optional(),
+            limit: z.number().int().min(1).max(50).optional(),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                section: z.union([
+                    z.literal('overview'),
+                    z.literal('queues'),
+                    z.literal('users'),
+                    z.literal('sanctions'),
+                    z.literal('subscriptions'),
+                    z.literal('families'),
+                    z.literal('payments'),
+                    z.literal('support'),
+                    z.literal('catalog'),
+                    z.literal('news'),
+                    z.literal('audit'),
+                    z.literal('rollback'),
+                    z.literal('legal-requests'),
+                    z.literal('operations'),
+                    z.literal('errors'),
+                    z.literal('metrics'),
+                    z.literal('access'),
+                ]),
+                availability: z.union([z.literal('available'), z.literal('unavailable'), z.literal('requires_query')]),
+                reason: z.string().nullable(),
+                items: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        title: z.string(),
+                        status: z.string().nullable(),
+                        updatedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        version: z.string(),
+                        fields: z.array(
+                            z.strictObject({ key: z.string(), label: z.string(), value: z.string().nullable() }),
+                        ),
+                        related: z.array(
+                            z.strictObject({
+                                label: z.string(),
+                                section: z.union([
+                                    z.literal('overview'),
+                                    z.literal('queues'),
+                                    z.literal('users'),
+                                    z.literal('sanctions'),
+                                    z.literal('subscriptions'),
+                                    z.literal('families'),
+                                    z.literal('payments'),
+                                    z.literal('support'),
+                                    z.literal('catalog'),
+                                    z.literal('news'),
+                                    z.literal('audit'),
+                                    z.literal('rollback'),
+                                    z.literal('legal-requests'),
+                                    z.literal('operations'),
+                                    z.literal('errors'),
+                                    z.literal('metrics'),
+                                    z.literal('access'),
+                                ]),
+                                id: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.uuid()),
+                            }),
+                        ),
+                        actions: z.array(
+                            z.strictObject({
+                                key: z.string(),
+                                label: z.string(),
+                                enabled: z.boolean(),
+                                reason: z.string().nullable(),
+                            }),
+                        ),
+                    }),
+                ),
+                nextCursor: z.string().nullable(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/{section}/{id}': {
+        params: z.strictObject({
+            section: z.union([
+                z.literal('overview'),
+                z.literal('queues'),
+                z.literal('users'),
+                z.literal('sanctions'),
+                z.literal('subscriptions'),
+                z.literal('families'),
+                z.literal('payments'),
+                z.literal('support'),
+                z.literal('catalog'),
+                z.literal('news'),
+                z.literal('audit'),
+                z.literal('rollback'),
+                z.literal('legal-requests'),
+                z.literal('operations'),
+                z.literal('errors'),
+                z.literal('metrics'),
+                z.literal('access'),
+            ]),
+            id: z.string().pipe(z.uuid()),
+        }),
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                section: z.union([
+                    z.literal('overview'),
+                    z.literal('queues'),
+                    z.literal('users'),
+                    z.literal('sanctions'),
+                    z.literal('subscriptions'),
+                    z.literal('families'),
+                    z.literal('payments'),
+                    z.literal('support'),
+                    z.literal('catalog'),
+                    z.literal('news'),
+                    z.literal('audit'),
+                    z.literal('rollback'),
+                    z.literal('legal-requests'),
+                    z.literal('operations'),
+                    z.literal('errors'),
+                    z.literal('metrics'),
+                    z.literal('access'),
+                ]),
+                item: z.strictObject({
+                    id: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.uuid()),
+                    title: z.string(),
+                    status: z.string().nullable(),
+                    updatedAt: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    version: z.string(),
+                    fields: z.array(
+                        z.strictObject({ key: z.string(), label: z.string(), value: z.string().nullable() }),
+                    ),
+                    related: z.array(
+                        z.strictObject({
+                            label: z.string(),
+                            section: z.union([
+                                z.literal('overview'),
+                                z.literal('queues'),
+                                z.literal('users'),
+                                z.literal('sanctions'),
+                                z.literal('subscriptions'),
+                                z.literal('families'),
+                                z.literal('payments'),
+                                z.literal('support'),
+                                z.literal('catalog'),
+                                z.literal('news'),
+                                z.literal('audit'),
+                                z.literal('rollback'),
+                                z.literal('legal-requests'),
+                                z.literal('operations'),
+                                z.literal('errors'),
+                                z.literal('metrics'),
+                                z.literal('access'),
+                            ]),
+                            id: z
+                                .string()
+                                .regex(
+                                    new RegExp(
+                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                        'u',
+                                    ),
+                                )
+                                .pipe(z.uuid()),
+                        }),
+                    ),
+                    actions: z.array(
+                        z.strictObject({
+                            key: z.string(),
+                            label: z.string(),
+                            enabled: z.boolean(),
+                            reason: z.string().nullable(),
+                        }),
+                    ),
+                }),
+                collections: z.array(z.strictObject({ key: z.string(), label: z.string() })),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/runtime-settings': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                generatedAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+                completeness: z.union([z.literal('complete'), z.literal('partial')]),
+                unavailableSources: z.array(z.string()),
+                tabs: z.array(
+                    z.strictObject({
+                        code: z.union([
+                            z.literal('notifications'),
+                            z.literal('mail'),
+                            z.literal('storage'),
+                            z.literal('security'),
+                            z.literal('deploy_backup'),
+                            z.literal('backup_recovery'),
+                            z.literal('integrations'),
+                            z.literal('legal'),
+                        ]),
+                        label: z.string(),
+                    }),
+                ),
+                selectedTab: z.union([
+                    z.literal('notifications'),
+                    z.literal('mail'),
+                    z.literal('storage'),
+                    z.literal('security'),
+                    z.literal('deploy_backup'),
+                    z.literal('backup_recovery'),
+                    z.literal('integrations'),
+                    z.literal('legal'),
+                ]),
+                entries: z.array(
+                    z.strictObject({
+                        key: z.string(),
+                        label: z.string(),
+                        description: z.string(),
+                        value: z.string(),
+                        status: z.union([
+                            z.literal('active'),
+                            z.literal('disabled'),
+                            z.literal('partial'),
+                            z.literal('blocked'),
+                        ]),
+                        source: z.union([
+                            z.literal('database'),
+                            z.literal('environment'),
+                            z.literal('vps_secret'),
+                            z.literal('github_secret'),
+                            z.literal('derived'),
+                        ]),
+                        readiness: z.union([
+                            z.literal('ready'),
+                            z.literal('owner_input'),
+                            z.literal('external_dependency'),
+                            z.literal('disabled'),
+                        ]),
+                        editable: z.boolean(),
+                        sensitive: z.boolean(),
+                        updatedAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        version: z.number().int().gt(0).max(9007199254740991).nullable(),
+                        blockers: z.array(z.string()),
+                        affectedServices: z.array(z.string()),
+                        checks: z.array(z.string()),
+                        instruction: z.string().nullable(),
+                        history: z
+                            .array(
+                                z.strictObject({
+                                    at: z
+                                        .string()
+                                        .regex(
+                                            new RegExp(
+                                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                'u',
+                                            ),
+                                        )
+                                        .pipe(z.iso.datetime()),
+                                    actor: z.string(),
+                                    summary: z.string(),
+                                }),
+                            )
+                            .max(20),
+                        secret: z
+                            .strictObject({
+                                configured: z.boolean(),
+                                fingerprint: z.string().nullable(),
+                                rotatedAt: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                            })
+                            .nullable(),
+                        policy: z
+                            .strictObject({
+                                quietHours: z.strictObject({
+                                    start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                                    end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                                }),
+                                ttlSeconds: z.strictObject({
+                                    critical: z.number().int().min(0).max(86400),
+                                    important: z.number().int().min(0).max(86400),
+                                    informational: z.number().int().min(0).max(86400),
+                                    marketing: z.number().int().min(0).max(86400),
+                                }),
+                                version: z.number().int().gt(0).max(9007199254740991),
+                            })
+                            .nullable(),
+                    }),
+                ),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/runtime-settings/web-push-policy/preview': {
+        params: null,
+        request: z.strictObject({
+            quietHours: z.strictObject({
+                start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+            }),
+            ttlSeconds: z.strictObject({
+                critical: z.number().int().min(0).max(86400),
+                important: z.number().int().min(0).max(86400),
+                informational: z.number().int().min(0).max(86400),
+                marketing: z.number().int().min(0).max(86400),
+            }),
+            expectedVersion: z.number().int().gt(0).max(9007199254740991),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                previewId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                expiresAt: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.iso.datetime()),
+                changes: z.array(z.strictObject({ field: z.string(), from: z.string().nullable(), to: z.string() })),
+                policy: z.strictObject({
+                    quietHours: z.strictObject({
+                        start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                        end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                    }),
+                    ttlSeconds: z.strictObject({
+                        critical: z.number().int().min(0).max(86400),
+                        important: z.number().int().min(0).max(86400),
+                        informational: z.number().int().min(0).max(86400),
+                        marketing: z.number().int().min(0).max(86400),
+                    }),
+                    version: z.number().int().gt(0).max(9007199254740991),
+                }),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/runtime-settings/web-push-policy/execute': {
+        params: null,
+        request: z.strictObject({
+            quietHours: z.strictObject({
+                start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+            }),
+            ttlSeconds: z.strictObject({
+                critical: z.number().int().min(0).max(86400),
+                important: z.number().int().min(0).max(86400),
+                informational: z.number().int().min(0).max(86400),
+                marketing: z.number().int().min(0).max(86400),
+            }),
+            expectedVersion: z.number().int().gt(0).max(9007199254740991),
+            previewId: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
             idempotencyKey: z
                 .string()
                 .regex(
@@ -10403,54 +10385,31 @@ export const contracts = {
                     ),
                 )
                 .pipe(z.uuid()),
-            action: z.union([
-                z.literal('grant'),
-                z.literal('extend'),
-                z.literal('revokeGift'),
-                z.literal('freeze'),
-                z.literal('unfreeze'),
-                z.literal('refund'),
-            ]),
-            plan: z.union([z.literal('plus'), z.literal('pro')]),
-            until: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                        'u',
-                    ),
-                )
-                .pipe(z.iso.datetime())
-                .nullable(),
-            targetId: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid())
-                .nullable(),
-            amountMinor: z.string().max(16).regex(new RegExp('^[1-9][0-9]*$', 'u')).nullable(),
-            effect: z.union([z.literal('preserve'), z.literal('terminate')]),
-            reason: z.string().min(1).max(5000),
-            confirmed: z.literal(true),
-            accessConfirmed: z.boolean(),
         }),
         success: z.strictObject({
             data: z.strictObject({
-                id: z
+                policy: z.strictObject({
+                    quietHours: z.strictObject({
+                        start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                        end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
+                    }),
+                    ttlSeconds: z.strictObject({
+                        critical: z.number().int().min(0).max(86400),
+                        important: z.number().int().min(0).max(86400),
+                        informational: z.number().int().min(0).max(86400),
+                        marketing: z.number().int().min(0).max(86400),
+                    }),
+                    version: z.number().int().gt(0).max(9007199254740991),
+                }),
+                updatedAt: z
                     .string()
                     .regex(
                         new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
                             'u',
                         ),
                     )
-                    .pipe(z.uuid()),
-                version: z.string(),
-                status: z.string(),
+                    .pipe(z.iso.datetime()),
             }),
             meta: z.strictObject({
                 requestId: z
@@ -11063,994 +11022,265 @@ export const contracts = {
             }),
         }),
     },
-    'GET /api/v1/admin/auth/csrf': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({ token: z.string() }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/auth/login': {
-        params: null,
-        request: z.strictObject({
-            login: z.string().regex(new RegExp('^[A-Za-z0-9_]{3,30}$', 'u')),
-            password: z.string().min(1).max(1024),
-            context: z.literal('admin'),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                status: z.literal('mfa_required'),
-                challenge: z.string(),
-                expiresAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime()),
-                enrollment: z.strictObject({ secret: z.string(), uri: z.string() }).nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/auth/mfa/verify': {
-        params: null,
-        request: z.strictObject({
-            challenge: z.string().regex(new RegExp('^[A-Za-z0-9_-]{43}$', 'u')),
-            code: z.string().min(6).max(64),
-            method: z.union([z.literal('totp'), z.literal('recovery')]),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                user: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    displayName: z.string(),
-                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
-                    expiresAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime()),
-                    sessionId: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                }),
-                recoveryCodes: z.array(z.string()),
-                unlockToken: z.string(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/auth/status': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                user: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    displayName: z.string(),
-                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
-                    expiresAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime()),
-                    sessionId: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                }),
-                status: z.union([z.literal('locked'), z.literal('unlocked')]),
-                criticalUntil: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime())
-                    .nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/auth/unlock': {
-        params: null,
-        request: z.strictObject({
-            code: z.string().min(6).max(64),
-            method: z.union([z.literal('totp'), z.literal('recovery')]),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                user: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    displayName: z.string(),
-                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
-                    expiresAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime()),
-                    sessionId: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                }),
-                unlockToken: z.string(),
-                criticalUntil: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime())
-                    .nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/auth/critical-confirm': {
-        params: null,
-        request: z.strictObject({
-            code: z.string().min(6).max(64),
-            method: z.union([z.literal('totp'), z.literal('recovery')]),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                criticalUntil: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime()),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/auth/me': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                user: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    displayName: z.string(),
-                    context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
-                    expiresAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime()),
-                    sessionId: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                }),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/auth/sessions': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                sessions: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        context: z.union([z.literal('user'), z.literal('admin'), z.literal('moderator')]),
-                        authenticatedAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime()),
-                        expiresAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime()),
-                        current: z.boolean(),
-                    }),
-                ),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/auth/sessions/revoke-others': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({ revokedCount: z.number().int().min(0).max(9007199254740991) }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/auth/logout': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({ loggedOut: z.literal(true) }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/{section}/{id}/related/{collection}/search': {
+    'GET /api/v1/admin/billing/{section}/{id}': {
         params: z.strictObject({
-            section: z.union([
-                z.literal('overview'),
-                z.literal('queues'),
-                z.literal('users'),
-                z.literal('sanctions'),
-                z.literal('subscriptions'),
-                z.literal('families'),
-                z.literal('payments'),
-                z.literal('support'),
-                z.literal('catalog'),
-                z.literal('news'),
-                z.literal('audit'),
-                z.literal('rollback'),
-                z.literal('legal-requests'),
-                z.literal('operations'),
-                z.literal('errors'),
-                z.literal('metrics'),
-                z.literal('access'),
-            ]),
             id: z.string().pipe(z.uuid()),
-            collection: z.string().regex(new RegExp('^[a-z][a-z-]{0,63}$', 'u')),
-        }),
-        request: z.strictObject({
-            cursor: z.string().max(1500).regex(new RegExp('^[A-Za-z0-9_-]+$', 'u')).optional(),
-            limit: z.number().int().min(1).max(50).optional(),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        title: z.string(),
-                        status: z.string().nullable(),
-                        updatedAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        version: z.string(),
-                        fields: z.array(
-                            z.strictObject({ key: z.string(), label: z.string(), value: z.string().nullable() }),
-                        ),
-                        related: z.array(
-                            z.strictObject({
-                                label: z.string(),
-                                section: z.union([
-                                    z.literal('overview'),
-                                    z.literal('queues'),
-                                    z.literal('users'),
-                                    z.literal('sanctions'),
-                                    z.literal('subscriptions'),
-                                    z.literal('families'),
-                                    z.literal('payments'),
-                                    z.literal('support'),
-                                    z.literal('catalog'),
-                                    z.literal('news'),
-                                    z.literal('audit'),
-                                    z.literal('rollback'),
-                                    z.literal('legal-requests'),
-                                    z.literal('operations'),
-                                    z.literal('errors'),
-                                    z.literal('metrics'),
-                                    z.literal('access'),
-                                ]),
-                                id: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.uuid()),
-                            }),
-                        ),
-                        actions: z.array(
-                            z.strictObject({
-                                key: z.string(),
-                                label: z.string(),
-                                enabled: z.boolean(),
-                                reason: z.string().nullable(),
-                            }),
-                        ),
-                    }),
-                ),
-                nextCursor: z.string().nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/{section}/search': {
-        params: z.strictObject({
-            section: z.union([
-                z.literal('overview'),
-                z.literal('queues'),
-                z.literal('users'),
-                z.literal('sanctions'),
-                z.literal('subscriptions'),
-                z.literal('families'),
-                z.literal('payments'),
-                z.literal('support'),
-                z.literal('catalog'),
-                z.literal('news'),
-                z.literal('audit'),
-                z.literal('rollback'),
-                z.literal('legal-requests'),
-                z.literal('operations'),
-                z.literal('errors'),
-                z.literal('metrics'),
-                z.literal('access'),
-            ]),
-        }),
-        request: z.strictObject({
-            queue: z.literal('recipes').optional(),
-            query: z.string().max(100).optional(),
-            status: z.string().max(64).optional(),
-            cursor: z.string().max(1500).regex(new RegExp('^[A-Za-z0-9_-]+$', 'u')).optional(),
-            limit: z.number().int().min(1).max(50).optional(),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                section: z.union([
-                    z.literal('overview'),
-                    z.literal('queues'),
-                    z.literal('users'),
-                    z.literal('sanctions'),
-                    z.literal('subscriptions'),
-                    z.literal('families'),
-                    z.literal('payments'),
-                    z.literal('support'),
-                    z.literal('catalog'),
-                    z.literal('news'),
-                    z.literal('audit'),
-                    z.literal('rollback'),
-                    z.literal('legal-requests'),
-                    z.literal('operations'),
-                    z.literal('errors'),
-                    z.literal('metrics'),
-                    z.literal('access'),
-                ]),
-                availability: z.union([z.literal('available'), z.literal('unavailable'), z.literal('requires_query')]),
-                reason: z.string().nullable(),
-                items: z.array(
-                    z.strictObject({
-                        id: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.uuid()),
-                        title: z.string(),
-                        status: z.string().nullable(),
-                        updatedAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        version: z.string(),
-                        fields: z.array(
-                            z.strictObject({ key: z.string(), label: z.string(), value: z.string().nullable() }),
-                        ),
-                        related: z.array(
-                            z.strictObject({
-                                label: z.string(),
-                                section: z.union([
-                                    z.literal('overview'),
-                                    z.literal('queues'),
-                                    z.literal('users'),
-                                    z.literal('sanctions'),
-                                    z.literal('subscriptions'),
-                                    z.literal('families'),
-                                    z.literal('payments'),
-                                    z.literal('support'),
-                                    z.literal('catalog'),
-                                    z.literal('news'),
-                                    z.literal('audit'),
-                                    z.literal('rollback'),
-                                    z.literal('legal-requests'),
-                                    z.literal('operations'),
-                                    z.literal('errors'),
-                                    z.literal('metrics'),
-                                    z.literal('access'),
-                                ]),
-                                id: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.uuid()),
-                            }),
-                        ),
-                        actions: z.array(
-                            z.strictObject({
-                                key: z.string(),
-                                label: z.string(),
-                                enabled: z.boolean(),
-                                reason: z.string().nullable(),
-                            }),
-                        ),
-                    }),
-                ),
-                nextCursor: z.string().nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/{section}/{id}': {
-        params: z.strictObject({
-            section: z.union([
-                z.literal('overview'),
-                z.literal('queues'),
-                z.literal('users'),
-                z.literal('sanctions'),
-                z.literal('subscriptions'),
-                z.literal('families'),
-                z.literal('payments'),
-                z.literal('support'),
-                z.literal('catalog'),
-                z.literal('news'),
-                z.literal('audit'),
-                z.literal('rollback'),
-                z.literal('legal-requests'),
-                z.literal('operations'),
-                z.literal('errors'),
-                z.literal('metrics'),
-                z.literal('access'),
-            ]),
-            id: z.string().pipe(z.uuid()),
+            section: z.union([z.literal('users'), z.literal('subscriptions'), z.literal('payments')]),
         }),
         request: null,
         success: z.strictObject({
             data: z.strictObject({
-                section: z.union([
-                    z.literal('overview'),
-                    z.literal('queues'),
-                    z.literal('users'),
-                    z.literal('sanctions'),
-                    z.literal('subscriptions'),
-                    z.literal('families'),
-                    z.literal('payments'),
-                    z.literal('support'),
-                    z.literal('catalog'),
-                    z.literal('news'),
-                    z.literal('audit'),
-                    z.literal('rollback'),
-                    z.literal('legal-requests'),
-                    z.literal('operations'),
-                    z.literal('errors'),
-                    z.literal('metrics'),
-                    z.literal('access'),
-                ]),
-                item: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    title: z.string(),
-                    status: z.string().nullable(),
-                    updatedAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                    version: z.string(),
-                    fields: z.array(
-                        z.strictObject({ key: z.string(), label: z.string(), value: z.string().nullable() }),
+                id: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                version: z.string(),
+                ownerId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                payerId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid())
+                    .nullable(),
+                plan: z.string(),
+                status: z.string(),
+                frozen: z.boolean(),
+                quota: z.number().int().min(0).max(9007199254740991),
+                refreshAt: z.string().nullable(),
+                periods: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        source: z.union([z.literal('paid'), z.literal('gift')]),
+                        startsAt: z.string(),
+                        endsAt: z.string(),
+                        revoked: z.boolean(),
+                    }),
+                ),
+                payment: z
+                    .strictObject({
+                        paidMinor: z.string(),
+                        returnedMinor: z.string(),
+                        reservedMinor: z.string(),
+                        currency: z.literal('RUB'),
+                        status: z.string(),
+                        targetId: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        targetKind: z.union([z.literal('period'), z.literal('package')]),
+                        packageRemaining: z.number().int().min(0).max(9007199254740991).nullable(),
+                    })
+                    .nullable(),
+                history: z.array(z.strictObject({ action: z.string(), reason: z.string(), at: z.string() })),
+                notice: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/billing/{section}/{id}': {
+        params: z.strictObject({
+            id: z.string().pipe(z.uuid()),
+            section: z.union([z.literal('users'), z.literal('subscriptions'), z.literal('payments')]),
+        }),
+        request: z.strictObject({
+            version: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
                     ),
-                    related: z.array(
-                        z.strictObject({
-                            label: z.string(),
-                            section: z.union([
-                                z.literal('overview'),
-                                z.literal('queues'),
-                                z.literal('users'),
-                                z.literal('sanctions'),
-                                z.literal('subscriptions'),
-                                z.literal('families'),
-                                z.literal('payments'),
-                                z.literal('support'),
-                                z.literal('catalog'),
-                                z.literal('news'),
-                                z.literal('audit'),
-                                z.literal('rollback'),
-                                z.literal('legal-requests'),
-                                z.literal('operations'),
-                                z.literal('errors'),
-                                z.literal('metrics'),
-                                z.literal('access'),
-                            ]),
-                            id: z
-                                .string()
-                                .regex(
-                                    new RegExp(
-                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                        'u',
-                                    ),
+                )
+                .pipe(z.uuid()),
+            action: z.union([
+                z.literal('grant'),
+                z.literal('extend'),
+                z.literal('revokeGift'),
+                z.literal('freeze'),
+                z.literal('unfreeze'),
+                z.literal('refund'),
+            ]),
+            plan: z.union([z.literal('plus'), z.literal('pro')]),
+            until: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                        'u',
+                    ),
+                )
+                .pipe(z.iso.datetime())
+                .nullable(),
+            targetId: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid())
+                .nullable(),
+            amountMinor: z.string().max(16).regex(new RegExp('^[1-9][0-9]*$', 'u')).nullable(),
+            effect: z.union([z.literal('preserve'), z.literal('terminate')]),
+            reason: z.string().min(1).max(5000),
+            confirmed: z.literal(true),
+            accessConfirmed: z.boolean(),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                id: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+                version: z.string(),
+                status: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'GET /api/v1/admin/news-workspace': {
+        params: null,
+        request: null,
+        success: z.strictObject({
+            data: z.strictObject({
+                items: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().gt(0).max(9007199254740991),
+                        content: z.strictObject({
+                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                            title: z.string().min(1).max(200),
+                            pages: z
+                                .array(
+                                    z.strictObject({
+                                        blocks: z
+                                            .array(
+                                                z
+                                                    .union([
+                                                        z.strictObject({
+                                                            kind: z.literal('text'),
+                                                            text: z.string().min(1).max(10000),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('image'),
+                                                            url: z.string().pipe(z.url()),
+                                                            alt: z.string().min(1).max(300),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('link'),
+                                                            url: z.string().pipe(z.url()),
+                                                            text: z.string().min(1).max(300),
+                                                        }),
+                                                    ])
+                                                    .refine(
+                                                        (value) =>
+                                                            [
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ].filter((branch) => branch.safeParse(value).success)
+                                                                .length === 1,
+                                                    ),
+                                            )
+                                            .min(1)
+                                            .max(30),
+                                    }),
                                 )
-                                .pipe(z.uuid()),
-                        }),
-                    ),
-                    actions: z.array(
-                        z.strictObject({
-                            key: z.string(),
-                            label: z.string(),
-                            enabled: z.boolean(),
-                            reason: z.string().nullable(),
-                        }),
-                    ),
-                }),
-                collections: z.array(z.strictObject({ key: z.string(), label: z.string() })),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/observability': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                schemaVersion: z.literal(1),
-                generatedAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime()),
-                completeness: z.union([z.literal('complete'), z.literal('partial')]),
-                host: z.strictObject({
-                    freshness: z.strictObject({
-                        state: z.union([
-                            z.literal('fresh'),
-                            z.literal('stale'),
-                            z.literal('unavailable'),
-                            z.literal('no_samples'),
-                        ]),
-                        observedAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
-                        staleAfterSeconds: z.number().int().min(1).max(604800),
-                    }),
-                    unavailableReason: z
-                        .union([
-                            z.literal('disabled'),
-                            z.literal('missing'),
-                            z.literal('unreadable'),
-                            z.literal('invalid'),
-                            z.literal('clock_skew'),
-                        ])
-                        .nullable(),
-                    collectorStatus: z.union([z.literal('ok'), z.literal('partial')]).nullable(),
-                    durationMs: z.number().int().min(0).max(86400000).nullable(),
-                    memory: z
-                        .strictObject({
-                            totalBytes: z.number().int().min(0).max(9007199254740991),
-                            availableBytes: z.number().int().min(0).max(9007199254740991),
-                        })
-                        .nullable(),
-                    load1mMilli: z.number().int().min(0).max(1000000).nullable(),
-                    uptimeSeconds: z.number().int().min(0).max(3153600000).nullable(),
-                    rebootRequired: z.boolean().nullable(),
-                    filesystems: z
-                        .array(
-                            z.strictObject({
-                                scope: z.union([z.literal('root'), z.literal('deployment'), z.literal('backups')]),
-                                totalBytes: z.number().int().min(0).max(9007199254740991).nullable(),
-                                availableBytes: z.number().int().min(0).max(9007199254740991).nullable(),
-                                usedPercent: z.number().int().min(0).max(100).nullable(),
-                            }),
-                        )
-                        .max(3),
-                    containers: z
-                        .array(
-                            z.strictObject({
-                                service: z.union([
-                                    z.literal('postgres'),
-                                    z.literal('backend'),
-                                    z.literal('worker'),
-                                    z.literal('frontend'),
-                                    z.literal('admin'),
-                                ]),
-                                state: z.union([
-                                    z.literal('running'),
-                                    z.literal('exited'),
-                                    z.literal('restarting'),
-                                    z.literal('paused'),
-                                    z.literal('created'),
-                                    z.literal('missing'),
-                                    z.literal('unknown'),
-                                ]),
-                                health: z.union([
-                                    z.literal('healthy'),
-                                    z.literal('unhealthy'),
-                                    z.literal('starting'),
-                                    z.literal('none'),
-                                    z.literal('unknown'),
-                                ]),
-                                restartCount: z.number().int().min(0).max(1000000000).nullable(),
-                                cpuPermille: z.number().int().min(0).max(1000000).nullable(),
-                                memoryBytes: z.number().int().min(0).max(9007199254740991).nullable(),
-                                memoryLimitBytes: z.number().int().min(0).max(9007199254740991).nullable(),
-                                pids: z.number().int().min(0).max(1000000000).nullable(),
-                            }),
-                        )
-                        .max(5),
-                }),
-                database: z.strictObject({
-                    freshness: z.strictObject({
-                        state: z.union([
-                            z.literal('fresh'),
-                            z.literal('stale'),
-                            z.literal('unavailable'),
-                            z.literal('no_samples'),
-                        ]),
-                        observedAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
-                        staleAfterSeconds: z.number().int().min(1).max(604800),
-                    }),
-                    queryDurationMs: z.number().int().min(0).max(86400000).nullable(),
-                    schemaVersion: z.number().int().min(0).max(100000).nullable(),
-                    databaseSizeBytes: z.number().int().min(0).max(9007199254740991).nullable(),
-                    backendPool: z
-                        .strictObject({
-                            max: z.number().int().min(1).max(50),
-                            total: z.number().int().min(0).max(50),
-                            idle: z.number().int().min(0).max(50),
-                            waiting: z.number().int().min(0).max(1000000000),
-                        })
-                        .nullable(),
-                }),
-                queue: z.strictObject({
-                    freshness: z.strictObject({
-                        state: z.union([
-                            z.literal('fresh'),
-                            z.literal('stale'),
-                            z.literal('unavailable'),
-                            z.literal('no_samples'),
-                        ]),
-                        observedAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        ageSeconds: z.number().int().min(0).max(31536000).nullable(),
-                        staleAfterSeconds: z.number().int().min(1).max(604800),
-                    }),
-                    counts: z
-                        .strictObject({
-                            pending: z.number().int().min(0).max(1000000000),
-                            queued: z.number().int().min(0).max(1000000000),
-                            running: z.number().int().min(0).max(1000000000),
-                            processing: z.number().int().min(0).max(1000000000),
-                            retrying: z.number().int().min(0).max(1000000000),
-                            failed: z.number().int().min(0).max(1000000000),
-                            deadLetter: z.number().int().min(0).max(1000000000),
-                            completed: z.number().int().min(0).max(1000000000),
-                            cancelled: z.number().int().min(0).max(1000000000),
-                            other: z.number().int().min(0).max(1000000000),
-                        })
-                        .nullable(),
-                    dueNow: z.number().int().min(0).max(1000000000).nullable(),
-                    oldestDueAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                }),
-                workers: z
-                    .array(
-                        z.strictObject({
-                            task: z.union([
-                                z.literal('scheduled-news'),
-                                z.literal('incident-ignore-expiry'),
-                                z.literal('retention-inspection'),
-                                z.literal('scheduled-sanctions'),
-                                z.literal('diary-portions'),
-                                z.literal('email-changes'),
-                                z.literal('exports'),
-                                z.literal('account-retention'),
-                                z.literal('ai-reconciliation'),
-                                z.literal('cooking-lifecycle'),
-                            ]),
-                            freshness: z.strictObject({
-                                state: z.union([
-                                    z.literal('fresh'),
-                                    z.literal('stale'),
-                                    z.literal('unavailable'),
-                                    z.literal('no_samples'),
-                                ]),
-                                observedAt: z
+                                .min(1)
+                                .max(10),
+                            sources: z
+                                .array(
+                                    z.strictObject({
+                                        claim: z.string().min(1).max(500),
+                                        source: z.string().min(1).max(10000),
+                                    }),
+                                )
+                                .max(30),
+                            audience: z.strictObject({
+                                plans: z
+                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                    .max(3),
+                                genders: z
+                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
+                                    .max(3),
+                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                registeredFrom: z
                                     .string()
                                     .regex(
                                         new RegExp(
@@ -12060,147 +11290,194 @@ export const contracts = {
                                     )
                                     .pipe(z.iso.datetime())
                                     .nullable(),
-                                ageSeconds: z.number().int().min(0).max(31536000).nullable(),
-                                staleAfterSeconds: z.number().int().min(1).max(604800),
+                                registeredTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
                             }),
-                            leaseState: z.union([z.literal('active'), z.literal('inactive'), z.literal('no_record')]),
-                            leaseExpiresAt: z
-                                .string()
-                                .regex(
-                                    new RegExp(
-                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                        'u',
-                                    ),
-                                )
-                                .pipe(z.iso.datetime())
-                                .nullable(),
-                            lastOutcome: z
-                                .union([
-                                    z.literal('success'),
-                                    z.literal('partial'),
-                                    z.literal('skipped_overlap'),
-                                    z.literal('skipped_not_ready'),
-                                    z.literal('timeout'),
-                                    z.literal('failure'),
-                                ])
-                                .nullable(),
-                            lastFinishedAt: z
-                                .string()
-                                .regex(
-                                    new RegExp(
-                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                        'u',
-                                    ),
-                                )
-                                .pipe(z.iso.datetime())
-                                .nullable(),
-                            lastDurationMs: z.number().int().min(0).max(86400000).nullable(),
-                            failuresLastHour: z.number().int().min(0).max(1000000000),
+                            channels: z
+                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                .min(1)
+                                .max(3),
+                            category: z.union([z.literal('service'), z.literal('marketing')]),
                         }),
-                    )
-                    .min(10)
-                    .max(10),
-                providers: z.strictObject({
-                    windowSeconds: z.literal(3600),
-                    services: z
-                        .array(
+                        status: z.union([
+                            z.literal('draft'),
+                            z.literal('scheduled'),
+                            z.literal('published'),
+                            z.literal('cancelled'),
+                        ]),
+                        scheduledAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        history: z.array(
                             z.strictObject({
-                                service: z.union([
-                                    z.literal('ai'),
-                                    z.literal('payment'),
-                                    z.literal('object_storage'),
-                                    z.literal('key_management'),
-                                    z.literal('malware_scanner'),
-                                    z.literal('email'),
-                                    z.literal('web_push'),
-                                    z.literal('ocr'),
-                                ]),
-                                freshness: z.strictObject({
-                                    state: z.union([
-                                        z.literal('fresh'),
-                                        z.literal('stale'),
-                                        z.literal('unavailable'),
-                                        z.literal('no_samples'),
-                                    ]),
-                                    observedAt: z
-                                        .string()
-                                        .regex(
-                                            new RegExp(
-                                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                'u',
-                                            ),
+                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                                at: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime()),
+                                content: z.strictObject({
+                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                                    title: z.string().min(1).max(200),
+                                    pages: z
+                                        .array(
+                                            z.strictObject({
+                                                blocks: z
+                                                    .array(
+                                                        z
+                                                            .union([
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ])
+                                                            .refine(
+                                                                (value) =>
+                                                                    [
+                                                                        z.strictObject({
+                                                                            kind: z.literal('text'),
+                                                                            text: z.string().min(1).max(10000),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('image'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            alt: z.string().min(1).max(300),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('link'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            text: z.string().min(1).max(300),
+                                                                        }),
+                                                                    ].filter(
+                                                                        (branch) => branch.safeParse(value).success,
+                                                                    ).length === 1,
+                                                            ),
+                                                    )
+                                                    .min(1)
+                                                    .max(30),
+                                            }),
                                         )
-                                        .pipe(z.iso.datetime())
-                                        .nullable(),
-                                    ageSeconds: z.number().int().min(0).max(31536000).nullable(),
-                                    staleAfterSeconds: z.number().int().min(1).max(604800),
+                                        .min(1)
+                                        .max(10),
+                                    sources: z
+                                        .array(
+                                            z.strictObject({
+                                                claim: z.string().min(1).max(500),
+                                                source: z.string().min(1).max(10000),
+                                            }),
+                                        )
+                                        .max(30),
+                                    audience: z.strictObject({
+                                        plans: z
+                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                            .max(3),
+                                        genders: z
+                                            .array(
+                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
+                                            )
+                                            .max(3),
+                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                        registeredFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        registeredTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                    }),
+                                    channels: z
+                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                        .min(1)
+                                        .max(3),
+                                    category: z.union([z.literal('service'), z.literal('marketing')]),
                                 }),
-                                lastOutcome: z
-                                    .union([
-                                        z.literal('success'),
-                                        z.literal('provider_error'),
-                                        z.literal('timeout'),
-                                        z.literal('cancelled'),
-                                        z.literal('boundary_rejected'),
-                                        z.literal('unavailable'),
-                                    ])
-                                    .nullable(),
-                                lastObservedAt: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                                sampleCount: z.number().int().min(0).max(1000000000),
-                                success: z.number().int().min(0).max(1000000000),
-                                providerError: z.number().int().min(0).max(1000000000),
-                                timeout: z.number().int().min(0).max(1000000000),
-                                cancelled: z.number().int().min(0).max(1000000000),
-                                boundaryRejected: z.number().int().min(0).max(1000000000),
-                                unavailable: z.number().int().min(0).max(1000000000),
-                                averageDurationMs: z.number().int().min(0).max(86400000).nullable(),
                             }),
-                        )
-                        .min(8)
-                        .max(8),
-                }),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
                         ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/acceptance-tests': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                schemaVersion: z.literal(1),
-                catalog: z.strictObject({
-                    version: z.string().min(1).max(80),
-                    publishedOn: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.date()),
-                }),
-                run: z
+                    }),
+                ),
+                preview: z
                     .strictObject({
                         id: z
                             .string()
@@ -12211,187 +11488,103 @@ export const contracts = {
                                 ),
                             )
                             .pipe(z.uuid()),
-                        createdAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime()),
+                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                        recipients: z.number().int().min(0).max(9007199254740991),
+                        preliminary: z.literal(true),
+                        mock: z.boolean(),
                     })
                     .nullable(),
-                summary: z.strictObject({
-                    total: z.number().int().min(0).max(9007199254740991),
-                    notTested: z.number().int().min(0).max(9007199254740991),
-                    passed: z.number().int().min(0).max(9007199254740991),
-                    partial: z.number().int().min(0).max(9007199254740991),
-                    failed: z.number().int().min(0).max(9007199254740991),
-                    completed: z.number().int().min(0).max(9007199254740991),
-                }),
-                groups: z
+                message: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/news-workspace/save': {
+        params: null,
+        request: z.strictObject({
+            action: z.literal('save'),
+            id: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            version: z.number().int().min(0).max(9007199254740991),
+            content: z.strictObject({
+                type: z
+                    .union([z.literal('article'), z.literal('important')])
+                    .default('article')
+                    .optional(),
+                title: z.string().min(1).max(200),
+                pages: z
                     .array(
                         z.strictObject({
-                            id: z.union([
-                                z.literal('database'),
-                                z.literal('backend'),
-                                z.literal('admin'),
-                                z.literal('frontend'),
-                            ]),
-                            title: z.string().min(1).max(80),
-                            order: z.number().int().gt(0).max(9007199254740991),
-                            cases: z
+                            blocks: z
                                 .array(
-                                    z.strictObject({
-                                        id: z
-                                            .string()
-                                            .min(3)
-                                            .max(80)
-                                            .regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
-                                        displayCode: z
-                                            .string()
-                                            .regex(new RegExp('^(?:DB|API|ADMIN|FRONTEND)-\\d{2}$', 'u')),
-                                        order: z.number().int().gt(0).max(9007199254740991),
-                                        title: z.string().min(1).max(240),
-                                        steps: z.array(z.string().min(1).max(2000)).min(1).max(100),
-                                        expectedResult: z.string().min(1).max(2000),
-                                        source: z.strictObject({
-                                            file: z.string().min(1).max(240),
-                                            anchor: z.string().min(1).max(240),
-                                            checksum: z.string().regex(new RegExp('^[0-9a-f]{64}$', 'u')),
-                                        }),
-                                        result: z.strictObject({
-                                            status: z.union([
-                                                z.literal('not_tested'),
-                                                z.literal('passed'),
-                                                z.literal('partial'),
-                                                z.literal('failed'),
-                                            ]),
-                                            comment: z.string().max(1000),
-                                            version: z.number().int().min(0).max(9007199254740991),
-                                            checkedBy: z
-                                                .strictObject({
-                                                    id: z
-                                                        .string()
-                                                        .regex(
-                                                            new RegExp(
-                                                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                                                'u',
-                                                            ),
-                                                        )
-                                                        .pipe(z.uuid()),
-                                                    login: z.string().min(1).max(100),
-                                                    displayName: z.string().min(1).max(200).nullable(),
-                                                })
-                                                .nullable(),
-                                            checkedAt: z
-                                                .string()
-                                                .regex(
-                                                    new RegExp(
-                                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                        'u',
-                                                    ),
-                                                )
-                                                .pipe(z.iso.datetime())
-                                                .nullable(),
-                                            updatedAt: z
-                                                .string()
-                                                .regex(
-                                                    new RegExp(
-                                                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                        'u',
-                                                    ),
-                                                )
-                                                .pipe(z.iso.datetime())
-                                                .nullable(),
-                                        }),
-                                    }),
+                                    z
+                                        .union([
+                                            z.strictObject({
+                                                kind: z.literal('text'),
+                                                text: z.string().min(1).max(10000),
+                                            }),
+                                            z.strictObject({
+                                                kind: z.literal('image'),
+                                                url: z.string().pipe(z.url()),
+                                                alt: z.string().min(1).max(300),
+                                            }),
+                                            z.strictObject({
+                                                kind: z.literal('link'),
+                                                url: z.string().pipe(z.url()),
+                                                text: z.string().min(1).max(300),
+                                            }),
+                                        ])
+                                        .refine(
+                                            (value) =>
+                                                [
+                                                    z.strictObject({
+                                                        kind: z.literal('text'),
+                                                        text: z.string().min(1).max(10000),
+                                                    }),
+                                                    z.strictObject({
+                                                        kind: z.literal('image'),
+                                                        url: z.string().pipe(z.url()),
+                                                        alt: z.string().min(1).max(300),
+                                                    }),
+                                                    z.strictObject({
+                                                        kind: z.literal('link'),
+                                                        url: z.string().pipe(z.url()),
+                                                        text: z.string().min(1).max(300),
+                                                    }),
+                                                ].filter((branch) => branch.safeParse(value).success).length === 1,
+                                        ),
                                 )
                                 .min(1)
-                                .max(50),
+                                .max(30),
                         }),
                     )
-                    .min(4)
-                    .max(4),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'PUT /api/v1/admin/acceptance-tests/{caseId}': {
-        params: z.strictObject({ caseId: z.string().min(3).max(80) }),
-        request: z.strictObject({
-            status: z.union([z.literal('passed'), z.literal('partial'), z.literal('failed')]),
-            comment: z.string().max(1000),
-            expectedVersion: z.number().int().min(0).max(9007199254740991),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                caseId: z.string().min(3).max(80).regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
-                run: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    createdAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime()),
-                }),
-                result: z.strictObject({
-                    status: z.union([
-                        z.literal('not_tested'),
-                        z.literal('passed'),
-                        z.literal('partial'),
-                        z.literal('failed'),
-                    ]),
-                    comment: z.string().max(1000),
-                    version: z.number().int().min(0).max(9007199254740991),
-                    checkedBy: z
-                        .strictObject({
-                            id: z
-                                .string()
-                                .regex(
-                                    new RegExp(
-                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                        'u',
-                                    ),
-                                )
-                                .pipe(z.uuid()),
-                            login: z.string().min(1).max(100),
-                            displayName: z.string().min(1).max(200).nullable(),
-                        })
-                        .nullable(),
-                    checkedAt: z
+                    .min(1)
+                    .max(10),
+                sources: z
+                    .array(z.strictObject({ claim: z.string().min(1).max(500), source: z.string().min(1).max(10000) }))
+                    .max(30),
+                audience: z.strictObject({
+                    plans: z.array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')])).max(3),
+                    genders: z.array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')])).max(3),
+                    families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                    registeredFrom: z
                         .string()
                         .regex(
                             new RegExp(
@@ -12401,7 +11594,27 @@ export const contracts = {
                         )
                         .pipe(z.iso.datetime())
                         .nullable(),
-                    updatedAt: z
+                    registeredTo: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    activeFrom: z
+                        .string()
+                        .regex(
+                            new RegExp(
+                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                'u',
+                            ),
+                        )
+                        .pipe(z.iso.datetime())
+                        .nullable(),
+                    activeTo: z
                         .string()
                         .regex(
                             new RegExp(
@@ -12412,24 +11625,12 @@ export const contracts = {
                         .pipe(z.iso.datetime())
                         .nullable(),
                 }),
+                channels: z
+                    .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                    .min(1)
+                    .max(3),
+                category: z.union([z.literal('service'), z.literal('marketing')]),
             }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/acceptance-tests/{caseId}/reset': {
-        params: z.strictObject({ caseId: z.string().min(3).max(80) }),
-        request: z.strictObject({
-            expectedVersion: z.number().int().min(0).max(9007199254740991),
             idempotencyKey: z
                 .string()
                 .regex(
@@ -12439,280 +11640,6 @@ export const contracts = {
                     ),
                 )
                 .pipe(z.uuid()),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                caseId: z.string().min(3).max(80).regex(new RegExp('^[a-z][a-z0-9-]+\\.[a-z0-9-]+$', 'u')),
-                run: z.strictObject({
-                    id: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.uuid()),
-                    createdAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime()),
-                }),
-                result: z.strictObject({
-                    status: z.union([
-                        z.literal('not_tested'),
-                        z.literal('passed'),
-                        z.literal('partial'),
-                        z.literal('failed'),
-                    ]),
-                    comment: z.string().max(1000),
-                    version: z.number().int().min(0).max(9007199254740991),
-                    checkedBy: z
-                        .strictObject({
-                            id: z
-                                .string()
-                                .regex(
-                                    new RegExp(
-                                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                                        'u',
-                                    ),
-                                )
-                                .pipe(z.uuid()),
-                            login: z.string().min(1).max(100),
-                            displayName: z.string().min(1).max(200).nullable(),
-                        })
-                        .nullable(),
-                    checkedAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                    updatedAt: z
-                        .string()
-                        .regex(
-                            new RegExp(
-                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                'u',
-                            ),
-                        )
-                        .pipe(z.iso.datetime())
-                        .nullable(),
-                }),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/notification-preferences': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                preferences: z.strictObject({ browser: z.boolean(), mobilePush: z.boolean(), email: z.boolean() }),
-                verifiedEmail: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
-                            'u',
-                        ),
-                    )
-                    .pipe(z.email())
-                    .nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/notification-preferences': {
-        params: null,
-        request: z.strictObject({
-            channel: z.union([z.literal('browser'), z.literal('mobilePush'), z.literal('email')]),
-            enabled: z.boolean(),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                preferences: z.strictObject({ browser: z.boolean(), mobilePush: z.boolean(), email: z.boolean() }),
-                verifiedEmail: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
-                            'u',
-                        ),
-                    )
-                    .pipe(z.email())
-                    .nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/support/{id}/reply': {
-        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
-        request: z.strictObject({
-            version: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            body: z.string().min(1).max(10000),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                ticketId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                version: z.string(),
-                status: z.string(),
-                assigneeId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid())
-                    .nullable(),
-                messageId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid())
-                    .nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/support/{id}/reopen': {
-        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
-        request: z.strictObject({
-            version: z.string().max(19).regex(new RegExp('^[1-9][0-9]*$', 'u')),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                ticketId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                version: z.string(),
-                status: z.string(),
-                assigneeId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid())
-                    .nullable(),
-                messageId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid())
-                    .nullable(),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/support/{id}/messages/search': {
-        params: z.strictObject({ id: z.string().pipe(z.uuid()) }),
-        request: z.strictObject({
-            cursor: z.string().max(1500).regex(new RegExp('^[A-Za-z0-9_-]+$', 'u')).optional(),
-            limit: z.number().int().min(1).max(50).default(25).optional(),
         }),
         success: z.strictObject({
             data: z.strictObject({
@@ -12727,8 +11654,275 @@ export const contracts = {
                                 ),
                             )
                             .pipe(z.uuid()),
-                        body: z.string(),
-                        authorId: z
+                        version: z.number().int().gt(0).max(9007199254740991),
+                        content: z.strictObject({
+                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                            title: z.string().min(1).max(200),
+                            pages: z
+                                .array(
+                                    z.strictObject({
+                                        blocks: z
+                                            .array(
+                                                z
+                                                    .union([
+                                                        z.strictObject({
+                                                            kind: z.literal('text'),
+                                                            text: z.string().min(1).max(10000),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('image'),
+                                                            url: z.string().pipe(z.url()),
+                                                            alt: z.string().min(1).max(300),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('link'),
+                                                            url: z.string().pipe(z.url()),
+                                                            text: z.string().min(1).max(300),
+                                                        }),
+                                                    ])
+                                                    .refine(
+                                                        (value) =>
+                                                            [
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ].filter((branch) => branch.safeParse(value).success)
+                                                                .length === 1,
+                                                    ),
+                                            )
+                                            .min(1)
+                                            .max(30),
+                                    }),
+                                )
+                                .min(1)
+                                .max(10),
+                            sources: z
+                                .array(
+                                    z.strictObject({
+                                        claim: z.string().min(1).max(500),
+                                        source: z.string().min(1).max(10000),
+                                    }),
+                                )
+                                .max(30),
+                            audience: z.strictObject({
+                                plans: z
+                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                    .max(3),
+                                genders: z
+                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
+                                    .max(3),
+                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                registeredFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                registeredTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                            }),
+                            channels: z
+                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                .min(1)
+                                .max(3),
+                            category: z.union([z.literal('service'), z.literal('marketing')]),
+                        }),
+                        status: z.union([
+                            z.literal('draft'),
+                            z.literal('scheduled'),
+                            z.literal('published'),
+                            z.literal('cancelled'),
+                        ]),
+                        scheduledAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        history: z.array(
+                            z.strictObject({
+                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                                at: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime()),
+                                content: z.strictObject({
+                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                                    title: z.string().min(1).max(200),
+                                    pages: z
+                                        .array(
+                                            z.strictObject({
+                                                blocks: z
+                                                    .array(
+                                                        z
+                                                            .union([
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ])
+                                                            .refine(
+                                                                (value) =>
+                                                                    [
+                                                                        z.strictObject({
+                                                                            kind: z.literal('text'),
+                                                                            text: z.string().min(1).max(10000),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('image'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            alt: z.string().min(1).max(300),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('link'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            text: z.string().min(1).max(300),
+                                                                        }),
+                                                                    ].filter(
+                                                                        (branch) => branch.safeParse(value).success,
+                                                                    ).length === 1,
+                                                            ),
+                                                    )
+                                                    .min(1)
+                                                    .max(30),
+                                            }),
+                                        )
+                                        .min(1)
+                                        .max(10),
+                                    sources: z
+                                        .array(
+                                            z.strictObject({
+                                                claim: z.string().min(1).max(500),
+                                                source: z.string().min(1).max(10000),
+                                            }),
+                                        )
+                                        .max(30),
+                                    audience: z.strictObject({
+                                        plans: z
+                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                            .max(3),
+                                        genders: z
+                                            .array(
+                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
+                                            )
+                                            .max(3),
+                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                        registeredFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        registeredTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                    }),
+                                    channels: z
+                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                        .min(1)
+                                        .max(3),
+                                    category: z.union([z.literal('service'), z.literal('marketing')]),
+                                }),
+                            }),
+                        ),
+                    }),
+                ),
+                preview: z
+                    .strictObject({
+                        id: z
                             .string()
                             .regex(
                                 new RegExp(
@@ -12737,7 +11931,178 @@ export const contracts = {
                                 ),
                             )
                             .pipe(z.uuid()),
-                        createdAt: z
+                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                        recipients: z.number().int().min(0).max(9007199254740991),
+                        preliminary: z.literal(true),
+                        mock: z.boolean(),
+                    })
+                    .nullable(),
+                message: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/news-workspace/preview': {
+        params: null,
+        request: z.strictObject({
+            action: z.literal('preview'),
+            id: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            version: z.number().int().gt(0).max(9007199254740991),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                items: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().gt(0).max(9007199254740991),
+                        content: z.strictObject({
+                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                            title: z.string().min(1).max(200),
+                            pages: z
+                                .array(
+                                    z.strictObject({
+                                        blocks: z
+                                            .array(
+                                                z
+                                                    .union([
+                                                        z.strictObject({
+                                                            kind: z.literal('text'),
+                                                            text: z.string().min(1).max(10000),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('image'),
+                                                            url: z.string().pipe(z.url()),
+                                                            alt: z.string().min(1).max(300),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('link'),
+                                                            url: z.string().pipe(z.url()),
+                                                            text: z.string().min(1).max(300),
+                                                        }),
+                                                    ])
+                                                    .refine(
+                                                        (value) =>
+                                                            [
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ].filter((branch) => branch.safeParse(value).success)
+                                                                .length === 1,
+                                                    ),
+                                            )
+                                            .min(1)
+                                            .max(30),
+                                    }),
+                                )
+                                .min(1)
+                                .max(10),
+                            sources: z
+                                .array(
+                                    z.strictObject({
+                                        claim: z.string().min(1).max(500),
+                                        source: z.string().min(1).max(10000),
+                                    }),
+                                )
+                                .max(30),
+                            audience: z.strictObject({
+                                plans: z
+                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                    .max(3),
+                                genders: z
+                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
+                                    .max(3),
+                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                registeredFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                registeredTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                            }),
+                            channels: z
+                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                .min(1)
+                                .max(3),
+                            category: z.union([z.literal('service'), z.literal('marketing')]),
+                        }),
+                        status: z.union([
+                            z.literal('draft'),
+                            z.literal('scheduled'),
+                            z.literal('published'),
+                            z.literal('cancelled'),
+                        ]),
+                        scheduledAt: z
                             .string()
                             .regex(
                                 new RegExp(
@@ -12745,11 +12110,1179 @@ export const contracts = {
                                     'u',
                                 ),
                             )
-                            .pipe(z.iso.datetime()),
-                        internal: z.literal(false),
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        history: z.array(
+                            z.strictObject({
+                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                                at: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime()),
+                                content: z.strictObject({
+                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                                    title: z.string().min(1).max(200),
+                                    pages: z
+                                        .array(
+                                            z.strictObject({
+                                                blocks: z
+                                                    .array(
+                                                        z
+                                                            .union([
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ])
+                                                            .refine(
+                                                                (value) =>
+                                                                    [
+                                                                        z.strictObject({
+                                                                            kind: z.literal('text'),
+                                                                            text: z.string().min(1).max(10000),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('image'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            alt: z.string().min(1).max(300),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('link'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            text: z.string().min(1).max(300),
+                                                                        }),
+                                                                    ].filter(
+                                                                        (branch) => branch.safeParse(value).success,
+                                                                    ).length === 1,
+                                                            ),
+                                                    )
+                                                    .min(1)
+                                                    .max(30),
+                                            }),
+                                        )
+                                        .min(1)
+                                        .max(10),
+                                    sources: z
+                                        .array(
+                                            z.strictObject({
+                                                claim: z.string().min(1).max(500),
+                                                source: z.string().min(1).max(10000),
+                                            }),
+                                        )
+                                        .max(30),
+                                    audience: z.strictObject({
+                                        plans: z
+                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                            .max(3),
+                                        genders: z
+                                            .array(
+                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
+                                            )
+                                            .max(3),
+                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                        registeredFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        registeredTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                    }),
+                                    channels: z
+                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                        .min(1)
+                                        .max(3),
+                                    category: z.union([z.literal('service'), z.literal('marketing')]),
+                                }),
+                            }),
+                        ),
                     }),
                 ),
-                nextCursor: z.string().nullable(),
+                preview: z
+                    .strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                        recipients: z.number().int().min(0).max(9007199254740991),
+                        preliminary: z.literal(true),
+                        mock: z.boolean(),
+                    })
+                    .nullable(),
+                message: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/news-workspace/launch': {
+        params: null,
+        request: z.strictObject({
+            action: z.literal('launch'),
+            id: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            version: z.number().int().gt(0).max(9007199254740991),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            scheduledAt: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                        'u',
+                    ),
+                )
+                .pipe(z.iso.datetime())
+                .nullable(),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                items: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().gt(0).max(9007199254740991),
+                        content: z.strictObject({
+                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                            title: z.string().min(1).max(200),
+                            pages: z
+                                .array(
+                                    z.strictObject({
+                                        blocks: z
+                                            .array(
+                                                z
+                                                    .union([
+                                                        z.strictObject({
+                                                            kind: z.literal('text'),
+                                                            text: z.string().min(1).max(10000),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('image'),
+                                                            url: z.string().pipe(z.url()),
+                                                            alt: z.string().min(1).max(300),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('link'),
+                                                            url: z.string().pipe(z.url()),
+                                                            text: z.string().min(1).max(300),
+                                                        }),
+                                                    ])
+                                                    .refine(
+                                                        (value) =>
+                                                            [
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ].filter((branch) => branch.safeParse(value).success)
+                                                                .length === 1,
+                                                    ),
+                                            )
+                                            .min(1)
+                                            .max(30),
+                                    }),
+                                )
+                                .min(1)
+                                .max(10),
+                            sources: z
+                                .array(
+                                    z.strictObject({
+                                        claim: z.string().min(1).max(500),
+                                        source: z.string().min(1).max(10000),
+                                    }),
+                                )
+                                .max(30),
+                            audience: z.strictObject({
+                                plans: z
+                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                    .max(3),
+                                genders: z
+                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
+                                    .max(3),
+                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                registeredFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                registeredTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                            }),
+                            channels: z
+                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                .min(1)
+                                .max(3),
+                            category: z.union([z.literal('service'), z.literal('marketing')]),
+                        }),
+                        status: z.union([
+                            z.literal('draft'),
+                            z.literal('scheduled'),
+                            z.literal('published'),
+                            z.literal('cancelled'),
+                        ]),
+                        scheduledAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        history: z.array(
+                            z.strictObject({
+                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                                at: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime()),
+                                content: z.strictObject({
+                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                                    title: z.string().min(1).max(200),
+                                    pages: z
+                                        .array(
+                                            z.strictObject({
+                                                blocks: z
+                                                    .array(
+                                                        z
+                                                            .union([
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ])
+                                                            .refine(
+                                                                (value) =>
+                                                                    [
+                                                                        z.strictObject({
+                                                                            kind: z.literal('text'),
+                                                                            text: z.string().min(1).max(10000),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('image'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            alt: z.string().min(1).max(300),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('link'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            text: z.string().min(1).max(300),
+                                                                        }),
+                                                                    ].filter(
+                                                                        (branch) => branch.safeParse(value).success,
+                                                                    ).length === 1,
+                                                            ),
+                                                    )
+                                                    .min(1)
+                                                    .max(30),
+                                            }),
+                                        )
+                                        .min(1)
+                                        .max(10),
+                                    sources: z
+                                        .array(
+                                            z.strictObject({
+                                                claim: z.string().min(1).max(500),
+                                                source: z.string().min(1).max(10000),
+                                            }),
+                                        )
+                                        .max(30),
+                                    audience: z.strictObject({
+                                        plans: z
+                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                            .max(3),
+                                        genders: z
+                                            .array(
+                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
+                                            )
+                                            .max(3),
+                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                        registeredFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        registeredTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                    }),
+                                    channels: z
+                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                        .min(1)
+                                        .max(3),
+                                    category: z.union([z.literal('service'), z.literal('marketing')]),
+                                }),
+                            }),
+                        ),
+                    }),
+                ),
+                preview: z
+                    .strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                        recipients: z.number().int().min(0).max(9007199254740991),
+                        preliminary: z.literal(true),
+                        mock: z.boolean(),
+                    })
+                    .nullable(),
+                message: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/news-workspace/cancel': {
+        params: null,
+        request: z.strictObject({
+            action: z.literal('cancel'),
+            id: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            version: z.number().int().gt(0).max(9007199254740991),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                items: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().gt(0).max(9007199254740991),
+                        content: z.strictObject({
+                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                            title: z.string().min(1).max(200),
+                            pages: z
+                                .array(
+                                    z.strictObject({
+                                        blocks: z
+                                            .array(
+                                                z
+                                                    .union([
+                                                        z.strictObject({
+                                                            kind: z.literal('text'),
+                                                            text: z.string().min(1).max(10000),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('image'),
+                                                            url: z.string().pipe(z.url()),
+                                                            alt: z.string().min(1).max(300),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('link'),
+                                                            url: z.string().pipe(z.url()),
+                                                            text: z.string().min(1).max(300),
+                                                        }),
+                                                    ])
+                                                    .refine(
+                                                        (value) =>
+                                                            [
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ].filter((branch) => branch.safeParse(value).success)
+                                                                .length === 1,
+                                                    ),
+                                            )
+                                            .min(1)
+                                            .max(30),
+                                    }),
+                                )
+                                .min(1)
+                                .max(10),
+                            sources: z
+                                .array(
+                                    z.strictObject({
+                                        claim: z.string().min(1).max(500),
+                                        source: z.string().min(1).max(10000),
+                                    }),
+                                )
+                                .max(30),
+                            audience: z.strictObject({
+                                plans: z
+                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                    .max(3),
+                                genders: z
+                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
+                                    .max(3),
+                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                registeredFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                registeredTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                            }),
+                            channels: z
+                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                .min(1)
+                                .max(3),
+                            category: z.union([z.literal('service'), z.literal('marketing')]),
+                        }),
+                        status: z.union([
+                            z.literal('draft'),
+                            z.literal('scheduled'),
+                            z.literal('published'),
+                            z.literal('cancelled'),
+                        ]),
+                        scheduledAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        history: z.array(
+                            z.strictObject({
+                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                                at: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime()),
+                                content: z.strictObject({
+                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                                    title: z.string().min(1).max(200),
+                                    pages: z
+                                        .array(
+                                            z.strictObject({
+                                                blocks: z
+                                                    .array(
+                                                        z
+                                                            .union([
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ])
+                                                            .refine(
+                                                                (value) =>
+                                                                    [
+                                                                        z.strictObject({
+                                                                            kind: z.literal('text'),
+                                                                            text: z.string().min(1).max(10000),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('image'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            alt: z.string().min(1).max(300),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('link'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            text: z.string().min(1).max(300),
+                                                                        }),
+                                                                    ].filter(
+                                                                        (branch) => branch.safeParse(value).success,
+                                                                    ).length === 1,
+                                                            ),
+                                                    )
+                                                    .min(1)
+                                                    .max(30),
+                                            }),
+                                        )
+                                        .min(1)
+                                        .max(10),
+                                    sources: z
+                                        .array(
+                                            z.strictObject({
+                                                claim: z.string().min(1).max(500),
+                                                source: z.string().min(1).max(10000),
+                                            }),
+                                        )
+                                        .max(30),
+                                    audience: z.strictObject({
+                                        plans: z
+                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                            .max(3),
+                                        genders: z
+                                            .array(
+                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
+                                            )
+                                            .max(3),
+                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                        registeredFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        registeredTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                    }),
+                                    channels: z
+                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                        .min(1)
+                                        .max(3),
+                                    category: z.union([z.literal('service'), z.literal('marketing')]),
+                                }),
+                            }),
+                        ),
+                    }),
+                ),
+                preview: z
+                    .strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                        recipients: z.number().int().min(0).max(9007199254740991),
+                        preliminary: z.literal(true),
+                        mock: z.boolean(),
+                    })
+                    .nullable(),
+                message: z.string(),
+            }),
+            meta: z.strictObject({
+                requestId: z
+                    .string()
+                    .regex(
+                        new RegExp(
+                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                            'u',
+                        ),
+                    )
+                    .pipe(z.uuid()),
+            }),
+        }),
+    },
+    'POST /api/v1/admin/news-workspace/test': {
+        params: null,
+        request: z.strictObject({
+            action: z.literal('test'),
+            id: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            version: z.number().int().gt(0).max(9007199254740991),
+            idempotencyKey: z
+                .string()
+                .regex(
+                    new RegExp(
+                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                        'u',
+                    ),
+                )
+                .pipe(z.uuid()),
+            recipients: z
+                .array(z.union([z.literal('admin'), z.literal('moderator')]))
+                .min(1)
+                .max(2),
+        }),
+        success: z.strictObject({
+            data: z.strictObject({
+                items: z.array(
+                    z.strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().gt(0).max(9007199254740991),
+                        content: z.strictObject({
+                            type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                            title: z.string().min(1).max(200),
+                            pages: z
+                                .array(
+                                    z.strictObject({
+                                        blocks: z
+                                            .array(
+                                                z
+                                                    .union([
+                                                        z.strictObject({
+                                                            kind: z.literal('text'),
+                                                            text: z.string().min(1).max(10000),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('image'),
+                                                            url: z.string().pipe(z.url()),
+                                                            alt: z.string().min(1).max(300),
+                                                        }),
+                                                        z.strictObject({
+                                                            kind: z.literal('link'),
+                                                            url: z.string().pipe(z.url()),
+                                                            text: z.string().min(1).max(300),
+                                                        }),
+                                                    ])
+                                                    .refine(
+                                                        (value) =>
+                                                            [
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ].filter((branch) => branch.safeParse(value).success)
+                                                                .length === 1,
+                                                    ),
+                                            )
+                                            .min(1)
+                                            .max(30),
+                                    }),
+                                )
+                                .min(1)
+                                .max(10),
+                            sources: z
+                                .array(
+                                    z.strictObject({
+                                        claim: z.string().min(1).max(500),
+                                        source: z.string().min(1).max(10000),
+                                    }),
+                                )
+                                .max(30),
+                            audience: z.strictObject({
+                                plans: z
+                                    .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                    .max(3),
+                                genders: z
+                                    .array(z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]))
+                                    .max(3),
+                                families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                registeredFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                registeredTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeFrom: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                                activeTo: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime())
+                                    .nullable(),
+                            }),
+                            channels: z
+                                .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                .min(1)
+                                .max(3),
+                            category: z.union([z.literal('service'), z.literal('marketing')]),
+                        }),
+                        status: z.union([
+                            z.literal('draft'),
+                            z.literal('scheduled'),
+                            z.literal('published'),
+                            z.literal('cancelled'),
+                        ]),
+                        scheduledAt: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.iso.datetime())
+                            .nullable(),
+                        history: z.array(
+                            z.strictObject({
+                                version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                                at: z
+                                    .string()
+                                    .regex(
+                                        new RegExp(
+                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                            'u',
+                                        ),
+                                    )
+                                    .pipe(z.iso.datetime()),
+                                content: z.strictObject({
+                                    type: z.union([z.literal('article'), z.literal('important')]).default('article'),
+                                    title: z.string().min(1).max(200),
+                                    pages: z
+                                        .array(
+                                            z.strictObject({
+                                                blocks: z
+                                                    .array(
+                                                        z
+                                                            .union([
+                                                                z.strictObject({
+                                                                    kind: z.literal('text'),
+                                                                    text: z.string().min(1).max(10000),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('image'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    alt: z.string().min(1).max(300),
+                                                                }),
+                                                                z.strictObject({
+                                                                    kind: z.literal('link'),
+                                                                    url: z.string().pipe(z.url()),
+                                                                    text: z.string().min(1).max(300),
+                                                                }),
+                                                            ])
+                                                            .refine(
+                                                                (value) =>
+                                                                    [
+                                                                        z.strictObject({
+                                                                            kind: z.literal('text'),
+                                                                            text: z.string().min(1).max(10000),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('image'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            alt: z.string().min(1).max(300),
+                                                                        }),
+                                                                        z.strictObject({
+                                                                            kind: z.literal('link'),
+                                                                            url: z.string().pipe(z.url()),
+                                                                            text: z.string().min(1).max(300),
+                                                                        }),
+                                                                    ].filter(
+                                                                        (branch) => branch.safeParse(value).success,
+                                                                    ).length === 1,
+                                                            ),
+                                                    )
+                                                    .min(1)
+                                                    .max(30),
+                                            }),
+                                        )
+                                        .min(1)
+                                        .max(10),
+                                    sources: z
+                                        .array(
+                                            z.strictObject({
+                                                claim: z.string().min(1).max(500),
+                                                source: z.string().min(1).max(10000),
+                                            }),
+                                        )
+                                        .max(30),
+                                    audience: z.strictObject({
+                                        plans: z
+                                            .array(z.union([z.literal('free'), z.literal('plus'), z.literal('pro')]))
+                                            .max(3),
+                                        genders: z
+                                            .array(
+                                                z.union([z.literal('female'), z.literal('male'), z.literal('unknown')]),
+                                            )
+                                            .max(3),
+                                        families: z.array(z.union([z.literal('yes'), z.literal('no')])).max(2),
+                                        registeredFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        registeredTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeFrom: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                        activeTo: z
+                                            .string()
+                                            .regex(
+                                                new RegExp(
+                                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
+                                                    'u',
+                                                ),
+                                            )
+                                            .pipe(z.iso.datetime())
+                                            .nullable(),
+                                    }),
+                                    channels: z
+                                        .array(z.union([z.literal('in_app'), z.literal('email'), z.literal('push')]))
+                                        .min(1)
+                                        .max(3),
+                                    category: z.union([z.literal('service'), z.literal('marketing')]),
+                                }),
+                            }),
+                        ),
+                    }),
+                ),
+                preview: z
+                    .strictObject({
+                        id: z
+                            .string()
+                            .regex(
+                                new RegExp(
+                                    '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
+                                    'u',
+                                ),
+                            )
+                            .pipe(z.uuid()),
+                        version: z.number().int().min(-9007199254740991).max(9007199254740991),
+                        recipients: z.number().int().min(0).max(9007199254740991),
+                        preliminary: z.literal(true),
+                        mock: z.boolean(),
+                    })
+                    .nullable(),
+                message: z.string(),
             }),
             meta: z.strictObject({
                 requestId: z
@@ -13388,42 +13921,6 @@ export const contracts = {
             }),
         }),
     },
-    'GET /health/live': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({ status: z.literal('ok') }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /health/ready': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({ status: z.literal('ok') }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
     'GET /api/v1/auth/csrf': {
         params: null,
         request: null,
@@ -13866,318 +14363,6 @@ export const contracts = {
         request: null,
         success: z.strictObject({
             data: z.strictObject({ loggedOut: z.literal(true) }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/telemetry/browser': {
-        params: null,
-        request: z.strictObject({
-            application: z.union([z.literal('front'), z.literal('admin')]),
-            code: z.union([
-                z.literal('root_error'),
-                z.literal('route_error'),
-                z.literal('unhandled_error'),
-                z.literal('unhandled_rejection'),
-            ]),
-            appVersion: z
-                .string()
-                .max(64)
-                .regex(new RegExp('^\\d+\\.\\d+\\.\\d+(?:[-+][0-9A-Za-z.-]+)?$', 'u'))
-                .nullable(),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({ accepted: z.literal(true) }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'GET /api/v1/admin/runtime-settings': {
-        params: null,
-        request: null,
-        success: z.strictObject({
-            data: z.strictObject({
-                generatedAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime()),
-                completeness: z.union([z.literal('complete'), z.literal('partial')]),
-                unavailableSources: z.array(z.string()),
-                tabs: z.array(
-                    z.strictObject({
-                        code: z.union([
-                            z.literal('notifications'),
-                            z.literal('mail'),
-                            z.literal('storage'),
-                            z.literal('security'),
-                            z.literal('deploy_backup'),
-                            z.literal('backup_recovery'),
-                            z.literal('integrations'),
-                            z.literal('legal'),
-                        ]),
-                        label: z.string(),
-                    }),
-                ),
-                selectedTab: z.union([
-                    z.literal('notifications'),
-                    z.literal('mail'),
-                    z.literal('storage'),
-                    z.literal('security'),
-                    z.literal('deploy_backup'),
-                    z.literal('backup_recovery'),
-                    z.literal('integrations'),
-                    z.literal('legal'),
-                ]),
-                entries: z.array(
-                    z.strictObject({
-                        key: z.string(),
-                        label: z.string(),
-                        description: z.string(),
-                        value: z.string(),
-                        status: z.union([
-                            z.literal('active'),
-                            z.literal('disabled'),
-                            z.literal('partial'),
-                            z.literal('blocked'),
-                        ]),
-                        source: z.union([
-                            z.literal('database'),
-                            z.literal('environment'),
-                            z.literal('vps_secret'),
-                            z.literal('github_secret'),
-                            z.literal('derived'),
-                        ]),
-                        readiness: z.union([
-                            z.literal('ready'),
-                            z.literal('owner_input'),
-                            z.literal('external_dependency'),
-                            z.literal('disabled'),
-                        ]),
-                        editable: z.boolean(),
-                        sensitive: z.boolean(),
-                        updatedAt: z
-                            .string()
-                            .regex(
-                                new RegExp(
-                                    '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                    'u',
-                                ),
-                            )
-                            .pipe(z.iso.datetime())
-                            .nullable(),
-                        version: z.number().int().gt(0).max(9007199254740991).nullable(),
-                        blockers: z.array(z.string()),
-                        affectedServices: z.array(z.string()),
-                        checks: z.array(z.string()),
-                        instruction: z.string().nullable(),
-                        history: z
-                            .array(
-                                z.strictObject({
-                                    at: z
-                                        .string()
-                                        .regex(
-                                            new RegExp(
-                                                '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                                'u',
-                                            ),
-                                        )
-                                        .pipe(z.iso.datetime()),
-                                    actor: z.string(),
-                                    summary: z.string(),
-                                }),
-                            )
-                            .max(20),
-                        secret: z
-                            .strictObject({
-                                configured: z.boolean(),
-                                fingerprint: z.string().nullable(),
-                                rotatedAt: z
-                                    .string()
-                                    .regex(
-                                        new RegExp(
-                                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                                            'u',
-                                        ),
-                                    )
-                                    .pipe(z.iso.datetime())
-                                    .nullable(),
-                            })
-                            .nullable(),
-                        policy: z
-                            .strictObject({
-                                quietHours: z.strictObject({
-                                    start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                                    end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                                }),
-                                ttlSeconds: z.strictObject({
-                                    critical: z.number().int().min(0).max(86400),
-                                    important: z.number().int().min(0).max(86400),
-                                    informational: z.number().int().min(0).max(86400),
-                                    marketing: z.number().int().min(0).max(86400),
-                                }),
-                                version: z.number().int().gt(0).max(9007199254740991),
-                            })
-                            .nullable(),
-                    }),
-                ),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/runtime-settings/web-push-policy/preview': {
-        params: null,
-        request: z.strictObject({
-            quietHours: z.strictObject({
-                start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-            }),
-            ttlSeconds: z.strictObject({
-                critical: z.number().int().min(0).max(86400),
-                important: z.number().int().min(0).max(86400),
-                informational: z.number().int().min(0).max(86400),
-                marketing: z.number().int().min(0).max(86400),
-            }),
-            expectedVersion: z.number().int().gt(0).max(9007199254740991),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                previewId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-                expiresAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime()),
-                changes: z.array(z.strictObject({ field: z.string(), from: z.string().nullable(), to: z.string() })),
-                policy: z.strictObject({
-                    quietHours: z.strictObject({
-                        start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                        end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                    }),
-                    ttlSeconds: z.strictObject({
-                        critical: z.number().int().min(0).max(86400),
-                        important: z.number().int().min(0).max(86400),
-                        informational: z.number().int().min(0).max(86400),
-                        marketing: z.number().int().min(0).max(86400),
-                    }),
-                    version: z.number().int().gt(0).max(9007199254740991),
-                }),
-            }),
-            meta: z.strictObject({
-                requestId: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.uuid()),
-            }),
-        }),
-    },
-    'POST /api/v1/admin/runtime-settings/web-push-policy/execute': {
-        params: null,
-        request: z.strictObject({
-            quietHours: z.strictObject({
-                start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-            }),
-            ttlSeconds: z.strictObject({
-                critical: z.number().int().min(0).max(86400),
-                important: z.number().int().min(0).max(86400),
-                informational: z.number().int().min(0).max(86400),
-                marketing: z.number().int().min(0).max(86400),
-            }),
-            expectedVersion: z.number().int().gt(0).max(9007199254740991),
-            previewId: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-            idempotencyKey: z
-                .string()
-                .regex(
-                    new RegExp(
-                        '^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$',
-                        'u',
-                    ),
-                )
-                .pipe(z.uuid()),
-        }),
-        success: z.strictObject({
-            data: z.strictObject({
-                policy: z.strictObject({
-                    quietHours: z.strictObject({
-                        start: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                        end: z.string().regex(new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$', 'u')),
-                    }),
-                    ttlSeconds: z.strictObject({
-                        critical: z.number().int().min(0).max(86400),
-                        important: z.number().int().min(0).max(86400),
-                        informational: z.number().int().min(0).max(86400),
-                        marketing: z.number().int().min(0).max(86400),
-                    }),
-                    version: z.number().int().gt(0).max(9007199254740991),
-                }),
-                updatedAt: z
-                    .string()
-                    .regex(
-                        new RegExp(
-                            '^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$',
-                            'u',
-                        ),
-                    )
-                    .pipe(z.iso.datetime()),
-            }),
             meta: z.strictObject({
                 requestId: z
                     .string()

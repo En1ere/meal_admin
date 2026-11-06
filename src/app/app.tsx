@@ -4,11 +4,11 @@ import { SignIn, MfaScreen, StaffHome } from '../features/auth/client.js';
 import { Providers } from './providers.js';
 import { AppErrorBoundary } from './error.js';
 import NotFound from './not-found.js';
-import { findSection } from '../entities/admin-section/model.js';
-import { AdminWorkspaceShell } from '../widgets/admin-shell/AdminWorkspaceShell.js';
-import { SessionGuard } from '../widgets/session-guard/SessionGuard.js';
+import { AdminWorkspaceShell } from '../widgets/admin-shell/client.js';
+import { SessionGuard } from '../widgets/session-guard/client.js';
 import { PageLoader as ArcPageLoader } from '@meal-planner/design-system';
 import { prepareApiMode } from './api-mode.js';
+import { resolveRoutePresentation } from './routes/manifest.js';
 
 const AdminRecordPage = lazy(async () => ({
     default: (await import('../widgets/admin-record-page/client.js')).AdminRecordPage,
@@ -41,6 +41,9 @@ const ReputationPage = lazy(async () => ({
 const ObservabilityPage = lazy(async () => ({
     default: (await import('../features/observability/client.js')).ObservabilityPage,
 }));
+const AiControlPage = lazy(async () => ({
+    default: (await import('../features/ai-control/client.js')).AiControlPage,
+}));
 const AcceptanceTestingPage = lazy(async () => ({
     default: (await import('../features/acceptance-testing/client.js')).AcceptanceTestingPage,
 }));
@@ -56,27 +59,7 @@ function RouteMetadata() {
     const { pathname } = useLocation();
     const previousPath = useRef(pathname);
     useEffect(() => {
-        const titles: Record<string, string> = {
-            '/': 'Администрирование',
-            '/auth': 'Вход администратора',
-            '/auth/mfa': 'Проверка входа',
-            '/admin/catalog/allergens': 'Словарь аллергенов',
-            '/admin/catalog/achievements': 'Достижения',
-            '/admin/catalog/reputation': 'Репутация',
-            '/admin/observability': 'Наблюдаемость',
-            '/admin/testing': 'Приёмочное тестирование',
-            '/admin/runtime-settings': 'Конфигурация сервиса',
-            '/settings/notifications': 'Настройки уведомлений',
-            '/settings/recipes': 'Рецепты и антиспам',
-            '/notifications': 'Центр уведомлений',
-            '/dev/scenarios': 'Тестовые сценарии',
-        };
-        const segments = pathname.split('/').filter(Boolean);
-        const section =
-            segments[0] === 'admin' ? findSection(segments[1] === 'moderation' ? 'queues' : segments[1]) : undefined;
-        const detail = section && segments.length > 2 && !(segments[1] === 'queues' && segments[2] === 'recipes');
-        const title =
-            titles[pathname] ?? (section ? `${detail ? 'Карточка · ' : ''}${section.title}` : 'Страница не найдена');
+        const { title } = resolveRoutePresentation(pathname);
         document.title = `${title} · Meal Planner Admin`;
         if (previousPath.current === pathname) return;
         previousPath.current = pathname;
@@ -117,6 +100,7 @@ export function App() {
                                         <Route path="/admin/releases" element={<ReleasesPage />} />
                                         <Route path="/admin/releases/:id" element={<ReleaseDetailPage />} />
                                         <Route path="/admin/observability" element={<ObservabilityPage />} />
+                                        <Route path="/admin/ai" element={<AiControlPage />} />
                                         <Route path="/admin/testing" element={<AcceptanceTestingPage />} />
                                         <Route path="/admin/runtime-settings" element={<RuntimeSettingsPage />} />
                                         <Route

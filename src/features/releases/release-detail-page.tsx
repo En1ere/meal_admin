@@ -4,14 +4,15 @@ import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import { PageLoader as ArcPageLoader } from '@meal-planner/design-system';
 import { runReleaseCommand, stableUuid } from './api.js';
-import { achievementIconUrl, groupLabels, releaseWorkspaceKey, useReleaseWorkspace } from './workspace.js';
+import { achievementIconUrl, groupLabels, useReleaseWorkspace } from './workspace.js';
 import {
+    contentReleaseKeys,
     contentDocumentSchema,
     dictionaryEntrySchema,
     type ContentDocument,
     type DictionaryEntry,
     type ReleaseChange,
-} from './contracts.js';
+} from '../../entities/content-release/index.js';
 import styles from './releases.module.css';
 import { adminReleaseDraftKey } from '../../shared/storage/private-cache.js';
 import {
@@ -69,7 +70,7 @@ export function ReleaseDetailPage() {
                 expectedVersion: server.version,
                 ...(kind === 'publish' || kind === 'rollback' ? { idempotencyKey: crypto.randomUUID() } : {}),
             } as Parameters<typeof runReleaseCommand>[1]);
-            queryClient.setQueryData(releaseWorkspaceKey, result.workspace);
+            queryClient.setQueryData(contentReleaseKeys.workspace, result.workspace);
             if (kind === 'reopen') void navigate(`/admin/releases/${result.workspace.releases[0]!.id}`);
         } catch (failure) {
             setError(failure instanceof ApiError ? failure.message : 'Команда не выполнена.');

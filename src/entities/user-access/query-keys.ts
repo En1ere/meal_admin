@@ -1,6 +1,4 @@
-import type { Section } from '../admin-section/model.js';
-
-export type GovernanceSection = Extract<Section, 'users' | 'sanctions' | 'access'>;
+export type GovernanceSection = 'users' | 'sanctions' | 'access';
 
 export const userAccessKeys = {
     root: ['user-access'] as const,

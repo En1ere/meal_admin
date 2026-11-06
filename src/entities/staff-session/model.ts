@@ -1,6 +1,6 @@
-import type { AuthContext } from '../../shared/auth/routes.js';
+import { authQueryKeys } from '../../shared/auth/query-keys.js';
 
 export const staffSessionKeys = {
-    root: ['session'] as const,
-    current: (context: AuthContext) => ['session', context] as const,
+    root: authQueryKeys.sessionRoot,
+    current: authQueryKeys.currentSession,
 };

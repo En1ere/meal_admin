@@ -1,5 +1,4 @@
-import type { Section } from '../admin-section/model.js';
-import type { AdminRecord } from './model.js';
+import type { AdminRecord, AdminRecordSection } from './model.js';
 
 interface DisplayField {
     key: string;
@@ -7,7 +6,7 @@ interface DisplayField {
     value: string | null;
 }
 
-const recordNames: Partial<Record<Section, string>> = {
+const recordNames: Partial<Record<AdminRecordSection, string>> = {
     subscriptions: 'Подписка',
     families: 'Семья',
     payments: 'Платёж',
@@ -46,7 +45,7 @@ const statusLabels: Readonly<Record<string, string>> = {
     cancelled: 'Отменено',
 };
 
-export function recordTitle(item: AdminRecord, section?: Section) {
+export function recordTitle(item: AdminRecord, section?: AdminRecordSection) {
     return item.title === item.id
         ? `${section ? (recordNames[section] ?? 'Запись') : 'Запись'} · ${item.id.slice(-8)}`
         : item.title;

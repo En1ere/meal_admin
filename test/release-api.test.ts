@@ -3,7 +3,7 @@ import test from 'node:test';
 import { contracts } from '../src/shared/api/contracts.generated.js';
 import { releaseApi } from '../src/mocks/release-api.js';
 import { createReleaseWorkspaceState } from '../src/mocks/release-workspace.js';
-import { canonicalPatchSchema } from '../src/features/releases/contracts.js';
+import { canonicalPatchSchema } from '../src/entities/content-release/index.js';
 
 await test('canonical release sources keep compound achievement rules contract-safe and explicitly legacy', () => {
     const sources = releaseApi(

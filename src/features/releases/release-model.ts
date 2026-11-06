@@ -1,5 +1,5 @@
 import { adminReleaseDraftKey } from '../../shared/storage/private-cache.js';
-import type { ContentDocument, DictionaryEntry, Release, ReleaseChange } from './contracts.js';
+import type { ContentDocument, DictionaryEntry, Release, ReleaseChange } from '../../entities/content-release/index.js';
 
 export type ReleaseDraftCache = {
     releaseId: string;

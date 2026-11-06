@@ -1,14 +1,17 @@
 import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ServiceShell, type ServiceNavigationGroup } from '@meal-planner/design-system';
-import { sectionPath, sections, type Section } from '../../entities/admin-section/model.js';
+import { sectionPath, sections, type Section } from '../../entities/admin-section/index.js';
 import { Brand } from '../../shared/ui/brand.js';
 import { ThemeControl } from '../../shared/ui/theme-control.js';
 
 export function AdminShell({ active, children }: { active: Section; children: ReactNode }) {
     const { pathname } = useLocation();
     const standaloneWorkspace =
-        pathname === '/admin/observability' || pathname === '/admin/testing' || pathname === '/admin/runtime-settings';
+        pathname === '/admin/observability' ||
+        pathname === '/admin/ai' ||
+        pathname === '/admin/testing' ||
+        pathname === '/admin/runtime-settings';
     const groups: ServiceNavigationGroup[] = [...new Set(sections.map((section) => section.group))].map((group) => ({
         label: group,
         items: [
@@ -25,6 +28,11 @@ export function AdminShell({ active, children }: { active: Section; children: Re
                           href: '/admin/observability',
                           label: 'Наблюдаемость',
                           active: pathname === '/admin/observability',
+                      },
+                      {
+                          href: '/admin/ai',
+                          label: 'AI-контур',
+                          active: pathname === '/admin/ai',
                       },
                       {
                           href: '/admin/testing',

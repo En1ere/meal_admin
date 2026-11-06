@@ -2,6 +2,8 @@
 
 Meal Admin развивается как FSD-подобное приложение, но границы определяются административными процессами. Backend остаётся владельцем staff roles/grants, MFA, audit и wire-контрактов.
 
+Исполняемые границы, точные debt ratchets, alias policy и ограничения анализа зафиксированы в `docs/adr/0001-architecture-boundary-gate.md`; они проверяются `npm run architecture:check` и focused fixtures. Типизированный route metadata manifest, его граница с `admin-section` и JSX parity описаны в `docs/adr/0002-typed-route-metadata-manifest.md`.
+
 ## Слои
 
 - `app` — router, route metadata, lazy chunks и композиция providers.

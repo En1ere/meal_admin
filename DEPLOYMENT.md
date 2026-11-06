@@ -89,7 +89,7 @@ npm audit --omit=dev --audit-level=high
 
 - `build/index.html`, hashed assets и `public/theme-init.js` существуют;
 - в `build` нет source maps, test reports, `.env*`, credentials и mock-only route;
-- версия совпадает в `package.json`, `package-lock.json`, README и последней записи `version-list.md`;
+- `npm run version:check` подтверждает совпадение версии в `package.json`, `package-lock.json` и последней записи `version-list.md`; README ссылается на manifest вместо дублирования patch-версии;
 - `node scripts/check-browser-budget.mjs` проходит по этой же production-сборке.
 
 Упакуйте только `build` и безопасный release manifest с revision/version/build time. Вычислите SHA-256 локального архива и сравните с SHA-256 загруженного файла на VPS. Несовпадение блокирует публикацию. Никогда не перезаписывайте существующий release directory.

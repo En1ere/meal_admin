@@ -4,10 +4,15 @@ import { useRuntime } from '../../shared/runtime/index.js';
 import { adminRecordKeys } from '../../entities/admin-record/index.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
-import { CriticalConfirmation } from '../auth/access-client.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
-import { operationsResultSchema, type Operation, type OperationsResult } from './contracts.js';
+import {
+    operationKeys,
+    operationsResultSchema,
+    type Operation,
+    type OperationsResult,
+} from '../../entities/operation/index.js';
 
 const labels: Record<Operation, string> = {
     retry: 'Повторить задачу',
@@ -37,7 +42,7 @@ export function OperationsWorkspace({
     const [busy, setBusy] = useState(false);
     const lock = useRef(false);
     const attempt = useRef<string | null>(null);
-    const key = ['operations-workspace', session.data?.id, section, id, itemVersion];
+    const key = operationKeys.workspace(session.data?.id, section, id, itemVersion);
     const query = useQuery({
         queryKey: key,
         enabled: !!api,
@@ -102,7 +107,7 @@ export function OperationsWorkspace({
                 setPreview(null);
                 attempt.current = null;
                 setMessage(result.message);
-                await queryClient.invalidateQueries({ queryKey: ['operations-workspace'] });
+                await queryClient.invalidateQueries({ queryKey: operationKeys.root });
                 await queryClient.invalidateQueries({ queryKey: adminRecordKeys.root });
             }
         } catch (error) {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { AppIcon, InlineLoader, Skeleton } from '@meal-planner/design-system';
-import { CriticalConfirmation } from '../auth/access-client.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import {
     runtimeReadinessLabels,
     runtimeSettingSections,

@@ -1,10 +1,10 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { useRuntime } from '../../shared/runtime/index.js';
-import { ApiError } from '../../shared/api/client.js';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
-import { useAdminStatus } from './unlock-screen.js';
-import { useRequestSignal } from '../../shared/api/use-request-signal.js';
-import styles from './security.module.css';
+import { ApiError } from '../api/client.js';
+import { useRequestSignal } from '../api/use-request-signal.js';
+import { useRuntime } from '../runtime/index.js';
+import { useAdminStatus } from './admin-status.js';
+import styles from './critical-confirmation.module.css';
 
 export function CriticalConfirmation() {
     const codeId = useId();

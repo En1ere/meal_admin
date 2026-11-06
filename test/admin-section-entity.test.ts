@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { activeSectionForPath, detailPath, sectionPath } from '../src/entities/admin-section/model.js';
+import { activeSectionForPath, detailPath, sectionPath } from '../src/entities/admin-section/index.js';
 import { adminRecordKeys } from '../src/entities/admin-record/query-keys.js';
 
 void test('admin section entity keeps canonical routes and resolves shell state', () => {

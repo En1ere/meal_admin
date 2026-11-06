@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
 import type { RuntimeSettingSection, WebPushPolicy } from './model.js';
+import { runtimeSettingsKeys } from './query-keys.js';
 import {
     mapRuntimeSettingsRegistry,
     runtimeSettingsRegistryEnvelopeSchema,
@@ -15,7 +16,7 @@ export function useRuntimeSettings(section: RuntimeSettingSection) {
     const { api } = useRuntime();
     const session = useStaffSession('admin');
     return useQuery({
-        queryKey: ['runtime-settings', session.data?.id, section],
+        queryKey: runtimeSettingsKeys.registry(session.data?.id, section),
         enabled: !!api && !!session.data,
         queryFn: async ({ signal }) => {
             const result = await api!.request('GET /api/v1/admin/runtime-settings', undefined, signal, undefined, {
@@ -57,6 +58,6 @@ export function useExecuteWebPushPolicy() {
             );
             return webPushExecuteEnvelopeSchema.parse(result).data;
         },
-        onSuccess: async () => cache.invalidateQueries({ queryKey: ['runtime-settings'] }),
+        onSuccess: async () => cache.invalidateQueries({ queryKey: runtimeSettingsKeys.root }),
     });
 }

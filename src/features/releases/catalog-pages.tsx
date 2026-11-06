@@ -4,16 +4,17 @@ import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import { PageLoader as ArcPageLoader } from '@meal-planner/design-system';
 import { runReleaseCommand } from './api.js';
-import { achievementIconUrl, checksum, groupLabels, releaseWorkspaceKey, useReleaseWorkspace } from './workspace.js';
-import type {
-    Achievement,
-    AchievementClause,
-    AchievementCondition,
-    AchievementMetric,
-    Release,
-    ReleaseChange,
-    ReputationRank,
-} from './contracts.js';
+import { achievementIconUrl, checksum, groupLabels, useReleaseWorkspace } from './workspace.js';
+import {
+    contentReleaseKeys,
+    type Achievement,
+    type AchievementClause,
+    type AchievementCondition,
+    type AchievementMetric,
+    type Release,
+    type ReleaseChange,
+    type ReputationRank,
+} from '../../entities/content-release/index.js';
 import styles from './catalog.module.css';
 
 const metricLabels: Record<AchievementMetric, string> = {
@@ -256,7 +257,7 @@ export function AchievementsPage() {
                 }),
                 patch,
             });
-            queryClient.setQueryData(releaseWorkspaceKey, result.workspace);
+            queryClient.setQueryData(contentReleaseKeys.workspace, result.workspace);
             setMessage(`Изменение добавлено в «${release.title}»`);
         } catch (failure) {
             setMessage(
@@ -567,7 +568,7 @@ export function ReputationPage() {
                 }),
                 patch,
             });
-            queryClient.setQueryData(releaseWorkspaceKey, result.workspace);
+            queryClient.setQueryData(contentReleaseKeys.workspace, result.workspace);
             setMessage(`Шкала добавлена в «${release.title}»`);
         } catch (failure) {
             setMessage(

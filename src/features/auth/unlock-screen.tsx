@@ -1,32 +1,16 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
+import { authQueryKeys } from '../../shared/auth/query-keys.js';
+import { adminAuthStatusKey } from '../../shared/auth/admin-status.js';
 import { setAdminUnlock } from '../../shared/auth/unlock.js';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import { AuthShell } from './auth-shell.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import styles from './security.module.css';
 
-export const adminAuthStatusKey = ['admin-auth-status'] as const;
-
-export function useAdminStatus() {
-    const { api } = useRuntime();
-    return useQuery({
-        queryKey: adminAuthStatusKey,
-        enabled: !!api,
-        queryFn: async ({ signal }) => {
-            if (!api) throw new Error('API not ready');
-            try {
-                return (await api.request('GET /api/v1/admin/auth/status', undefined, signal)).data;
-            } catch (error) {
-                if (error instanceof ApiError && error.status === 401) return null;
-                throw error;
-            }
-        },
-    });
-}
+export { adminAuthStatusKey, useAdminStatus } from '../../shared/auth/admin-status.js';
 
 export function UnlockScreen({ returnTo }: { returnTo: string }) {
     const runtime = useRuntime();
@@ -50,7 +34,7 @@ export function UnlockScreen({ returnTo }: { returnTo: string }) {
             runtime.api.invalidate();
             setAdminUnlock(response.data.unlockToken);
             runtime.queryClient.clear();
-            runtime.queryClient.setQueryData(['session', 'admin'], response.data.user);
+            runtime.queryClient.setQueryData(authQueryKeys.currentSession('admin'), response.data.user);
             void navigate(returnTo, { replace: true });
         } catch (failure) {
             if (signal.aborted) return;

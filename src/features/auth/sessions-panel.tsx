@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
+import { authQueryKeys } from '../../shared/auth/query-keys.js';
 import { authRoutes, type AuthContext } from '../../shared/auth/routes.js';
 import { Brand } from '../../shared/ui/brand.js';
 import { ThemeControl } from '../../shared/ui/theme-control.js';
@@ -10,7 +11,7 @@ import { useStaffSession } from '../../entities/staff-session/client.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
-import { CriticalConfirmation } from './critical-confirmation.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 
 export function SessionsPanel({ context }: { context: AuthContext }) {
     const runtime = useRuntime();
@@ -21,7 +22,7 @@ export function SessionsPanel({ context }: { context: AuthContext }) {
     const beginRequest = useRequestSignal();
     const kind = 'admin';
     const sessions = useQuery({
-        queryKey: ['sessions', kind],
+        queryKey: authQueryKeys.sessions(kind),
         enabled: !!runtime.api,
         queryFn: async ({ signal }) => {
             if (!runtime.api) throw new Error('API not ready');
@@ -48,7 +49,7 @@ export function SessionsPanel({ context }: { context: AuthContext }) {
                     signal,
                 );
                 signal.throwIfAborted();
-                await runtime.queryClient.invalidateQueries({ queryKey: ['sessions', kind] });
+                await runtime.queryClient.invalidateQueries({ queryKey: authQueryKeys.sessions(kind) });
                 signal.throwIfAborted();
                 runtime.broadcast();
                 setMessage(`Завершено других сессий: ${response.data.revokedCount}`);

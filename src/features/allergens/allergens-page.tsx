@@ -6,6 +6,7 @@ import { ApiError } from '../../shared/api/client.js';
 import type { Success } from '../../shared/api/contracts.generated.js';
 import { stageAllergenAsset } from '../../shared/api/development-adapters.js';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
+import { allergenKeys } from './query-keys.js';
 import styles from './allergens.module.css';
 
 type Detail = Success<'GET /api/v1/admin/allergens/{code}'>['data'];
@@ -55,7 +56,7 @@ export function AllergensPage() {
     const [subjectId, setSubjectId] = useState('');
     const [stagedIcon, setStagedIcon] = useState<{ code: string; file: File; dataUrl: string } | null>(null);
     const list = useQuery({
-        queryKey: ['admin', 'allergens'],
+        queryKey: allergenKeys.list(),
         enabled: !!api,
         queryFn: async ({ signal }) => (await api!.request('GET /api/v1/admin/allergens', undefined, signal)).data,
     });
@@ -74,13 +75,13 @@ export function AllergensPage() {
     );
     const selectedCode = code ?? visible[0]?.code;
     const detail = useQuery({
-        queryKey: ['admin', 'allergens', 'detail', selectedCode],
+        queryKey: allergenKeys.detail(selectedCode),
         enabled: !!api && !!selectedCode,
         queryFn: async ({ signal }) =>
             (await api!.request('GET /api/v1/admin/allergens/{code}', undefined, signal, { code: selectedCode! })).data,
     });
     const subjects = useQuery({
-        queryKey: ['admin', 'allergen-subjects', subjectType, subjectQuery],
+        queryKey: allergenKeys.subjects(subjectType, subjectQuery),
         enabled: !!api,
         queryFn: async ({ signal }) =>
             (
@@ -95,8 +96,8 @@ export function AllergensPage() {
         setError('');
         try {
             const next = await run(detail.data);
-            queryClient.setQueryData(['admin', 'allergens', 'detail', detail.data.code], next);
-            await queryClient.invalidateQueries({ queryKey: ['admin', 'allergens'], exact: false });
+            queryClient.setQueryData(allergenKeys.detail(detail.data.code), next);
+            await queryClient.invalidateQueries({ queryKey: allergenKeys.root, exact: false });
             return true;
         } catch (cause) {
             setError(message(cause));

@@ -4,8 +4,8 @@ import { PageLoader as ArcPageLoader } from '@meal-planner/design-system';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { ApiError } from '../../shared/api/client.js';
 import { runReleaseCommand } from './api.js';
-import { releaseWorkspaceKey, useReleaseWorkspace } from './workspace.js';
-import type { Release } from './contracts.js';
+import { contentReleaseKeys, type Release } from '../../entities/content-release/index.js';
+import { useReleaseWorkspace } from './workspace.js';
 import { statusLabel } from './release-model.js';
 import styles from './releases.module.css';
 
@@ -68,7 +68,7 @@ export function ReleasesPage() {
                 title: name.trim(),
                 idempotencyKey: crypto.randomUUID(),
             });
-            queryClient.setQueryData(releaseWorkspaceKey, result.workspace);
+            queryClient.setQueryData(contentReleaseKeys.workspace, result.workspace);
             const created = result.workspace.releases[0];
             if (created) void navigate(`/admin/releases/${created.id}`);
         } catch (failure) {

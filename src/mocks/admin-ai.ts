@@ -1,0 +1,126 @@
+import type { AdminAiControlPlane } from '../entities/admin-ai/index.js';
+
+const tasks = [
+    ['culinary_question', 'Кулинарный вопрос', 'standard', 1, ['free', 'plus', 'pro'], [], ['preferences']],
+    [
+        'substitution',
+        'Подбор замены',
+        'standard',
+        1,
+        ['free', 'plus', 'pro'],
+        [],
+        ['personal_inventory', 'preferences'],
+    ],
+    ['storage_advice', 'Совет по хранению', 'standard', 1, ['free', 'plus', 'pro'], [], ['personal_inventory']],
+    ['ingredient_extraction', 'Извлечение ингредиентов', 'standard', 1, ['free', 'plus', 'pro'], [], []],
+    ['product_classification', 'Классификация продукта', 'standard', 1, ['free', 'plus', 'pro'], [], []],
+    [
+        'recipe_from_stock',
+        'Рецепт из запасов',
+        'advanced',
+        2,
+        ['free', 'plus', 'pro'],
+        ['personal_inventory'],
+        ['preferences'],
+    ],
+    ['nutrition_calculation', 'Расчёт КБЖУ', 'advanced', 2, ['pro'], [], ['preferences', 'nutrition_profile']],
+    [
+        'personal_recommendation',
+        'Персональная рекомендация',
+        'advanced',
+        2,
+        ['free', 'plus', 'pro'],
+        ['preferences'],
+        ['personal_inventory', 'nutrition_profile'],
+    ],
+    ['beverage_pairing', 'Подбор напитка', 'advanced', 2, ['free', 'plus', 'pro'], [], ['preferences']],
+    ['portion_cost_calculation', 'Порции и стоимость', 'advanced', 2, ['pro'], [], []],
+    [
+        'recipe_adaptation',
+        'Адаптация рецепта',
+        'advanced',
+        2,
+        ['free', 'plus', 'pro'],
+        [],
+        ['personal_inventory', 'preferences'],
+    ],
+    [
+        'shopping_list_generation',
+        'Список покупок',
+        'heavy',
+        3,
+        ['plus', 'pro'],
+        [],
+        ['personal_inventory', 'preferences'],
+    ],
+    [
+        'registry_analysis',
+        'Анализ реестра',
+        'heavy',
+        3,
+        ['free', 'plus', 'pro'],
+        ['personal_inventory'],
+        ['preferences'],
+    ],
+    ['review_summary', 'Саммаризация отзывов', 'heavy', 3, ['free', 'plus', 'pro'], [], []],
+    [
+        'meal_plan_generation',
+        'План питания',
+        'heavy',
+        4,
+        ['plus', 'pro'],
+        [],
+        ['personal_inventory', 'preferences', 'nutrition_profile'],
+    ],
+    ['seasonal_analysis', 'Анализ сезонности', 'heavy', 4, [], [], []],
+    ['event_menu', 'Меню для события', 'heavy', 4, ['plus', 'pro'], [], ['preferences']],
+    ['document_analysis', 'Анализ документа', 'heavy', 5, [], [], []],
+] as const;
+
+export function createAdminAiFixture(now: Date | number): AdminAiControlPlane {
+    const generatedAt = new Date(now).toISOString();
+    return {
+        schemaVersion: 2,
+        generatedAt,
+        executionAvailable: true,
+        provider: { configured: true, kind: 'openai_compatible', model: 'gpt-6-luna' },
+        policies: {
+            task: { version: 'ai-task-policy-v3', effectiveAt: generatedAt },
+            context: { version: 'ai-context-v1', effectiveAt: generatedAt },
+        },
+        usage: {
+            last24Hours: { tasks: 4, actions: 7, completed: 3, refunded: 1, failed: 0 },
+            last30Days: { tasks: 36, actions: 72, completed: 33, refunded: 2, failed: 1 },
+        },
+        statuses: [
+            { status: 'completed', count: 33 },
+            { status: 'refunded', count: 2 },
+        ],
+        operations: {
+            lifecycle: [
+                { state: 'queued', count: 2 },
+                { state: 'running', count: 1 },
+                { state: 'succeeded', count: 31 },
+                { state: 'unknown', count: 1 },
+            ],
+            financial: [
+                { state: 'reserved', count: 3 },
+                { state: 'captured', count: 31 },
+                { state: 'reconciliation_hold', count: 1 },
+            ],
+            oldestQueuedAt: new Date(new Date(now).getTime() - 90_000).toISOString(),
+            oldestRunningAt: new Date(new Date(now).getTime() - 30_000).toISOString(),
+            unknownCount: 1,
+            reconciliationHoldCount: 1,
+        },
+        tasks: tasks.map(([code, label, taskClass, cost, availableOn, requiredContext, optionalContext]) => ({
+            code,
+            label,
+            taskClass,
+            cost,
+            availableOn: [...availableOn],
+            requiredContext: [...requiredContext],
+            optionalContext: [...optionalContext],
+        })),
+    };
+}

@@ -121,6 +121,7 @@ await test('untrusted returnTo never leaves admin home or redirects into login',
     assert.equal(safeReturnTo('/dev/scenarios', 'admin'), '/dev/scenarios');
     assert.equal(safeReturnTo('/admin', 'admin'), '/admin');
     assert.equal(safeReturnTo('/admin/observability', 'admin'), '/admin/observability');
+    assert.equal(safeReturnTo('/admin/ai', 'admin'), '/admin/ai');
     assert.equal(safeReturnTo('/admin/testing', 'admin'), '/admin/testing');
     assert.equal(safeReturnTo('/admin/releases', 'admin'), '/admin/releases');
     assert.equal(

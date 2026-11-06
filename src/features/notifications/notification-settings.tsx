@@ -6,7 +6,8 @@ import { useStaffSession } from '../../entities/staff-session/client.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
-import type { NotificationChannel } from './preferences.js';
+import { adminNotificationPreferencesKeys } from '../../entities/admin-notification/preferences-query-keys.js';
+import type { NotificationChannel } from '../../entities/admin-notification/preferences.js';
 
 const channels = [
     { key: 'browser', title: 'Браузер', description: 'Системные уведомления при открытой фоновой вкладке.' },
@@ -29,7 +30,7 @@ function NotificationSettingsContent() {
     const locked = useRef(false);
     const [busy, setBusy] = useState(false);
     const [message, setMessage] = useState('');
-    const queryKey = ['notification-settings', session.data?.id];
+    const queryKey = adminNotificationPreferencesKeys.forPrincipal(session.data?.id);
     const settings = useQuery({
         queryKey,
         enabled: !!api && session.data?.context === 'admin',

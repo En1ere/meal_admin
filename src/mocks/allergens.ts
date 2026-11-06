@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { contracts } from '../shared/api/contracts.generated.js';
-import type { MockState } from './model.js';
 import { allergenAsset } from './allergen-assets.js';
 
 const iconSchema = z.object({
@@ -133,8 +132,12 @@ const subjects = () =>
         },
     ]);
 
+interface AllergenMockState {
+    allergens: AllergensState;
+}
+
 export function allergensHandle(c: {
-    state: MockState;
+    state: AllergenMockState;
     path: string;
     params: Record<string, string>;
     method: string;

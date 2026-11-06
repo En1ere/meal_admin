@@ -6,7 +6,7 @@ import {
     NewsMockError,
     type NewsRecipient,
 } from '../src/mocks/news-workspace.js';
-import { type NewsContent, newsContentSchema } from '../src/features/news/contracts.js';
+import { type NewsContent, newsContentSchema } from '../src/entities/news/index.js';
 import type { AdminState } from '../src/mocks/admin-model.js';
 
 const content: NewsContent = {

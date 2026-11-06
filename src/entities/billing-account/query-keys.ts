@@ -1,6 +1,4 @@
-import type { Section } from '../admin-section/model.js';
-
-export type BillingSection = Extract<Section, 'users' | 'subscriptions' | 'payments'>;
+export type BillingSection = 'users' | 'subscriptions' | 'payments';
 
 export const billingAccountKeys = {
     root: ['billing-account'] as const,

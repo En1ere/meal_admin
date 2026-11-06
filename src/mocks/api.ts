@@ -24,6 +24,7 @@ import { releaseWorkspaceCommand, ReleaseMockError } from './release-workspace.j
 import { releaseApi } from './release-api.js';
 import { accountDeletionReviewHandle } from './account-deletion-review.js';
 import { createObservabilityFixture } from './observability.js';
+import { createAdminAiFixture } from './admin-ai.js';
 import { acceptanceTestingHandle } from './acceptance-testing.js';
 import { runtimeSettingsMock } from './runtime-settings.js';
 import {
@@ -400,6 +401,8 @@ export class MockApi {
                     if (operation.params && !operation.params.safeParse(params).success) return fail(400);
                     if (wirePath === '/api/v1/admin/observability' && request.method === 'GET')
                         return success(createObservabilityFixture(now));
+                    if (wirePath === '/api/v1/admin/ai' && request.method === 'GET')
+                        return success(createAdminAiFixture(now));
                     const runtimeSettings = runtimeSettingsMock(state.admin, {
                         method: request.method,
                         path: wirePath,

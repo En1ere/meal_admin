@@ -3,10 +3,15 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
-import { adminRecordKeys, displayStatus, recordTitle } from '../../entities/admin-record/index.js';
+import {
+    adminRecordKeys,
+    displayStatus,
+    recordTitle,
+    type AdminRecordSection,
+} from '../../entities/admin-record/index.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { Fields } from './record-fields.js';
-import { detailPath, type Section } from '../../entities/admin-section/model.js';
+import { detailPath } from '../../entities/admin-section/index.js';
 import styles from './admin-record.module.css';
 
 export function RelatedCollection({
@@ -15,7 +20,7 @@ export function RelatedCollection({
     collection,
     label,
 }: {
-    section: Section;
+    section: AdminRecordSection;
     id: string;
     collection: string;
     label: string;

@@ -2,12 +2,13 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useRuntime } from '../../shared/runtime/index.js';
-import { CriticalConfirmation } from '../auth/access-client.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
 import type { Success } from '../../shared/api/contracts.generated.js';
+import { recipePolicyKeys } from './recipe-policy-query-keys.js';
 type Policy = Success<'GET /api/v1/admin/settings/recipe-policy'>['data'];
 export function RecipePolicyPage() {
     return <RecipePolicyContent />;
@@ -16,7 +17,7 @@ function RecipePolicyContent() {
     const { api } = useRuntime();
     const session = useStaffSession('admin');
     const query = useQuery({
-        queryKey: ['recipe-policy', session.data?.id],
+        queryKey: recipePolicyKeys.forPrincipal(session.data?.id),
         enabled: !!api && !!session.data,
         queryFn: async ({ signal }) =>
             (await api!.request('GET /api/v1/admin/settings/recipe-policy', undefined, signal)).data,

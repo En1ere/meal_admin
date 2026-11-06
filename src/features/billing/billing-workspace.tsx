@@ -10,7 +10,7 @@ import {
 } from '../../entities/billing-account/index.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
 import { ApiError } from '../../shared/api/client.js';
-import { CriticalConfirmation } from '../auth/access-client.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 export function BillingWorkspace({ section, id }: { section: 'users' | 'subscriptions' | 'payments'; id: string }) {

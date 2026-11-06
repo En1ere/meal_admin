@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { defaultAdminTheme, resolveTheme, type ThemeName } from '@meal-planner/design-system';
 import type { ApiClient } from '../api/client.js';
 import type { Success } from '../api/contracts.generated.js';
+import { authQueryKeys } from '../auth/query-keys.js';
 import { setAdminUnlock } from '../auth/unlock.js';
 import { clearAdminPrivateStorage, removeLegacyAdminPrivateStorage } from '../storage/private-cache.js';
 
@@ -78,7 +79,7 @@ export function RuntimeProvider({
                         new ApiClient(window.location.origin, fetch, () => {
                             queryClient.clear();
                             clearAdminPrivateStorage();
-                            queryClient.setQueryData(['session', 'admin'], null);
+                            queryClient.setQueryData(authQueryKeys.currentSession('admin'), null);
                             setMfa(null);
                             setAuthGeneration((value) => value + 1);
                         }),

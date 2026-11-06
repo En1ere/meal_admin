@@ -16,7 +16,8 @@ import {
 } from '../../entities/content-workflow/index.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
 import { ApiError } from '../../shared/api/client.js';
-import { adminAuthStatusKey, CriticalConfirmation, useAdminStatus } from '../auth/access-client.js';
+import { adminAuthStatusKey, useAdminStatus } from '../../shared/auth/admin-status.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import styles from './content-workspace.module.css';
 

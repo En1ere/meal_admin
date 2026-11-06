@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
+import { contentReleaseKeys } from '../../entities/content-release/index.js';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { loadReleaseWorkspace } from './api.js';
-
-export const releaseWorkspaceKey = ['admin', 'content-releases'] as const;
 
 export function useReleaseWorkspace() {
     const { api } = useRuntime();
     return useQuery({
-        queryKey: releaseWorkspaceKey,
+        queryKey: contentReleaseKeys.workspace,
         enabled: !!api,
         queryFn: ({ signal }) => {
             if (!api) throw new Error('Подключение не готово');

@@ -4,7 +4,7 @@ import { useRuntime } from '../../shared/runtime/index.js';
 import { adminRecordKeys } from '../../entities/admin-record/index.js';
 import { complianceReviewKeys, isAccountDeletionReviewable } from '../../entities/compliance-review/index.js';
 import { ApiError } from '../../shared/api/client.js';
-import { CriticalConfirmation } from '../auth/access-client.js';
+import { CriticalConfirmation } from '../../shared/auth/critical-confirmation.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 
 type DeletionDecision = 'approve' | 'reject';

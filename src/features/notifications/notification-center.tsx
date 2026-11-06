@@ -6,13 +6,14 @@ import { useStaffSession } from '../../entities/staff-session/client.js';
 import { useRequestSignal } from '../../shared/api/use-request-signal.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { InlineLoader as ArcInlineLoader } from '@meal-planner/design-system';
+import { adminNotificationCenterKeys } from '../../entities/admin-notification/center-query-keys.js';
 import {
     notificationCenterSchema,
     validNotificationTimeZone,
     type NotificationCategory,
     type NotificationCenterSettings,
     type NotificationCenter,
-} from './center-contracts.js';
+} from '../../entities/admin-notification/center-contracts.js';
 import styles from './notification-center.module.css';
 
 const categories: { key: NotificationCategory; title: string }[] = [
@@ -34,7 +35,7 @@ function NotificationCenterContent() {
     const [busy, setBusy] = useState(false);
     const [message, setMessage] = useState('');
     const [category, setCategory] = useState<NotificationCategory>('security');
-    const key = ['notification-center', session.data?.id];
+    const key = adminNotificationCenterKeys.forPrincipal(session.data?.id);
     const query = useQuery({
         queryKey: key,
         enabled: !!api && session.data?.context === 'admin',

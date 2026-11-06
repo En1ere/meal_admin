@@ -3,9 +3,9 @@ import type { QueryClient } from '@tanstack/react-query';
 import type { ApiClient } from '../../shared/api/client.js';
 import { ApiError } from '../../shared/api/client.js';
 import { adminReleaseDraftKey } from '../../shared/storage/private-cache.js';
-import type { Release, ReleaseChange } from './contracts.js';
+import { contentReleaseKeys, type Release, type ReleaseChange } from '../../entities/content-release/index.js';
 import { runReleaseCommand, serializeChanges } from './api.js';
-import { checksum, releaseWorkspaceKey } from './workspace.js';
+import { checksum } from './workspace.js';
 import { readReleaseDraftCache, type ReleaseDraftCache } from './release-model.js';
 
 export function useReleaseDraft(server: Release | undefined, api: ApiClient | null, queryClient: QueryClient) {
@@ -76,7 +76,7 @@ export function useReleaseDraft(server: Release | undefined, api: ApiClient | nu
                         setSaveStatus('saving');
                         try {
                             const result = await runReleaseCommand(api, { action: 'save', ...cached });
-                            queryClient.setQueryData(releaseWorkspaceKey, result.workspace);
+                            queryClient.setQueryData(contentReleaseKeys.workspace, result.workspace);
                             if (result.ack?.clientRevision === nextRevision && result.ack.checksum === sum) {
                                 try {
                                     sessionStorage.removeItem(adminReleaseDraftKey);

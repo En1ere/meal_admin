@@ -3,31 +3,37 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import { useRuntime } from '../../shared/runtime/index.js';
 import { useStaffSession } from '../../entities/staff-session/client.js';
-import { adminRecordKeys, displayStatus, recordTitle, type AdminRecord } from '../../entities/admin-record/index.js';
+import {
+    adminRecordKeys,
+    displayStatus,
+    recordTitle,
+    type AdminRecord,
+    type AdminRecordSection,
+} from '../../entities/admin-record/index.js';
 import { Skeleton as ArcSkeleton } from '@meal-planner/design-system';
 import { Fields } from './record-fields.js';
 import { RelatedCollection } from './related-collection.js';
-import { detailPath, findSection, sectionPath, type Section } from '../../entities/admin-section/model.js';
+import { detailPath, findSection, sectionPath, type Section } from '../../entities/admin-section/index.js';
 import styles from './admin-record.module.css';
 import { ApiError } from '../../shared/api/client.js';
 
 export type AdminRecordDetailContext = {
-    section: Section;
+    section: AdminRecordSection;
     id: string;
     item: AdminRecord;
     requestKind: string | null | undefined;
 };
 
 export type AdminRecordPageExtensions = {
-    renderListPrelude?: (section: Section) => ReactNode;
+    renderListPrelude?: (section: AdminRecordSection) => ReactNode;
     renderBeforeCollections?: (context: AdminRecordDetailContext) => ReactNode;
     renderDetailActions?: (context: AdminRecordDetailContext) => ReactNode;
-    hasCustomActions?: (section: Section) => boolean;
+    hasCustomActions?: (section: AdminRecordSection) => boolean;
 };
 
-const lookupSections: readonly Section[] = ['users', 'access', 'subscriptions'];
+const lookupSections: readonly AdminRecordSection[] = ['users', 'access', 'subscriptions'];
 function OverviewLinks({ item }: { item: AdminRecord }) {
-    const destinations: Record<string, Section> = {
+    const destinations: Record<string, AdminRecordSection> = {
         support_waiting: 'support',
         assigned_support: 'support',
         moderation_pending: 'queues',
@@ -87,6 +93,11 @@ function ErrorPanel({ error, retry }: { error: Error; retry: () => void }) {
         </div>
     );
 }
+
+function toAdminRecordSection(section: Section): AdminRecordSection | undefined {
+    return section === 'releases' ? undefined : section;
+}
+
 export function AdminRecordPage({
     fixedSection,
     extensions,
@@ -95,8 +106,9 @@ export function AdminRecordPage({
     extensions?: AdminRecordPageExtensions | undefined;
 }) {
     const { section: sectionParam, id } = useParams();
-    const section = findSection(fixedSection ?? sectionParam);
-    if (!section)
+    const navigationSection = findSection(fixedSection ?? sectionParam);
+    const section = navigationSection ? toAdminRecordSection(navigationSection.id) : undefined;
+    if (!navigationSection || !section)
         return (
             <>
                 <h1>Раздел не найден</h1>
@@ -106,14 +118,20 @@ export function AdminRecordPage({
     return (
         <>
             {id ? (
-                <Detail key={`${section.id}/${id}`} section={section.id} id={id} extensions={extensions} />
+                <Detail key={`${section}/${id}`} section={section} id={id} extensions={extensions} />
             ) : (
-                <List key={section.id} section={section.id} extensions={extensions} />
+                <List key={section} section={section} extensions={extensions} />
             )}
         </>
     );
 }
-function List({ section, extensions }: { section: Section; extensions?: AdminRecordPageExtensions | undefined }) {
+function List({
+    section,
+    extensions,
+}: {
+    section: AdminRecordSection;
+    extensions?: AdminRecordPageExtensions | undefined;
+}) {
     const { api, queryClient } = useRuntime();
     const session = useStaffSession('admin');
     const info = findSection(section)!;
@@ -298,7 +316,7 @@ function Detail({
     id,
     extensions,
 }: {
-    section: Section;
+    section: AdminRecordSection;
     id: string;
     extensions?: AdminRecordPageExtensions | undefined;
 }) {

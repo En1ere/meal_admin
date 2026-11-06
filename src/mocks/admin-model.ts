@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import fixture from '../../contracts/dev-users.json' with { type: 'json' };
 import type { Success } from '../shared/api/contracts.generated.js';
+import { adminRowSchema, type AdminRow } from './admin-row.js';
 import { relatedFixtures } from './admin-related-fixtures.js';
 
 export type AdminSection = Success<'POST /api/v1/admin/{section}/search'>['data']['section'];
 export type AdminRecord = Success<'GET /api/v1/admin/{section}/{id}'>['data']['item'];
-export const adminRowSchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()]));
-export type AdminRow = z.infer<typeof adminRowSchema>;
+export { adminRowSchema, type AdminRow } from './admin-row.js';
 export const adminStateSchema = z.strictObject({
     tables: z.record(z.string(), z.array(adminRowSchema)),
     commands: z.record(z.string(), z.strictObject({ digest: z.string(), result: adminRowSchema })),
