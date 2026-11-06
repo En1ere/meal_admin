@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.165 - 11.07.2026 | 03:03 - Admin синхронизирован с backend OpenAPI 0.0.72/schema v38: observability распознаёт отдельный `ai-content-retention` worker и показывает его lease, freshness, outcome, duration и failures под понятным названием «Очистка AI-контента». Моки и generated contracts обновлены до 11 worker-задач; raw AI payloads и персональные данные в проекцию не добавлялись.
+
 0.0.164 - 11.07.2026 | 02:08 - AI control plane синхронизирован с backend OpenAPI 0.0.71/schema v3. Экран показывает выбранные model/pricing profile, месячный USD-лимит, actual cost, conservative held cost для pending/unknown, остаток, utilization и состояния stop-loss `unconfigured/disabled/ready/exhausted`. Неготовый или исчерпанный контур объясняет блокировку и следующий шаг; API остаётся read-only и не раскрывает ключ, endpoint credentials, prompt, context, result или provider request ID.
 
 0.0.163 - 11.07.2026 | 00:05 - OpenAPI синхронизирован до 0.0.70 после добавления canonical async continuation; read-only AI control plane schema v2 показывает общие lifecycle/financial агрегаты initial и continuation, возраст очереди и выполнения, unknown outcomes и `reconciliation_hold`. Экран объясняет оператору, что blind массовый refund запрещён, не раскрывает prompts, результаты, provider metadata или секреты. Генератор контрактов поддерживает документированные `202 Accepted` ответы.

@@ -19,6 +19,7 @@ export function createObservabilityFixture(now: Date | number): AdminObservabili
         'exports',
         'account-retention',
         'ai-reconciliation',
+        'ai-content-retention',
         'cooking-lifecycle',
     ].map((task) => ({
         task,

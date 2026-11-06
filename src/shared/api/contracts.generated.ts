@@ -1,6 +1,6 @@
-// Generated from contracts/openapi.json. Do not edit. SHA256: 2165d0b4d8b53d750c0785b71060ae5ce560d944650e41b1aa23aba22086d74d
+// Generated from contracts/openapi.json. Do not edit. SHA256: 4aada83eda302331ec25dc9fd7cb4bc71acd4602aa0085f4b9167d004568f5ac
 import { z } from 'zod';
-export const contractVersion = '0.0.71';
+export const contractVersion = '0.0.72';
 export const contracts = {
     'GET /api/v1/recipe-policy': {
         params: null,
@@ -8099,6 +8099,7 @@ export const contracts = {
                                 z.literal('exports'),
                                 z.literal('account-retention'),
                                 z.literal('ai-reconciliation'),
+                                z.literal('ai-content-retention'),
                                 z.literal('cooking-lifecycle'),
                             ]),
                             freshness: z.strictObject({
@@ -8156,8 +8157,8 @@ export const contracts = {
                             failuresLastHour: z.number().int().min(0).max(1000000000),
                         }),
                     )
-                    .min(10)
-                    .max(10),
+                    .min(11)
+                    .max(11),
                 providers: z.strictObject({
                     windowSeconds: z.literal(3600),
                     services: z

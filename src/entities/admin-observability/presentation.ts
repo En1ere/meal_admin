@@ -24,6 +24,7 @@ export const workerLabels: Record<AdminObservability['workers'][number]['task'],
     exports: 'Экспорты',
     'account-retention': 'Хранение аккаунтов',
     'ai-reconciliation': 'Сверка AI',
+    'ai-content-retention': 'Очистка AI-контента',
     'cooking-lifecycle': 'Жизненный цикл готовки',
 };
 
