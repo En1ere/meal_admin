@@ -1,5 +1,7 @@
 # Версии meal_admin
 
+0.0.166 - 11.07.2026 | 04:15 - Текущие operator docs синхронизированы с backend 0.0.273, полным OpenAPI 0.0.72/367 операций и schema v38; отдельно зафиксирован административный allowlist 110 операций. Ручной AI test-case дополнен worker `ai-content-retention` в observability и проверкой отсутствия удалённого контента/provider payload. Runtime, generated contracts и публичные API не изменены.
+
 0.0.165 - 11.07.2026 | 03:03 - Admin синхронизирован с backend OpenAPI 0.0.72/schema v38: observability распознаёт отдельный `ai-content-retention` worker и показывает его lease, freshness, outcome, duration и failures под понятным названием «Очистка AI-контента». Моки и generated contracts обновлены до 11 worker-задач; raw AI payloads и персональные данные в проекцию не добавлялись.
 
 0.0.164 - 11.07.2026 | 02:08 - AI control plane синхронизирован с backend OpenAPI 0.0.71/schema v3. Экран показывает выбранные model/pricing profile, месячный USD-лимит, actual cost, conservative held cost для pending/unknown, остаток, utilization и состояния stop-loss `unconfigured/disabled/ready/exhausted`. Неготовый или исчерпанный контур объясняет блокировку и следующий шаг; API остаётся read-only и не раскрывает ключ, endpoint credentials, prompt, context, result или provider request ID.
